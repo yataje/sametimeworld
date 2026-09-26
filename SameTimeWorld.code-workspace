@@ -1,0 +1,10 @@
+{
+  "folders": [
+    { "path": "." }
+  ],
+  "settings": {
+    "files.encoding": "utf8",
+    "editor.formatOnSave": true,
+    "terminal.integrated.cwd": "C:\\SameTimeWorld"
+  }
+}
