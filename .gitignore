@@ -9,3 +9,10 @@ install_manifest.json
 .DS_Store
 Thumbs.db
 *.log
+
+archive/
+*.zip
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
