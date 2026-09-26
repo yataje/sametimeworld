@@ -1,4 +1,5 @@
 import './style.css';
+import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
@@ -184,6 +185,7 @@ function render(){let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=vi
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
  $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위`;
+ refreshLeaderHeaders(center);
 }
 let renderQueued=false;function requestRender(){if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;render()});}
 // 현재 화면의 행만 복제해 확대 도중 이전 시대가 사라지는 순간적인 점프를 막는다.
@@ -386,6 +388,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&searchOverlay.class
 
 async function bootSameTimeWorld(){
  const statusEl=$('#status');
+ loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchFirebaseJSON);
  try{
   if(statusEl)statusEl.textContent='Firebase 사건 DB를 불러오는 중…';
   updateVersionLabels({});

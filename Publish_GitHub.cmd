@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\publish.ps1"
+"C:\SameTimeWorldTools\SameTimeWorld_FirebaseUpdater.exe" --publish
 set "RESULT=%ERRORLEVEL%"
 pause
 exit /b %RESULT%
