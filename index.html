@@ -6,11 +6,143 @@
   .importance-color-4 { color: #FFB020 !important; }
   .importance-color-5 { color: #FF4D4F !important; }
 </style>
+
+<style id="leader-header-restore-v040">
+/* 이전 지도자 헤더 기능 복원: 화면 중앙 날짜에 맞춰 main.js가 #leaders-*를 갱신 */
+.headgrid{min-height:76px}
+.headgrid .region-head{
+  position:relative;
+  display:grid;
+  grid-template-rows:22px minmax(0,1fr);
+  padding:3px 7px 4px;
+  min-height:76px;
+  overflow:hidden;
+}
+.region-title-label{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  font-size:11px;
+  line-height:1;
+  font-weight:800;
+  color:#d0e0f3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.leader-live-dot{
+  position:absolute;
+  right:5px;
+  top:5px;
+  z-index:2;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:#63cdb4;
+  box-shadow:0 0 5px rgba(99,205,180,.45);
+}
+.leader-subrows{
+  --leader-label-w:52px;
+  display:grid;
+  grid-template-rows:1fr 1fr;
+  min-height:46px;
+  gap:2px;
+  padding-right:3px;
+  overflow:hidden;
+}
+.leader-subrow{
+  display:grid;
+  grid-template-columns:var(--leader-label-w) minmax(0,1fr);
+  align-items:center;
+  min-width:0;
+  min-height:21px;
+  background:rgba(8,20,34,.16);
+  border-radius:3px;
+  overflow:hidden;
+}
+.leader-subregion{
+  height:100%;
+  display:flex;
+  align-items:center;
+  padding:0 4px 0 2px;
+  border-right:1px solid rgba(89,116,145,.34);
+  font-size:7.5px;
+  line-height:1.05;
+  font-weight:800;
+  color:#9fb3c8;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.leader-inline-list{
+  display:flex;
+  align-items:center;
+  align-content:center;
+  flex-wrap:wrap;
+  min-width:0;
+  gap:1px 6px;
+  padding:1px 2px 1px 6px;
+  font-size:7.5px;
+  line-height:1.12;
+  font-weight:600;
+  color:#afc0d3;
+  overflow:hidden;
+}
+.leader-inline-item{
+  display:inline-flex;
+  align-items:baseline;
+  min-width:0;
+  max-width:100%;
+  white-space:nowrap;
+  gap:3px;
+  opacity:.95;
+}
+.leader-inline-item b{
+  font-size:.95em;
+  color:#63cdb4;
+  font-weight:800;
+  flex:none;
+}
+.leader-inline-item .leader-names{
+  color:#b8c8da;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:145px;
+}
+.leader-inline-item.no-data .leader-names{color:#62758b}
+.region-head.leader-loading .leader-inline-list{opacity:.62}
+.region-head[data-leader-region="east"] .leader-subrows{--leader-label-w:82px}
+
+@media(max-width:1130px){
+  .leader-subrows{--leader-label-w:48px}
+  .region-head[data-leader-region="east"] .leader-subrows{--leader-label-w:74px}
+  .leader-inline-list{gap:1px 4px;padding-left:4px}
+  .leader-inline-item .leader-names{max-width:105px}
+}
+</style>
 </head><body><div class="workspace"><nav class="app-tabs" aria-label="화면 탭"><button type="button" class="app-tab active" id="tabExperience" data-tab="experience">시간축</button><button type="button" class="app-tab" id="tabWeb" data-tab="web" title="사건 상세"><span id="tabWebLabel">사건 상세</span></button></nav><section class="tab-panel active" id="experiencePanel"><div class="mapbg-frame"><div class="mapbg-inner"><div class="mapbg"></div></div></div><div class="mapbg-mask-top"></div><div class="mapbg-mask-bottom"></div><div class="app"><header class="top"><div class="brandarea"><div class="brand"><span class="brand-title"><span class="brand-en">THE WORLD AT THE SAME TIME</span><span class="brand-sep">·</span><span class="brand-ko">세계는 동시에</span></span><small class="version-label"><span id="pageVersionLabel">v0.4.0</span> · <span id="dbVersionLabel">DB v15</span></small></div><button class="search-open" id="searchOpen" type="button" title="역사 사건 검색"><span aria-hidden="true">⌕</span> 검색</button><button class="display-settings-open" id="displaySettingsOpen" type="button" title="화면 설정" aria-haspopup="dialog"><span aria-hidden="true">⚙</span><span class="display-settings-open-label">화면</span></button></div><div class="right"><span class="hint">휠 : 확대/축소, 드래그 : 시간이동</span><button class="zbtn" id="out" title="축소">−</button><span class="zoomtitle" id="level">1년</span><button class="zbtn" id="in" title="확대">+</button><span class="chip" id="loc">1900년</span></div></header><div class="headgrid"><div>날짜</div>
-<div class="region-head">유럽 / 아프리카</div>
-<div class="region-head">중동</div>
-<div class="region-head">동아시아 / 오세아니아</div>
-<div class="region-head">아메리카</div></div><main class="viewport" id="viewport" aria-label="역사 시간축. 휠은 확대/축소, 드래그는 시간이동"><div class="space" id="space"><div class="rows" id="rows"></div></div></main><div class="foot"><span id="status">데이터를 준비하고 있습니다.</span><span>사건을 누르면 상세 내용 · 휠로 확대 · 드래그로 이동</span></div></div></section><section class="tab-panel" id="webPanel" aria-label="사건 상세"><article class="event-detail"><p id="webEventMeta">시간축에서 사건을 선택하세요.</p><h1 id="webQuery">사건 상세</h1><div id="eventDetailBody"></div><a id="externalSearch" target="_blank" rel="noopener noreferrer" hidden>Google에서 관련 자료 검색 ↗</a></article></section></div><div class="display-settings-overlay" id="displaySettingsOverlay" role="presentation"><section class="display-settings-modal" role="dialog" aria-modal="true" aria-labelledby="displaySettingsTitle"><div class="display-settings-head"><strong id="displaySettingsTitle">화면 설정</strong><button class="display-settings-close" id="displaySettingsClose" type="button" aria-label="화면 설정 닫기">✕</button></div><div class="display-settings-section"><div class="display-settings-section-title">사건</div><div class="display-setting-row"><label for="settingEventFont">사건 글자 크기</label><input id="settingEventFont" type="range" min="80" max="140" step="5"><output class="display-setting-value" id="settingEventFontValue"></output></div></div><div class="display-settings-section"><div class="display-settings-section-title">세계지도</div><div class="display-setting-row"><label for="settingMapTransparency">지도 투명도</label><input id="settingMapTransparency" type="range" min="0" max="100" step="1"><output class="display-setting-value" id="settingMapTransparencyValue"></output></div></div><div class="display-settings-note">설정은 이 브라우저에 자동 저장됩니다.</div><div class="display-settings-actions"><button class="display-settings-reset" id="displaySettingsReset" type="button">기본값 복원</button></div></section></div><div class="search-overlay" id="searchOverlay" role="presentation"><section class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-head"><strong id="searchTitle">역사 사건 검색</strong><button class="search-close" id="searchClose" type="button" aria-label="검색 닫기">✕</button></div><div class="search-box-wrap"><input class="search-input" id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="날짜 · 사건명 · 대상 · 장소 검색 · 예: 1925년 5월 5일 / 명성황후"></div><div class="search-summary" id="searchSummary"></div><div class="search-results" id="searchResults"><div class="search-empty"><b>날짜 또는 사건명을 입력하세요.</b><br>1925 05 05 · 1925년 5월 5일 · 명성황후</div></div></section></div><script type="module" src="/src/main.js"></script>
+<div class="region-head" data-leader-region="europe">
+  <div class="region-title-label">유럽 / 아프리카</div>
+  <span class="leader-live-dot" title="지도자 DB · 화면 중앙 날짜 기준"></span>
+  <div class="leader-subrows" id="leaders-europe"></div>
+</div>
+<div class="region-head" data-leader-region="middle">
+  <div class="region-title-label">중동</div>
+  <span class="leader-live-dot" title="지도자 DB · 화면 중앙 날짜 기준"></span>
+  <div class="leader-subrows" id="leaders-middle"></div>
+</div>
+<div class="region-head" data-leader-region="east">
+  <div class="region-title-label">동아시아 / 오세아니아</div>
+  <span class="leader-live-dot" title="지도자 DB · 화면 중앙 날짜 기준"></span>
+  <div class="leader-subrows" id="leaders-east"></div>
+</div>
+<div class="region-head" data-leader-region="americas">
+  <div class="region-title-label">아메리카</div>
+  <span class="leader-live-dot" title="지도자 DB · 화면 중앙 날짜 기준"></span>
+  <div class="leader-subrows" id="leaders-americas"></div>
+</div></div><main class="viewport" id="viewport" aria-label="역사 시간축. 휠은 확대/축소, 드래그는 시간이동"><div class="space" id="space"><div class="rows" id="rows"></div></div></main><div class="foot"><span id="status">데이터를 준비하고 있습니다.</span><span>사건을 누르면 상세 내용 · 휠로 확대 · 드래그로 이동</span></div></div></section><section class="tab-panel" id="webPanel" aria-label="사건 상세"><article class="event-detail"><p id="webEventMeta">시간축에서 사건을 선택하세요.</p><h1 id="webQuery">사건 상세</h1><div id="eventDetailBody"></div><a id="externalSearch" target="_blank" rel="noopener noreferrer" hidden>Google에서 관련 자료 검색 ↗</a></article></section></div><div class="display-settings-overlay" id="displaySettingsOverlay" role="presentation"><section class="display-settings-modal" role="dialog" aria-modal="true" aria-labelledby="displaySettingsTitle"><div class="display-settings-head"><strong id="displaySettingsTitle">화면 설정</strong><button class="display-settings-close" id="displaySettingsClose" type="button" aria-label="화면 설정 닫기">✕</button></div><div class="display-settings-section"><div class="display-settings-section-title">사건</div><div class="display-setting-row"><label for="settingEventFont">사건 글자 크기</label><input id="settingEventFont" type="range" min="80" max="140" step="5"><output class="display-setting-value" id="settingEventFontValue"></output></div></div><div class="display-settings-section"><div class="display-settings-section-title">세계지도</div><div class="display-setting-row"><label for="settingMapTransparency">지도 투명도</label><input id="settingMapTransparency" type="range" min="0" max="100" step="1"><output class="display-setting-value" id="settingMapTransparencyValue"></output></div></div><div class="display-settings-note">설정은 이 브라우저에 자동 저장됩니다.</div><div class="display-settings-actions"><button class="display-settings-reset" id="displaySettingsReset" type="button">기본값 복원</button></div></section></div><div class="search-overlay" id="searchOverlay" role="presentation"><section class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchTitle"><div class="search-head"><strong id="searchTitle">역사 사건 검색</strong><button class="search-close" id="searchClose" type="button" aria-label="검색 닫기">✕</button></div><div class="search-box-wrap"><input class="search-input" id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="날짜 · 사건명 · 대상 · 장소 검색 · 예: 1925년 5월 5일 / 명성황후"></div><div class="search-summary" id="searchSummary"></div><div class="search-results" id="searchResults"><div class="search-empty"><b>날짜 또는 사건명을 입력하세요.</b><br>1925 05 05 · 1925년 5월 5일 · 명성황후</div></div></section></div><script type="module" src="/src/main.js"></script>
 <script id="importance-color-test-script">
 (() => {
   const STAR_RE = /★\s*([1-5])/g;
