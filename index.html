@@ -438,7 +438,6 @@ function initMobileRegionNav(){
   });
   applyMobileRegion(mobileRegionKey,false);
 }
-initMobileRegionNav();
 
 
 const DISPLAY_SETTINGS_KEY='stw-display-settings-v1';
@@ -877,5 +876,7 @@ function scheduleLeaderRefresh(centerT){
 }
 // ---------------------------------------------------------------------------
 
+// Mobile navigation must be initialized only after the render state has been created.
+initMobileRegionNav();
 window.addEventListener('resize',requestRender);space.style.height=totalHeight(zoom)+'px';viewport.scrollTop=topAt(utc(1900,0,1),zoom)-viewport.clientHeight/3;$('#level').textContent=LEVELS[zoom].name;render();
 </script></body></html>
