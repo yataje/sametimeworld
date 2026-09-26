@@ -62,7 +62,7 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 .timeline-row:nth-child(even){background:rgba(15,23,35,0.48)}
 .timeline-row>div{padding:7px 8px;border-right:1px solid rgba(37,52,70,.65);overflow:hidden;min-width:0;background:transparent}
 .timeline-row>div:last-child{border-right:0}
-.date{background:rgba(21,36,54,0.45);color:var(--blue);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.08}.date-year,.date-rest{display:block}.date-rest{margin-top:2px;font-size:12px;letter-spacing:.15px}
+.date{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(21,36,54,0.45);color:var(--blue);font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.08}.date-year,.date-rest{display:block}.date-rest{margin-top:2px;font-size:12px;letter-spacing:.15px}
 .date small{display:block;color:#9ab0c5;font-weight:500;font-size:10px;margin-top:3px}
 .event{display:flex;align-items:center;gap:4px;border:1px solid rgba(61,86,113,.22);background:rgba(14,33,58,var(--event-bg-alpha));border-radius:6px;padding:4px 6px;margin-bottom:4px;font-size:var(--event-font-size);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#e4eefa;cursor:grab;backdrop-filter:blur(2px);opacity:1}
 .event:hover{border-color:rgba(102,188,237,.72);background:rgba(35,59,82,var(--event-bg-alpha));opacity:1}
@@ -282,7 +282,7 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
   .viewport::-webkit-scrollbar{display:none;width:0!important}
   .timeline-row{grid-template-columns:var(--date-col) minmax(0,1fr)!important}
   .timeline-row>div{display:none!important;padding:6px 7px}
-  .timeline-row>div:first-child{display:block!important;padding:6px 4px}
+  .timeline-row>div:first-child{display:flex!important;padding:6px 4px}
   body.mobile-region-europe .timeline-row>div:nth-child(2),
   body.mobile-region-middle .timeline-row>div:nth-child(3),
   body.mobile-region-east .timeline-row>div:nth-child(4),
