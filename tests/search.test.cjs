@@ -23,9 +23,9 @@ test('partial dates remain searchable',()=>{
  assert.deepEqual(Array.from(context().searchEvents('1944년 6월 6일').all,x=>x.id),[5]);
  assert.equal(context().parseSearchDateQuery('1944-02-31'),null);
 });
-test('title and subject relevance precede description matches',()=>{
+test('search results are always chronological even when a later title is a stronger match',()=>{
  const data=[{id:1,date:'1800',title:'기타',description:'이지중대 언급'},{id:2,date:'1944',title:'이지중대',description:''}];
- assert.equal(context(data).searchEvents('이지중대').all[0].id,2);
+ assert.deepEqual(Array.from(context(data).searchEvents('이지중대').all,x=>x.id),[1,2]);
 });
 test('result cap reports total without losing matches',()=>{
  const data=Array.from({length:125},(_,i)=>({id:i+1,date:'1944',title:'검색',description:''}));
