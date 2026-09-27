@@ -17,8 +17,12 @@ test('detail navigation participates in browser history',()=>{
  assert.match(main,/function returnToTimeline\(\)/);
 });
 
-test('recent search history is stored separately from event search data',()=>{
- assert.match(main,/SEARCH_HISTORY_LIMIT=10/);
- assert.match(main,/localStorage\.setItem\(SEARCH_HISTORY_KEY/);
- assert.match(main,/class="search-history-item"/);
+test('search stays in the timeline header without the old modal',()=>{
+ assert.match(html,/id="headerSearch"/);
+ assert.match(html,/id="searchInput"/);
+ assert.match(html,/id="searchGo"/);
+ assert.match(html,/id="searchResults"/);
+ assert.doesNotMatch(html,/id="searchOpen"/);
+ assert.doesNotMatch(html,/class="search-overlay"/);
+ assert.doesNotMatch(main,/SEARCH_HISTORY_KEY|SEARCH_HISTORY_LIMIT|searchOverlay|openSearch\(/);
 });
