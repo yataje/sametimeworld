@@ -16,7 +16,7 @@
   --green:#6ed3b7;
   --orange:#f6c16c;
   --scrollbarw:24px;
-  --date-col:82px;
+  --date-col:64px;
   --ui-opacity:0.82;
   --event-bg-alpha:0.50;
   --map-opacity:0.42;
@@ -29,7 +29,7 @@ html,body{height:100%;margin:0}
 body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color:var(--text);background:var(--bg);overflow:hidden}
 .app{position:relative;z-index:1;height:100dvh;display:flex;flex-direction:column;min-width:930px;background:transparent}
 
-.mapbg-frame{position:fixed;z-index:0;pointer-events:none;left:var(--date-col);right:var(--scrollbarw);top:50px;bottom:28px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.mapbg-frame{position:fixed;z-index:0;pointer-events:none;left:var(--date-col);right:calc(var(--date-col) + var(--scrollbarw));top:50px;bottom:28px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .mapbg-inner{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:10px 0}
 .mapbg{width:100%;height:auto;aspect-ratio:1672/941;background:url('./assets/world-map.png') center center/contain no-repeat;opacity:var(--map-opacity);filter:brightness(var(--map-brightness)) contrast(var(--map-contrast));mix-blend-mode:screen}
 .mapbg-mask-top{position:fixed;z-index:0;left:0;right:0;top:0;height:50px;background:rgba(5,8,13,0.92);pointer-events:none}
@@ -46,7 +46,7 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 .zbtn{background:rgba(27,42,59,0.72);border:1px solid rgba(88,114,146,.75);color:#dceaff;border-radius:9px;min-width:34px;height:32px;font-size:20px;cursor:pointer;opacity:var(--ui-opacity)}
 .zbtn:hover{background:rgba(40,67,90,0.9);opacity:.96}
 .hint{color:var(--muted);font-size:11px}
-.headgrid,.timeline-row{display:grid;grid-template-columns:var(--date-col) repeat(4,minmax(0,1fr))}
+.headgrid,.timeline-row{display:grid;grid-template-columns:var(--date-col) repeat(4,minmax(0,1fr)) var(--date-col)}
 .headgrid{position:relative;flex-shrink:0;width:calc(100% - var(--scrollbarw));background:rgba(18,29,42,0.72);backdrop-filter:blur(4px);border-bottom:1px solid var(--line-strong)}
 .headgrid>div{padding:12px 9px;font-weight:700;font-size:12px;color:#d0e0f3;border-right:1px solid rgba(65,81,106,.72)}
 .headgrid>div:last-child{border-right:0}
@@ -86,7 +86,7 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 .close{border:1px solid rgba(64,83,106,.82);background:rgba(35,51,73,.72);color:white;border-radius:7px;padding:5px 11px;cursor:pointer;opacity:var(--ui-opacity)}
 .foot{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:7px 20px;border-top:1px solid var(--line);color:#a0b3c8;font-size:11px;gap:12px;background:rgba(8,13,20,0.52);backdrop-filter:blur(4px)}
 .foot b{color:var(--blue)}
-@media(max-width:1130px){.hint{display:none}.headgrid,.timeline-row{grid-template-columns:var(--date-col) repeat(4,minmax(0,1fr))}.headgrid{width:calc(100% - var(--scrollbarw))}:root{--date-col:74px}}
+@media(max-width:1130px){.hint{display:none}.headgrid,.timeline-row{grid-template-columns:var(--date-col) repeat(4,minmax(0,1fr)) var(--date-col)}.headgrid{width:calc(100% - var(--scrollbarw))}:root{--date-col:60px}}
 
 
 /* v2.9 Wikidata 실시간 지도자: 기존 본문을 건드리지 않고 헤더 내부만 고밀도화 */
@@ -439,13 +439,9 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 .viewport{z-index:1}
 .header-search{z-index:240}
 .search-suggestions{z-index:250;pointer-events:auto}
-.region-title-label{display:flex!important;align-items:center;justify-content:space-between;gap:8px}
-.region-date-badge{
-  flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:18px;padding:0 6px;
-  border:1px solid rgba(100,198,255,.38);border-radius:999px;background:rgba(13,31,46,.76);
-  color:#78cdf7;font:800 9px/1 system-ui,'Malgun Gothic',sans-serif;font-variant-numeric:tabular-nums;
-  box-shadow:0 1px 5px rgba(0,0,0,.26)
-}
+.region-title-label{display:block!important}
+.headgrid>.date-head{display:flex;align-items:center;justify-content:center;padding:4px;font-size:11px;text-align:center}
+.date-right{border-left:1px solid rgba(37,52,70,.65)}
 .mapbg{
   transform:scale(var(--map-scale));
   transform-origin:100% 100%;
