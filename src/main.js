@@ -3,7 +3,7 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.4';
+const PAGE_VERSION='v0.4.5';
 const DB_VERSION_FALLBACK='v15';
 const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
 
@@ -397,21 +397,46 @@ viewport.addEventListener('click',e=>{if(performance.now()<suppressClickUntil){e
 
 const tabExperience=$('#tabExperience'), tabWeb=$('#tabWeb'), tabWebLabel=$('#tabWebLabel'), experiencePanel=$('#experiencePanel'), webPanel=$('#webPanel');
 const webQuery=$('#webQuery'), webEventMeta=$('#webEventMeta');
-let activeAppTab='experience';
+const TIMELINE_HISTORY_STATE={stwTab:'experience'};
+let activeAppTab='experience',activeDetailEventId=null;
 function setAppTab(name){
  activeAppTab=name==='web'?'web':'experience';
  const web=activeAppTab==='web';
  tabExperience.classList.toggle('active',!web);tabWeb.classList.toggle('active',web);
  experiencePanel.classList.toggle('active',!web);webPanel.classList.toggle('active',web);
 }
-tabExperience.onclick=()=>setAppTab('experience');
-tabWeb.onclick=()=>setAppTab('web');
-function openWebForEvent(id){
+function eventDateDisplay(raw){
+ const value=String(raw??'').trim();
+ let m;
+ if((m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value)))return {precision:'일',display:`${Number(m[1])}년 ${Number(m[2])}월 ${Number(m[3])}일`,raw:value};
+ if((m=/^(\d{4})-(\d{2})$/.exec(value)))return {precision:'월',display:`${Number(m[1])}년 ${Number(m[2])}월`,raw:value};
+ if((m=/^(\d{4})$/.exec(value)))return {precision:'연',display:`${Number(m[1])}년`,raw:value};
+ return {precision:'—',display:value||'날짜 미상',raw:value};
+}
+function renderEventMeta(x){
+ const date=eventDateDisplay(x.date),fields=[['날짜',date.display,date.precision],['대륙',x.region],['국가',x.country],['카테고리',x.category]];
+ webEventMeta.replaceChildren();
+ for(const [label,value,precision] of fields){
+  if(!value)continue;
+  const item=document.createElement('span');item.className='detail-meta-item';
+  const key=document.createElement('b');key.className='detail-meta-label';key.textContent=label;
+  item.append(key);
+  if(precision){const badge=document.createElement('em');badge.className='detail-date-precision';badge.textContent=precision;item.append(badge);}
+  const text=document.createElement('span');text.textContent=value;item.append(text);webEventMeta.append(item);
+ }
+}
+function returnToTimeline(){
+ if(activeAppTab==='web'&&history.state?.stwTab==='web'){history.back();return;}
+ activeDetailEventId=null;setAppTab('experience');
+}
+tabExperience.onclick=returnToTimeline;
+tabWeb.onclick=()=>{if(activeDetailEventId!==null)setAppTab('web');};
+function openWebForEvent(id,{historyMode='push'}={}){
  const x=byId.get(Number(id));if(!x)return;
- const d=eventDetails(x);
+ const d=eventDetails(x);activeDetailEventId=x.id;
  tabWebLabel.textContent='사건 상세';
  webQuery.textContent=x.title;
- webEventMeta.textContent=[x.date,x.country,d.subject,x.category].filter(Boolean).join(' · ');
+ renderEventMeta(x);
  const body=$('#eventDetailBody');body.replaceChildren();
  for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date],['검증 상태',d.verification]]){
   if(!value)continue;
@@ -420,7 +445,15 @@ function openWebForEvent(id){
  const link=$('#externalSearch');link.hidden=false;
  link.href='https://www.google.com/search?q='+encodeURIComponent([x.date,d.subject,x.title].filter(Boolean).join(' '));
  setAppTab('web');
+ if(historyMode==='push')history.pushState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
 }
+document.getElementById('backToTimeline')?.addEventListener('click',returnToTimeline);
+window.addEventListener('popstate',e=>{
+ const state=e.state;
+ if(state?.stwTab==='web'&&state.eventId!=null){openWebForEvent(state.eventId,{historyMode:'none'});return;}
+ activeDetailEventId=null;setAppTab('experience');
+});
+if(!history.state?.stwTab)history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);
 const searchOverlay=$('#searchOverlay'), searchInput=$('#searchInput'), searchResults=$('#searchResults'), searchSummary=$('#searchSummary');
 function parseSearchDateQuery(raw){
  const cleaned=String(raw??'').trim().replace(/[년월일.\/-]/g,' ').replace(/\s+/g,' ').trim();
@@ -446,11 +479,19 @@ function eventDetails(x){
  }
  result.description=body.join('\n').trim();return result;
 }
-function searchRank(x,q){
- const d=eventDetails(x),n=q.toLocaleLowerCase('ko-KR');
- if([x.title,d.subject].some(v=>String(v).toLocaleLowerCase('ko-KR')===n))return 0;
- if([x.title,d.subject].some(v=>String(v).toLocaleLowerCase('ko-KR').includes(n)))return 1;
- return 2;
+const SEARCH_HISTORY_KEY='stw-search-history-v1',SEARCH_HISTORY_LIMIT=10;
+function loadSearchHistory(){
+ try{const values=JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)||'[]');return Array.isArray(values)?values.map(v=>String(v).trim()).filter(Boolean).slice(0,SEARCH_HISTORY_LIMIT):[];}catch{return [];}
+}
+function saveSearchHistory(raw){
+ const q=String(raw??'').trim();if(!q)return;
+ const next=[q,...loadSearchHistory().filter(v=>v!==q)].slice(0,SEARCH_HISTORY_LIMIT);
+ try{localStorage.setItem(SEARCH_HISTORY_KEY,JSON.stringify(next));}catch{}
+}
+function searchHistoryHTML(){
+ const recent=loadSearchHistory();
+ if(!recent.length)return '<div class="search-empty"><b>날짜 또는 사건명을 입력하세요.</b><br>1925 05 05 · 1925년 5월 5일 · 명성황후</div>';
+ return `<section class="search-history"><h3>최근 검색</h3><div class="search-history-list">${recent.map(q=>`<button type="button" class="search-history-item" data-search-query="${escapeHTML(q)}">${escapeHTML(q)}</button>`).join('')}</div></section>`;
 }
 function searchDateRange(query){
  const [y,m=1,d=1]=query.normalized.split('-').map(Number);
@@ -484,7 +525,7 @@ function searchEvents(raw){
   const n=q.toLocaleLowerCase('ko-KR');
   all=DATA.filter(x=>{const d=eventDetails(x);return [x.title,d.subject,d.place,d.description,x.country,x.category,x.region,x.date].some(v=>String(v??'').toLocaleLowerCase('ko-KR').includes(n));});
  }
- all=all.slice().sort((a,b)=>(dq?0:searchRank(a,q)-searchRank(b,q))||a.date.localeCompare(b.date)||(b.importance||0)-(a.importance||0)||a.id-b.id);
+ all=all.slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  return {all,shown:all.slice(0,100),dateQuery:dq,nearby:dq&&!all.length?nearbySearchEvents(dq):null};
 }
 function searchResultHTML(x){
@@ -494,7 +535,7 @@ function renderSearch(){
  const q=searchInput.value, result=searchEvents(q);
  if(!q.trim()){
   searchSummary.textContent='';
-  searchResults.innerHTML='<div class="search-empty"><b>날짜 또는 사건명을 입력하세요.</b><br>1925 05 05 · 1925년 5월 5일 · 명성황후</div>';
+  searchResults.innerHTML=searchHistoryHTML();
   return;
  }
  searchSummary.textContent=result.all.length>100?`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건 · 상위 100건 표시`:`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건`;
@@ -525,7 +566,13 @@ function navigateToEvent(id){
 $('#searchOpen').onclick=openSearch;
 $('#searchClose').onclick=closeSearch;
 searchInput.addEventListener('input',renderSearch);
-searchResults.addEventListener('click',e=>{const r=e.target.closest('.search-result');if(r)navigateToEvent(r.dataset.id);});
+searchInput.addEventListener('change',()=>saveSearchHistory(searchInput.value));
+searchInput.addEventListener('keydown',e=>{if(e.key==='Enter'){saveSearchHistory(searchInput.value);renderSearch();}});
+searchResults.addEventListener('click',e=>{
+ const h=e.target.closest('.search-history-item');
+ if(h){searchInput.value=h.dataset.searchQuery||'';renderSearch();searchInput.focus();return;}
+ const r=e.target.closest('.search-result');if(r){saveSearchHistory(searchInput.value);navigateToEvent(r.dataset.id);}
+});
 searchOverlay.addEventListener('click',e=>{if(e.target===searchOverlay)closeSearch();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&searchOverlay.classList.contains('open')){e.stopImmediatePropagation();closeSearch();}} ,true);
 
