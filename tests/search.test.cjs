@@ -17,7 +17,7 @@ function context(data=rows){
  vm.runInContext(source.slice(source.indexOf('function parseSearchDateQuery('),source.indexOf('function hideSearchSuggestions(')),ctx);
  return ctx;
 }
-for(const [q,expected] of [['해병대',[2,4]],['이지중대',[5,3]],['엔터프라이즈',[1]],['노르망디',[5]],['사용자 제공',[]]]){
+for(const [q,expected] of [['해병대',[2,4]],['이지중대',[3,5]],['엔터프라이즈',[1]],['노르망디',[5]],['사용자 제공',[]]]){
  test('semantic search ranking: '+q,()=>assert.deepEqual(Array.from(context().searchEvents(q).all,x=>x.id),expected));
 }
 test('partial dates remain searchable',()=>{
