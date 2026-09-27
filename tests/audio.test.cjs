@@ -18,7 +18,7 @@ function harness({state='running',throws=false,saved=null}={}){
  }
  const sandbox={window:{AudioContext:Context},document:{getElementById(){return null;},addEventListener(){}},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},performance:{now:()=>time},console,Set,Math};
  vm.createContext(sandbox);
- vm.runInContext(block+'\nthis.api={ensureAudioContext,setAudioEnabled,emitDragSound,playZoomCue};',sandbox);
+ vm.runInContext(block+'\nthis.api={ensureAudioContext,setAudioEnabled,emitDragSound,playZoomCue,silenceNavigationAudio};',sandbox);
  return {api:sandbox.api,oscillators,gains,storage,advance:n=>{time+=n;},constructed:()=>constructed};
 }
 test('audio context unavailable must never break navigation',()=>{const h=harness({throws:true});assert.doesNotThrow(()=>h.api.playZoomCue('in'));});
@@ -26,4 +26,5 @@ test('suspended audio schedules no stale sounds to burst on the next click',()=>
 test('rapid drag emits at most one bounded tick per input frame',()=>{const h=harness();h.api.emitDragSound(10000);assert.ok(h.oscillators.length<=1);h.advance(1);h.api.emitDragSound(10000);assert.ok(h.oscillators.length<=1);});
 test('muting silences already scheduled sound, not only future calls',()=>{const h=harness();h.api.playZoomCue('in');h.api.setAudioEnabled(false);assert.ok(h.gains.some(g=>g.gain.value===0)||h.oscillators.every(o=>o.stops>=2),'No immediate mute for active voices');const n=h.oscillators.length;h.api.emitDragSound(1000);h.api.playZoomCue('out');assert.equal(h.oscillators.length,n);});
 test('saved mute avoids creating audio and stays saved',()=>{const h=harness({saved:'0'});h.api.playZoomCue('in');assert.equal(h.constructed(),0);h.api.setAudioEnabled(false);assert.equal(h.storage.get('stw-audio-enabled-v1'),'0');});
+test('audio level is restored after returning from a hidden tab',()=>{const h=harness();h.api.playZoomCue('in');assert.ok(h.gains.some(g=>g.gain.value>0));h.api.silenceNavigationAudio();assert.ok(h.gains.some(g=>g.gain.value===0));h.api.playZoomCue('out');assert.ok(h.gains.some(g=>g.gain.value===0.7));});
 test('no movement produces no tick',()=>{const h=harness();h.api.emitDragSound(0);assert.equal(h.oscillators.length,0);});
