@@ -22,7 +22,7 @@ function harness({state='running',throws=false,saved=null}={}){
  return {api:sandbox.api,oscillators,gains,storage,advance:n=>{time+=n;},constructed:()=>constructed};
 }
 test('audio context unavailable must never break navigation',()=>{const h=harness({throws:true});assert.doesNotThrow(()=>h.api.playZoomCue('in'));});
-test('suspended audio replays only the current zoom cue after resume, never queued drag ticks',async()=>{const h=harness({state:'suspended'});h.api.playZoomCue('in');h.api.emitDragSound(100);assert.equal(h.oscillators.length,0);await Promise.resolve();await Promise.resolve();assert.equal(h.oscillators.length,3);});
+test('suspended audio replays only the current zoom cue after resume, never queued drag ticks',async()=>{const h=harness({state:'suspended'});h.api.playZoomCue('in');h.api.emitDragSound(100);assert.equal(h.oscillators.length,0);await new Promise(resolve=>setImmediate(resolve));assert.equal(h.oscillators.length,3);});
 test('rapid drag emits at most one bounded tick per input frame',()=>{const h=harness();h.api.emitDragSound(10000);assert.ok(h.oscillators.length<=1);h.advance(1);h.api.emitDragSound(10000);assert.ok(h.oscillators.length<=1);});
 test('muting silences already scheduled sound, not only future calls',()=>{const h=harness();h.api.playZoomCue('in');h.api.setAudioEnabled(false);assert.ok(h.gains.some(g=>g.gain.value===0)||h.oscillators.every(o=>o.stops>=2),'No immediate mute for active voices');const n=h.oscillators.length;h.api.emitDragSound(1000);h.api.playZoomCue('out');assert.equal(h.oscillators.length,n);});
 test('saved mute avoids creating audio and stays saved',()=>{const h=harness({saved:'0'});h.api.playZoomCue('in');assert.equal(h.constructed(),0);h.api.setAudioEnabled(false);assert.equal(h.storage.get('stw-audio-enabled-v1'),'0');});
@@ -33,6 +33,6 @@ test('multiple suspended zoom inputs collapse to one latest cue',async()=>{
  const h=harness({state:'suspended'});
  h.api.playZoomCue('in');h.api.playZoomCue('out');h.api.emitDragSound(1000);
  assert.equal(h.oscillators.length,0);
- await Promise.resolve();await Promise.resolve();
+ await new Promise(resolve=>setImmediate(resolve));
  assert.equal(h.oscillators.length,3);
 });
