@@ -3,7 +3,7 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.3';
+const PAGE_VERSION='v0.4.4';
 const DB_VERSION_FALLBACK='v15';
 const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
 
@@ -143,11 +143,13 @@ function ensureAudioContext(){
    masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);
    masterGain.connect(audioContext.destination);
   }
+  const restoreLevel=()=>{if(audioEnabled&&masterGain&&audioContext){try{masterGain.gain.cancelScheduledValues(audioContext.currentTime);masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);}catch{}}};
   if(audioContext.state!=='running'&&!resumePending){
    resumePending=true;
-   Promise.resolve(audioContext.resume()).catch(()=>{}).finally(()=>{resumePending=false;});
+   Promise.resolve(audioContext.resume()).then(()=>{if(audioContext?.state==='running')restoreLevel();}).catch(()=>{}).finally(()=>{resumePending=false;});
   }
-  return audioContext.state==='running'?audioContext:null;
+  if(audioContext.state==='running'){restoreLevel();return audioContext;}
+  return null;
  }catch{return null;}
 }
 function silenceNavigationAudio(){
@@ -208,7 +210,7 @@ function initAudioToggle(){
  document.addEventListener('pointerdown',unlock,{capture:true,passive:true});
  document.addEventListener('pointerup',unlock,{capture:true,passive:true});
  document.addEventListener('keydown',unlock,{capture:true});
- document.addEventListener('visibilitychange',()=>{if(document.hidden)silenceNavigationAudio();});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)silenceNavigationAudio();else if(audioEnabled)ensureAudioContext();});
 }
 initAudioToggle();
 
