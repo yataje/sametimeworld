@@ -27,13 +27,24 @@ test('display settings include event-card transparency without fading text',()=>
  assert.match(css,/\.event strong[\s\S]*opacity:1/);
 });
 
-test('region headers repeat the current year and the map shrinks from bottom right',()=>{
+test('date rails are mirrored on both sides without per-row event counts',()=>{
  const h=text('index.html'),main=text('src/main.js'),css=text('src/style.css');
- assert.equal((h.match(/class="region-date-badge"/g)||[]).length,4);
- assert.match(main,/querySelectorAll\('\.region-date-badge'\)/);
+ assert.equal((h.match(/class="date-head date-head-/g)||[]).length,2);
+ assert.doesNotMatch(h,/region-date-badge/);
+ assert.doesNotMatch(main,/region-date-badge/);
+ assert.match(main,/class="date date-left"/);
+ assert.match(main,/class="date date-right"/);
+ assert.doesNotMatch(main,/events\.length\}건/);
+ assert.match(css,/--date-col:64px/);
+ assert.match(css,/grid-template-columns:var\(--date-col\) repeat\(4,minmax\(0,1fr\)\) var\(--date-col\)/);
+});
+
+test('map remains scaled from the bottom-right and excludes both desktop date rails',()=>{
+ const css=text('src/style.css');
  assert.match(css,/--map-scale:\.94/);
  assert.match(css,/transform-origin:100% 100%/);
  assert.match(css,/background-position:right bottom/);
+ assert.match(css,/right:calc\(var\(--date-col\) \+ var\(--scrollbarw\)\)/);
 });
 
 test('page, source and package identify the same release',()=>{
