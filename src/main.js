@@ -3,7 +3,7 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.2';
+const PAGE_VERSION='v0.4.3';
 const DB_VERSION_FALLBACK='v15';
 const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
 
@@ -223,7 +223,7 @@ const pad=n=>String(n).padStart(2,'0');
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let bins=[], maps=[], zoom=2, animation=0, dragging=false, dragMoved=false, lastY=0, recent=[], suppressClickUntil=0, wheelAccum=0;
 let zoomFocusEventId=null; // 사건 위에서 확대할 때 해당 사건을 다음 단계에서도 유지
-let zoomTransition=false, queuedZoom=null; const ZOOM_DURATION=800;
+let zoomTransition=false, queuedZoom=null, activeZoomFx=null; const ZOOM_DURATION=800;
 let byId=new Map();
 function parseDate(x){let m=/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/.exec(x.date||'');if(!m)return null;let y=+m[1],mo=+(m[2]||1),d=+(m[3]||1);if(m[3]&&!(mo>=1&&mo<=12&&d>=1&&d<=31))return null;return {y,mo,d,t:utc(y,mo-1,d),precision:m[3]?'일':m[2]?'월':'연도'};}
 for(let z=0;z<LEVELS.length;z++){
@@ -302,12 +302,24 @@ function hoveredEventId(e){
  const el=e.target?.closest?.('.event[data-id]');
  return el?Number(el.dataset.id):null;
 }
+function stopZoomTransition(){
+ const fx=activeZoomFx;
+ if(!fx)return;
+ activeZoomFx=null;zoomTransition=false;queuedZoom=null;
+ try{fx.incoming.cancel();}catch{}
+ try{fx.snapshotAnimation.cancel();}catch{}
+ fx.overlay.remove();
+ render();
+ if(fx.eventAnchored)reanchorFocusedEvent(fx.anchorEventId,fx.anchorY);
+}
 function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
  next=Math.max(0,Math.min(LEVELS.length-1,next));
  anchorY=Math.max(0,Math.min(viewport.clientHeight,anchorY));
- if(zoomTransition){queuedZoom={next,anchorY,anchorEventId};return;}
+ // 확대/축소 애니메이션은 시각 효과일 뿐 입력 잠금이 아니다.
+ // 새 휠/버튼 입력이 오면 현재 효과를 즉시 정리하고 현재 배율에서 다음 조작을 시작한다.
+ if(zoomTransition)stopZoomTransition();
  if(next===zoom)return;
- // 연속 입력의 최종 목적지는 보관하되, 애니메이션은 인접한 단계씩 진행한다.
+ // 직접 여러 단계를 요청한 경우에만 인접 단계씩 이어 간다. 사용자 입력은 언제든 이 큐를 끊을 수 있다.
  if(Math.abs(next-zoom)>1){queuedZoom={next,anchorY,anchorEventId};next=zoom+Math.sign(next-zoom);}
  cancelAnimationFrame(animation);
  const previous=zoom;
@@ -333,15 +345,24 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
   {opacity:0,transform:`scale(${next>previous?1.13:0.89})`,filter:'blur(2px)'}
  ],{duration:ZOOM_DURATION,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
  overlay.style.transformOrigin=`${anchorX}px ${anchorY}px`;
+ const fx={incoming,snapshotAnimation,overlay,eventAnchored,anchorEventId,anchorY};
+ activeZoomFx=fx;
  const finish=()=>{
-  incoming.cancel();snapshotAnimation.cancel();overlay.remove();zoomTransition=false;
+  if(activeZoomFx!==fx)return;
+  activeZoomFx=null;zoomTransition=false;
+  incoming.cancel();snapshotAnimation.cancel();overlay.remove();
   render();
   if(eventAnchored)reanchorFocusedEvent(anchorEventId,anchorY);
   if(queuedZoom){const q=queuedZoom;queuedZoom=null;setZoom(q.next,q.anchorY,q.anchorEventId);}
  };
- snapshotAnimation.finished.then(finish).catch(()=>{overlay.remove();zoomTransition=false;});
+ snapshotAnimation.finished.then(finish).catch(()=>{
+  // cancel()은 이전 애니메이션의 finished Promise를 reject한다.
+  // 이미 새 조작이 시작된 경우에는 그 새 전환 상태를 건드리지 않는다.
+  if(activeZoomFx!==fx)return;
+  activeZoomFx=null;zoomTransition=false;overlay.remove();
+ });
 }
-function requestedZoomBase(){return queuedZoom?queuedZoom.next:zoom;}
+function requestedZoomBase(){return zoom;}
 $('#in').onclick=()=>setZoom(requestedZoomBase()+1);
 $('#out').onclick=()=>setZoom(requestedZoomBase()-1);
 viewport.addEventListener('wheel',e=>{
@@ -364,7 +385,7 @@ viewport.addEventListener('wheel',e=>{
  }
 },{passive:false});
 viewport.addEventListener('scroll',requestRender,{passive:true});
-viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0||searchOverlay.classList.contains('open')||zoomTransition)return;ensureAudioContext();zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;dragAudioBudget=0;lastDragAudioAt=0;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
+viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0||searchOverlay.classList.contains('open'))return;if(zoomTransition)stopZoomTransition();ensureAudioContext();zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;dragAudioBudget=0;lastDragAudioAt=0;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
 viewport.addEventListener('pointermove',e=>{if(!dragging)return;let delta=e.clientY-lastY;if(Math.abs(e.clientY-recent[0].y)>5)dragMoved=true;const beforeScroll=viewport.scrollTop;viewport.scrollTop-=delta;if(dragMoved)emitDragSound(viewport.scrollTop-beforeScroll);lastY=e.clientY;recent.push({t:performance.now(),y:e.clientY});while(recent.length>2&&performance.now()-recent[0].t>110)recent.shift();});
 function release(e){if(!dragging)return;dragging=false;dragAudioBudget=0;viewport.classList.remove('grabbing');if(viewport.hasPointerCapture(e.pointerId))viewport.releasePointerCapture(e.pointerId);if(!dragMoved){let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-id]');if(target)openWebForEvent(Number(target.dataset.id));return;}suppressClickUntil=performance.now()+260;let first=recent[0],last=recent[recent.length-1],dt=Math.max(1,last.t-first.t);let v=-(last.y-first.y)/dt*16;v=Math.max(-65,Math.min(65,v));function glide(){v*=.92;if(Math.abs(v)<.35)return;let old=viewport.scrollTop;viewport.scrollTop+=v;if(old===viewport.scrollTop)return;animation=requestAnimationFrame(glide);}if(Math.abs(v)>1)animation=requestAnimationFrame(glide);}
 viewport.addEventListener('keydown',e=>{const card=e.target.closest('[data-id]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openWebForEvent(Number(card.dataset.id));}});
@@ -493,7 +514,7 @@ function navigateToEvent(id){
  const regionKey={'유럽/아프리카':'europe','중동':'middle','동아시아/오세아니아':'east','아메리카':'americas'}[x.region];
  if(regionKey)applyMobileRegion(regionKey);
  closeSearch();
- if(zoomTransition){setTimeout(()=>navigateToEvent(id),ZOOM_DURATION+60);return;}
+ if(zoomTransition)stopZoomTransition();
  cancelAnimationFrame(animation); queuedZoom=null; wheelAccum=0;
  zoomFocusEventId=x.id;const target=Math.max(0,zoomForEvent(x)); zoom=target; space.style.height=totalHeight(zoom)+'px';
  $('#level').textContent=LEVELS[zoom].name; $('#out').disabled=zoom===0; $('#in').disabled=zoom===LEVELS.length-1;
