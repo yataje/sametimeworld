@@ -430,3 +430,24 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
  .brand-en,.brand-sep{display:none}
  .header-search{min-width:220px}
 }
+
+
+/* v0.4.5.1 — search overlay stacking, repeated year context, card alpha and map alignment */
+:root{--map-scale:.94}
+.top{position:relative;z-index:220;overflow:visible}
+.headgrid{z-index:30}
+.viewport{z-index:1}
+.header-search{z-index:240}
+.search-suggestions{z-index:250;pointer-events:auto}
+.region-title-label{display:flex!important;align-items:center;justify-content:space-between;gap:8px}
+.region-date-badge{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:18px;padding:0 6px;
+  border:1px solid rgba(100,198,255,.38);border-radius:999px;background:rgba(13,31,46,.76);
+  color:#78cdf7;font:800 9px/1 system-ui,'Malgun Gothic',sans-serif;font-variant-numeric:tabular-nums;
+  box-shadow:0 1px 5px rgba(0,0,0,.26)
+}
+.mapbg{
+  transform:scale(var(--map-scale));
+  transform-origin:100% 100%;
+  background-position:right bottom;
+}
