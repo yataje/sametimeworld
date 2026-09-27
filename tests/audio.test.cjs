@@ -11,7 +11,7 @@ function harness({state='running',throws=false,saved=null}={}){
  const param=()=>({value:0,setValueAtTime(v){this.value=v;return this;},exponentialRampToValueAtTime(v){this.value=v;return this;},linearRampToValueAtTime(v){this.value=v;return this;},cancelScheduledValues(){return this;}});
  class Context{
   constructor(){constructed++;if(throws)throw new Error('device unavailable');this.state=state;this.currentTime=1;this.destination={};}
-  resume(){this.state='running';return Promise.resolve();}
+  resume(){return Promise.resolve().then(()=>{this.state='running';});}
   createGain(){const g={gain:param(),connect(){},disconnect(){}};gains.push(g);return g;}
   createStereoPanner(){return {pan:param(),connect(){},disconnect(){}};}
   createOscillator(){const o={frequency:param(),connect(){},disconnect(){},start(){this.started=true;},stop(){this.stops=(this.stops||0)+1;},onended:null};oscillators.push(o);return o;}
