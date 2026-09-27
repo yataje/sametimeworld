@@ -90,8 +90,8 @@ function initMobileRegionNav(){
 }
 
 const DISPLAY_SETTINGS_KEY='stw-display-settings-v1';
-const DISPLAY_DEFAULTS=Object.freeze({mapTransparency:58,eventFont:100});
-const DISPLAY_LIMITS={mapTransparency:[0,100],eventFont:[80,140]};
+const DISPLAY_DEFAULTS=Object.freeze({mapTransparency:58,eventFont:100,cardTransparency:50});
+const DISPLAY_LIMITS={mapTransparency:[0,100],eventFont:[80,140],cardTransparency:[0,100]};
 let displaySettings={...DISPLAY_DEFAULTS};
 function displayClamp(key,value){const [lo,hi]=DISPLAY_LIMITS[key];const n=Number(value);return Number.isFinite(n)?Math.min(hi,Math.max(lo,n)):DISPLAY_DEFAULTS[key];}
 function loadDisplaySettings(){try{const raw=JSON.parse(localStorage.getItem(DISPLAY_SETTINGS_KEY)||'{}');for(const k of Object.keys(DISPLAY_DEFAULTS))displaySettings[k]=displayClamp(k,raw[k]??DISPLAY_DEFAULTS[k]);}catch{displaySettings={...DISPLAY_DEFAULTS};}}
@@ -100,12 +100,14 @@ function applyDisplaySettings(shouldRender=false){
  const root=document.documentElement.style;
  root.setProperty('--map-opacity',String(1-displaySettings.mapTransparency/100));
  root.setProperty('--event-font-size',`${(11*displaySettings.eventFont/100).toFixed(2)}px`);
+ root.setProperty('--event-bg-alpha',String(1-displaySettings.cardTransparency/100));
  syncDisplaySettingsControls();
  if(shouldRender&&typeof requestRender==='function')requestRender();
 }
 const DISPLAY_CONTROL_MAP={
  mapTransparency:['settingMapTransparency','settingMapTransparencyValue',v=>`${v}%`],
  eventFont:['settingEventFont','settingEventFontValue',v=>`${v}%`],
+ cardTransparency:['settingCardTransparency','settingCardTransparencyValue',v=>`${v}%`],
 };
 function syncDisplaySettingsControls(){for(const [key,[inputId,valueId,format]] of Object.entries(DISPLAY_CONTROL_MAP)){const input=document.getElementById(inputId),out=document.getElementById(valueId);if(input)input.value=displaySettings[key];if(out)out.textContent=format(displaySettings[key]);}}
 loadDisplaySettings();applyDisplaySettings(false);
@@ -273,6 +275,7 @@ function render(){let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=vi
  rows.innerHTML=content;
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
+ document.querySelectorAll('.region-date-badge').forEach(el=>{el.textContent=String(y);});
  $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위`;
  refreshLeaderHeaders(center);
 }
