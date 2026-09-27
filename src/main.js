@@ -3,7 +3,7 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.0';
+const PAGE_VERSION='v0.4.2';
 const DB_VERSION_FALLBACK='v15';
 const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
 
@@ -39,6 +39,7 @@ function updateVersionLabels(meta={}){
   let dbVersion=String(meta.events_db_version||meta.db_version||DB_VERSION_FALLBACK);
   if(dbVersion&&!/^v/i.test(dbVersion))dbVersion=`v${dbVersion}`;
   if(db)db.textContent=`DB ${dbVersion}`;
+  document.title=`The World at the Same Time — ${PAGE_VERSION} · DB ${dbVersion}`;
 }
 
 const REGIONS=['유럽/아프리카','중동','동아시아/오세아니아','아메리카'];
@@ -124,6 +125,92 @@ for(const [key,[inputId]] of Object.entries(DISPLAY_CONTROL_MAP)){
 const displaySettingsReset=document.getElementById('displaySettingsReset');
 if(displaySettingsReset)displaySettingsReset.addEventListener('click',()=>{displaySettings={...DISPLAY_DEFAULTS};applyDisplaySettings(true);saveDisplaySettings();});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&displaySettingsOverlay?.classList.contains('open'))closeDisplaySettings();});
+
+const AUDIO_SETTINGS_KEY='stw-audio-enabled-v1';
+let audioEnabled=true;
+try{audioEnabled=localStorage.getItem(AUDIO_SETTINGS_KEY)!=='0';}catch{}
+let audioContext=null,masterGain=null,resumePending=false;
+let dragAudioBudget=0,lastDragAudioAt=-Infinity;
+const activeAudioVoices=new Set();
+// Never queue sounds while autoplay is blocked. A later click must not release a backlog.
+function ensureAudioContext(){
+ if(!audioEnabled)return null;
+ try{
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return null;
+  if(!audioContext||audioContext.state==='closed'){
+   audioContext=new Ctx();masterGain=audioContext.createGain();
+   masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);
+   masterGain.connect(audioContext.destination);
+  }
+  if(audioContext.state!=='running'&&!resumePending){
+   resumePending=true;
+   Promise.resolve(audioContext.resume()).catch(()=>{}).finally(()=>{resumePending=false;});
+  }
+  return audioContext.state==='running'?audioContext:null;
+ }catch{return null;}
+}
+function silenceNavigationAudio(){
+ dragAudioBudget=0;
+ if(masterGain&&audioContext){
+  try{masterGain.gain.cancelScheduledValues(audioContext.currentTime);masterGain.gain.setValueAtTime(0,audioContext.currentTime);}catch{}
+ }
+ for(const osc of activeAudioVoices){try{osc.stop();}catch{}}
+ activeAudioVoices.clear();
+}
+function syncAudioToggle(){
+ const btn=document.getElementById('soundToggle');if(!btn)return;
+ btn.title=audioEnabled?'효과음 켜짐 · 클릭하여 음소거':'효과음 꺼짐 · 클릭하여 켜기';
+ btn.setAttribute('aria-label',btn.title);btn.setAttribute('aria-pressed',String(audioEnabled));
+ btn.classList.toggle('muted',!audioEnabled);
+}
+function setAudioEnabled(enabled){
+ audioEnabled=Boolean(enabled);
+ if(!audioEnabled)silenceNavigationAudio();
+ else{ensureAudioContext();if(masterGain&&audioContext){try{masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);}catch{}}}
+ syncAudioToggle();try{localStorage.setItem(AUDIO_SETTINGS_KEY,audioEnabled?'1':'0');}catch{}
+}
+function createTone(ctx,time,freq,duration,type='sine',gainValue=0.045,panValue=0){
+ const osc=ctx.createOscillator(),gain=ctx.createGain();
+ osc.type=type;osc.frequency.setValueAtTime(freq,time);
+ gain.gain.setValueAtTime(0.0001,time);
+ gain.gain.exponentialRampToValueAtTime(gainValue,time+(duration<0.03?0.002:0.008));
+ gain.gain.exponentialRampToValueAtTime(0.0001,time+duration);
+ osc.connect(gain);gain.connect(masterGain);
+ activeAudioVoices.add(osc);
+ osc.onended=()=>{activeAudioVoices.delete(osc);osc.disconnect();gain.disconnect();};
+ osc.start(time);osc.stop(time+duration+0.008);
+}
+function playZoomCue(direction){
+ const ctx=ensureAudioContext();if(!ctx)return;
+ try{
+  const now=ctx.currentTime+0.004,freqs=direction==='in'?[330,520,820]:[820,520,330];
+  freqs.forEach((freq,i)=>createTone(ctx,now+i*0.037,freq,0.064,'sine',0.046-i*0.004));
+ }catch{} // Audio device failures cannot cancel zoom or navigation.
+}
+function playDragTick(speed=0.5){
+ const ctx=ensureAudioContext();if(!ctx)return;
+ try{createTone(ctx,ctx.currentTime+0.002,170+70*speed,0.021,'triangle',0.046+speed*0.010);}catch{}
+}
+function emitDragSound(delta){
+ if(!audioEnabled||!Number.isFinite(delta)||delta===0)return;
+ const amount=Math.abs(delta),speed=Math.min(1,amount/32),threshold=14;
+ dragAudioBudget=Math.min(2*threshold,dragAudioBudget+amount);
+ const now=performance.now();
+ // At most one voice per frame; discard backlog instead of stacking identical ticks.
+ if(dragAudioBudget<threshold||now-lastDragAudioAt<24)return;
+ dragAudioBudget%=threshold;lastDragAudioAt=now;playDragTick(speed);
+}
+function initAudioToggle(){
+ syncAudioToggle();
+ document.getElementById('soundToggle')?.addEventListener('click',()=>setAudioEnabled(!audioEnabled));
+ const unlock=e=>{if(e.isTrusted&&audioEnabled){ensureAudioContext();if(masterGain&&audioContext){try{masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);}catch{}}}};
+ document.addEventListener('pointerdown',unlock,{capture:true,passive:true});
+ document.addEventListener('pointerup',unlock,{capture:true,passive:true});
+ document.addEventListener('keydown',unlock,{capture:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)silenceNavigationAudio();});
+}
+initAudioToggle();
 
 function syncTimelineHeaderWidth(){document.documentElement.style.setProperty('--timeline-client-width',`${viewport.clientWidth}px`);}
 syncTimelineHeaderWidth();
@@ -224,6 +311,7 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
  if(Math.abs(next-zoom)>1){queuedZoom={next,anchorY,anchorEventId};next=zoom+Math.sign(next-zoom);}
  cancelAnimationFrame(animation);
  const previous=zoom;
+ playZoomCue(next>previous?'in':'out');
  const anchorDate=next>previous?focusedEventDate(anchorEventId):null;
  const eventAnchored=Boolean(anchorDate);
  if(eventAnchored)zoomFocusEventId=Number(anchorEventId);
@@ -276,11 +364,11 @@ viewport.addEventListener('wheel',e=>{
  }
 },{passive:false});
 viewport.addEventListener('scroll',requestRender,{passive:true});
-viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0||searchOverlay.classList.contains('open')||zoomTransition)return;zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
-viewport.addEventListener('pointermove',e=>{if(!dragging)return;let delta=e.clientY-lastY;if(Math.abs(e.clientY-recent[0].y)>5)dragMoved=true;viewport.scrollTop-=delta;lastY=e.clientY;recent.push({t:performance.now(),y:e.clientY});while(recent.length>2&&performance.now()-recent[0].t>110)recent.shift();});
-function release(e){if(!dragging)return;dragging=false;viewport.classList.remove('grabbing');if(viewport.hasPointerCapture(e.pointerId))viewport.releasePointerCapture(e.pointerId);if(!dragMoved){let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-id]');if(target)openWebForEvent(Number(target.dataset.id));return;}suppressClickUntil=performance.now()+260;let first=recent[0],last=recent[recent.length-1],dt=Math.max(1,last.t-first.t);let v=-(last.y-first.y)/dt*16;v=Math.max(-65,Math.min(65,v));function glide(){v*=.92;if(Math.abs(v)<.35)return;let old=viewport.scrollTop;viewport.scrollTop+=v;if(old===viewport.scrollTop)return;animation=requestAnimationFrame(glide);}if(Math.abs(v)>1)animation=requestAnimationFrame(glide);}
+viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0||searchOverlay.classList.contains('open')||zoomTransition)return;ensureAudioContext();zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;dragAudioBudget=0;lastDragAudioAt=0;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
+viewport.addEventListener('pointermove',e=>{if(!dragging)return;let delta=e.clientY-lastY;if(Math.abs(e.clientY-recent[0].y)>5)dragMoved=true;const beforeScroll=viewport.scrollTop;viewport.scrollTop-=delta;if(dragMoved)emitDragSound(viewport.scrollTop-beforeScroll);lastY=e.clientY;recent.push({t:performance.now(),y:e.clientY});while(recent.length>2&&performance.now()-recent[0].t>110)recent.shift();});
+function release(e){if(!dragging)return;dragging=false;dragAudioBudget=0;viewport.classList.remove('grabbing');if(viewport.hasPointerCapture(e.pointerId))viewport.releasePointerCapture(e.pointerId);if(!dragMoved){let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-id]');if(target)openWebForEvent(Number(target.dataset.id));return;}suppressClickUntil=performance.now()+260;let first=recent[0],last=recent[recent.length-1],dt=Math.max(1,last.t-first.t);let v=-(last.y-first.y)/dt*16;v=Math.max(-65,Math.min(65,v));function glide(){v*=.92;if(Math.abs(v)<.35)return;let old=viewport.scrollTop;viewport.scrollTop+=v;if(old===viewport.scrollTop)return;animation=requestAnimationFrame(glide);}if(Math.abs(v)>1)animation=requestAnimationFrame(glide);}
 viewport.addEventListener('keydown',e=>{const card=e.target.closest('[data-id]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openWebForEvent(Number(card.dataset.id));}});
-viewport.addEventListener('pointerup',release);viewport.addEventListener('pointercancel',e=>{dragMoved=true;release(e)});
+viewport.addEventListener('pointerup',release);viewport.addEventListener('pointercancel',e=>{dragging=false;dragAudioBudget=0;cancelAnimationFrame(animation);viewport.classList.remove('grabbing');if(viewport.hasPointerCapture(e.pointerId))viewport.releasePointerCapture(e.pointerId);});
 viewport.addEventListener('click',e=>{if(performance.now()<suppressClickUntil){e.preventDefault();return;}if(window.matchMedia('(pointer: coarse)').matches){const target=e.target.closest?.('[data-id]');if(target)openWebForEvent(Number(target.dataset.id));}},true);
 
 

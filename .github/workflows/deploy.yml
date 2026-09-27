@@ -30,13 +30,13 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      # The production builder and tests use only Node.js built-ins.
+      # Vite remains available for local development, but is not required in CI.
 
-      - name: Test search behavior
+      - name: Test search, leaders and audio
         run: npm test
 
-      - name: Build with Vite
+      - name: Build portable web release
         run: npm run build
 
       - name: Setup Pages

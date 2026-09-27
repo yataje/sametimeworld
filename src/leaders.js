@@ -191,8 +191,8 @@ const LEADER_REGION_CONFIG={
 };
 const LEADER_REGION_LAYOUT={
  europe:[{label:'유럽',keys:['uk','france','germany','russia','italy','hungary']},{label:'아프리카',keys:['ethiopia','southafrica','liberia']}],
- middle:[{label:'서아시아',keys:['turkey','iran','iraq']},{label:'아라비아·이집트',keys:['saudi','egypt']}],
- east:[{label:'동아시아',keys:['korea','china','japan']},{label:'동남아·오세아니아',keys:['vietnam','philippines','indonesia','australia','newzealand']}],
+ middle:[{label:'서아시아',keys:['turkey','iran','iraq']},{label:'아라비아\n이집트',keys:['saudi','egypt']}],
+ east:[{label:'동아시아',keys:['korea','china','japan']},{label:'동남아\n오세아니아',keys:['vietnam','philippines','indonesia','australia','newzealand']}],
  americas:[{label:'북미',keys:['usa','canada','mexico']},{label:'중남미',keys:['brazil','argentina','chile']}]
 };
 let LEADER_GROUP_DATA={};
