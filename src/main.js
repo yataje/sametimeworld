@@ -368,7 +368,7 @@ function requestedZoomBase(){return zoom;}
 $('#in').onclick=()=>setZoom(requestedZoomBase()+1);
 $('#out').onclick=()=>setZoom(requestedZoomBase()-1);
 viewport.addEventListener('wheel',e=>{
- if(searchOverlay.classList.contains('open'))return;e.preventDefault();
+ e.preventDefault();
  let d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?viewport.clientHeight:1);
  if(!Number.isFinite(d)||d===0)return;
  const direction=Math.sign(d),base=requestedZoomBase();
@@ -387,7 +387,7 @@ viewport.addEventListener('wheel',e=>{
  }
 },{passive:false});
 viewport.addEventListener('scroll',requestRender,{passive:true});
-viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0||searchOverlay.classList.contains('open'))return;if(zoomTransition)stopZoomTransition();ensureAudioContext();zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;dragAudioBudget=0;lastDragAudioAt=0;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
+viewport.addEventListener('pointerdown',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;if(e.button!==0)return;if(zoomTransition)stopZoomTransition();ensureAudioContext();zoomFocusEventId=null;cancelAnimationFrame(animation);dragging=true;dragMoved=false;dragAudioBudget=0;lastDragAudioAt=0;lastY=e.clientY;recent=[{t:performance.now(),y:e.clientY}];viewport.classList.add('grabbing');viewport.setPointerCapture(e.pointerId);});
 viewport.addEventListener('pointermove',e=>{if(!dragging)return;let delta=e.clientY-lastY;if(Math.abs(e.clientY-recent[0].y)>5)dragMoved=true;const beforeScroll=viewport.scrollTop;viewport.scrollTop-=delta;if(dragMoved)emitDragSound(viewport.scrollTop-beforeScroll);lastY=e.clientY;recent.push({t:performance.now(),y:e.clientY});while(recent.length>2&&performance.now()-recent[0].t>110)recent.shift();});
 function release(e){if(!dragging)return;dragging=false;dragAudioBudget=0;viewport.classList.remove('grabbing');if(viewport.hasPointerCapture(e.pointerId))viewport.releasePointerCapture(e.pointerId);if(!dragMoved){let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-id]');if(target)openWebForEvent(Number(target.dataset.id));return;}suppressClickUntil=performance.now()+260;let first=recent[0],last=recent[recent.length-1],dt=Math.max(1,last.t-first.t);let v=-(last.y-first.y)/dt*16;v=Math.max(-65,Math.min(65,v));function glide(){v*=.92;if(Math.abs(v)<.35)return;let old=viewport.scrollTop;viewport.scrollTop+=v;if(old===viewport.scrollTop)return;animation=requestAnimationFrame(glide);}if(Math.abs(v)>1)animation=requestAnimationFrame(glide);}
 viewport.addEventListener('keydown',e=>{const card=e.target.closest('[data-id]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openWebForEvent(Number(card.dataset.id));}});
@@ -454,7 +454,7 @@ window.addEventListener('popstate',e=>{
  activeDetailEventId=null;setAppTab('experience');
 });
 if(!history.state?.stwTab)history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);
-const searchOverlay=$('#searchOverlay'), searchInput=$('#searchInput'), searchResults=$('#searchResults'), searchSummary=$('#searchSummary');
+const headerSearch=$('#headerSearch'), searchInput=$('#searchInput'), searchGo=$('#searchGo'), searchResults=$('#searchResults');
 function parseSearchDateQuery(raw){
  const cleaned=String(raw??'').trim().replace(/[년월일.\/-]/g,' ').replace(/\s+/g,' ').trim();
  if(!cleaned)return null;
@@ -479,103 +479,89 @@ function eventDetails(x){
  }
  result.description=body.join('\n').trim();return result;
 }
-const SEARCH_HISTORY_KEY='stw-search-history-v1',SEARCH_HISTORY_LIMIT=10;
-function loadSearchHistory(){
- try{const values=JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)||'[]');return Array.isArray(values)?values.map(v=>String(v).trim()).filter(Boolean).slice(0,SEARCH_HISTORY_LIMIT):[];}catch{return [];}
+function normalizedSearchText(value){return String(value??'').trim().toLocaleLowerCase('ko-KR');}
+function searchFieldScore(value,query,exact,start,contains){
+ const text=normalizedSearchText(value);if(!text)return Infinity;
+ if(text===query)return exact;
+ if(text.startsWith(query))return start;
+ if(text.includes(query))return contains;
+ return Infinity;
 }
-function saveSearchHistory(raw){
- const q=String(raw??'').trim();if(!q)return;
- const next=[q,...loadSearchHistory().filter(v=>v!==q)].slice(0,SEARCH_HISTORY_LIMIT);
- try{localStorage.setItem(SEARCH_HISTORY_KEY,JSON.stringify(next));}catch{}
-}
-function searchHistoryHTML(){
- const recent=loadSearchHistory();
- if(!recent.length)return '<div class="search-empty"><b>날짜 또는 사건명을 입력하세요.</b><br>1925 05 05 · 1925년 5월 5일 · 명성황후</div>';
- return `<section class="search-history"><h3>최근 검색</h3><div class="search-history-list">${recent.map(q=>`<button type="button" class="search-history-item" data-search-query="${escapeHTML(q)}">${escapeHTML(q)}</button>`).join('')}</div></section>`;
-}
-function searchDateRange(query){
- const [y,m=1,d=1]=query.normalized.split('-').map(Number);
- const start=utc(y,m-1,d);
- const end=query.precision==='year'?utc(y+1,0,1):query.precision==='month'?utc(y,m,1):utc(y,m-1,d+1);
- return {start,end};
-}
-function nearbySearchEvents(query){
- const target=searchDateRange(query);
- // Clamp leap-day boundaries to February's last day in the adjacent year.
- const shiftYear=(t,offset)=>{const [y,m,d]=ymd(t),last=ymd(utc(y+offset,m,0))[2];return utc(y+offset,m-1,Math.min(d,last));};
- const lower=shiftYear(target.start,-1),upper=shiftYear(target.end,1);
- const before=[],after=[];
- for(const event of DATA){
-  if(!/^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(event.date))continue;
-  const parsed=parseSearchDateQuery(event.date);if(!parsed)continue;
-  const range=searchDateRange(parsed);
-  // A partial date must fall wholly on one side; never invent its day.
-  if(range.start>=lower&&range.end<=target.start)before.push({event,distance:target.start-range.end});
-  else if(range.start>=target.end&&range.end<=upper)after.push({event,distance:range.start-target.end});
- }
- const select=items=>items.sort((a,b)=>(b.event.importance||0)-(a.event.importance||0)||a.distance-b.distance||a.event.id-b.event.id).slice(0,5).map(x=>x.event);
- return {before:select(before),after:select(after)};
+function searchScore(x,query){
+ const d=eventDetails(x);
+ return Math.min(
+  searchFieldScore(x.title,query,0,5,12),
+  searchFieldScore(d.subject,query,8,14,22),
+  searchFieldScore(x.country,query,10,16,24),
+  searchFieldScore(d.place,query,12,18,26),
+  searchFieldScore(x.category,query,16,22,30),
+  searchFieldScore(x.region,query,18,24,32),
+  searchFieldScore(x.date,query,20,26,34),
+  searchFieldScore(d.description,query,45,50,60)
+ );
 }
 function searchEvents(raw){
- const q=String(raw??'').trim(); if(!q)return {all:[],shown:[],dateQuery:null};
- const dq=parseSearchDateQuery(q); let all;
+ const q=String(raw??'').trim();if(!q)return {all:[],shown:[],dateQuery:null};
+ const dq=parseSearchDateQuery(q);let all;
  if(dq){
-  all=DATA.filter(x=>dq.precision==='day'?x.date===dq.normalized:dq.precision==='month'?x.date.startsWith(dq.normalized):x.date.startsWith(dq.normalized));
+  all=DATA.filter(x=>dq.precision==='day'?x.date===dq.normalized:dq.precision==='month'?x.date.startsWith(dq.normalized):x.date.startsWith(dq.normalized))
+    .slice()
+    .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  }else{
-  const n=q.toLocaleLowerCase('ko-KR');
-  all=DATA.filter(x=>{const d=eventDetails(x);return [x.title,d.subject,d.place,d.description,x.country,x.category,x.region,x.date].some(v=>String(v??'').toLocaleLowerCase('ko-KR').includes(n));});
+  const query=normalizedSearchText(q);
+  all=DATA.map(x=>({x,score:searchScore(x,query)}))
+    .filter(item=>Number.isFinite(item.score))
+    .sort((a,b)=>a.score-b.score||(b.x.importance||0)-(a.x.importance||0)||String(a.x.date||'').localeCompare(String(b.x.date||''))||a.x.id-b.x.id)
+    .map(item=>item.x);
  }
- all=all.slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
- return {all,shown:all.slice(0,100),dateQuery:dq,nearby:dq&&!all.length?nearbySearchEvents(dq):null};
+ return {all,shown:all.slice(0,10),dateQuery:dq};
 }
-function searchResultHTML(x){
- return `<button type="button" class="search-result" data-id="${x.id}" title="${escapeHTML(eventDetails(x).description||x.title)}"><span class="sr-date">${escapeHTML(x.date)}</span><span class="sr-region">${escapeHTML(x.region)}</span><span class="sr-title">${escapeHTML(x.title)}${eventDetails(x).subject?`<small> · ${escapeHTML(eventDetails(x).subject)}</small>`:''}</span><span class="sr-category">${escapeHTML(x.category||'미분류')}</span><span class="sr-importance">★ ${escapeHTML(x.importance??'—')}</span></button>`;
+function searchSuggestionHTML(x){
+ const d=eventDetails(x);
+ const sub=[x.country,d.subject].filter(Boolean).join(' · ');
+ return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
+function hideSearchSuggestions(){searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
- const q=searchInput.value, result=searchEvents(q);
- if(!q.trim()){
-  searchSummary.textContent='';
-  searchResults.innerHTML=searchHistoryHTML();
+ const q=searchInput.value.trim();
+ if(!q){hideSearchSuggestions();return;}
+ const result=searchEvents(q);
+ if(!result.shown.length){
+  searchResults.innerHTML='<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
+  searchResults.hidden=false;
   return;
  }
- searchSummary.textContent=result.all.length>100?`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건 · 상위 100건 표시`:`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건`;
- if(result.nearby){
-  const {before,after}=result.nearby;
-  searchSummary.textContent+=` · 앞뒤 주요 사건 ${before.length+after.length}건 추천`;
-  const section=(label,items)=>`<section class="search-nearby"><h3>${label} 주요 사건</h3>${items.length?items.map(searchResultHTML).join(''):`<p class="search-nearby-empty">전후 1년 범위에 추천할 ${label} 자료가 없습니다.</p>`}</section>`;
-  searchResults.innerHTML='<div class="search-empty search-date-empty"><b>[해당 날짜의 기록된 자료가 없음]</b><br>검색 날짜 또는 기간 전후 1년 · 중요도 순으로 각각 최대 5건</div>'+section('이전',before)+section('이후',after);
-  return;
- }
- if(!result.shown.length){searchResults.innerHTML='<div class="search-empty">검색 결과가 없습니다.</div>';return;}
- searchResults.innerHTML=result.shown.map(searchResultHTML).join('');
+ searchResults.innerHTML=result.shown.map(searchSuggestionHTML).join('');
+ searchResults.hidden=false;
 }
-function openSearch(){searchOverlay.classList.add('open');searchInput.value='';renderSearch();requestAnimationFrame(()=>searchInput.focus());}
-function closeSearch(){searchOverlay.classList.remove('open');searchInput.blur();}
 function zoomForEvent(x){return /^\d{4}-\d{2}-\d{2}$/.test(x.date)?LEVELS.findIndex(v=>v.kind==='day'):/^\d{4}-\d{2}$/.test(x.date)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
 function navigateToEvent(id){
- const x=byId.get(Number(id)); if(!x)return; const dt=parseDate(x); if(!dt)return;
+ const x=byId.get(Number(id));if(!x)return;const dt=parseDate(x);if(!dt)return;
  const regionKey={'유럽/아프리카':'europe','중동':'middle','동아시아/오세아니아':'east','아메리카':'americas'}[x.region];
  if(regionKey)applyMobileRegion(regionKey);
- closeSearch();
+ hideSearchSuggestions();
  if(zoomTransition)stopZoomTransition();
- cancelAnimationFrame(animation); queuedZoom=null; wheelAccum=0;
- zoomFocusEventId=x.id;const target=Math.max(0,zoomForEvent(x)); zoom=target; space.style.height=totalHeight(zoom)+'px';
- $('#level').textContent=LEVELS[zoom].name; $('#out').disabled=zoom===0; $('#in').disabled=zoom===LEVELS.length-1;
- const rowCenter=topAt(dt.t,zoom)+LEVELS[zoom].h/2; viewport.scrollTop=Math.max(0,rowCenter-viewport.clientHeight/2); render();
+ cancelAnimationFrame(animation);queuedZoom=null;wheelAccum=0;
+ zoomFocusEventId=x.id;const target=Math.max(0,zoomForEvent(x));zoom=target;space.style.height=totalHeight(zoom)+'px';
+ $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;
+ const rowCenter=topAt(dt.t,zoom)+LEVELS[zoom].h/2;viewport.scrollTop=Math.max(0,rowCenter-viewport.clientHeight/2);render();
 }
-$('#searchOpen').onclick=openSearch;
-$('#searchClose').onclick=closeSearch;
+function goToBestSearchResult(){
+ const first=searchEvents(searchInput.value).shown[0];
+ if(first)navigateToEvent(first.id);
+}
 searchInput.addEventListener('input',renderSearch);
-searchInput.addEventListener('change',()=>saveSearchHistory(searchInput.value));
-searchInput.addEventListener('keydown',e=>{if(e.key==='Enter'){saveSearchHistory(searchInput.value);renderSearch();}});
-searchResults.addEventListener('click',e=>{
- const h=e.target.closest('.search-history-item');
- if(h){searchInput.value=h.dataset.searchQuery||'';renderSearch();searchInput.focus();return;}
- const r=e.target.closest('.search-result');if(r){saveSearchHistory(searchInput.value);navigateToEvent(r.dataset.id);}
+searchInput.addEventListener('focus',renderSearch);
+searchInput.addEventListener('keydown',e=>{
+ if(e.key==='Enter'){e.preventDefault();goToBestSearchResult();return;}
+ if(e.key==='Escape'){e.preventDefault();hideSearchSuggestions();searchInput.blur();}
 });
-searchOverlay.addEventListener('click',e=>{if(e.target===searchOverlay)closeSearch();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&searchOverlay.classList.contains('open')){e.stopImmediatePropagation();closeSearch();}} ,true);
-
+searchGo.addEventListener('click',goToBestSearchResult);
+searchResults.addEventListener('click',e=>{
+ const result=e.target.closest('.search-suggestion');
+ if(result)navigateToEvent(result.dataset.id);
+});
+document.addEventListener('pointerdown',e=>{if(!headerSearch.contains(e.target))hideSearchSuggestions();});
 
 async function bootSameTimeWorld(){
  const statusEl=$('#status');
