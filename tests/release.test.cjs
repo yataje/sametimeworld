@@ -12,6 +12,30 @@ test('header controls follow search, magnifier, display settings, mute order',()
  assert.ok(header.indexOf('id="soundToggle"')<header.indexOf('class="hint"'),'mute must remain before wheel help');
 });
 
+test('inline search suggestions stay above the timeline header',()=>{
+ const css=text('src/style.css');
+ assert.match(css,/\.top\{position:relative;z-index:220;overflow:visible\}/);
+ assert.match(css,/\.search-suggestions\{z-index:250;pointer-events:auto\}/);
+});
+
+test('display settings include event-card transparency without fading text',()=>{
+ const h=text('index.html'),main=text('src/main.js'),css=text('src/style.css');
+ assert.match(h,/id="settingCardTransparency"/);
+ assert.match(main,/cardTransparency:50/);
+ assert.match(main,/--event-bg-alpha/);
+ assert.match(css,/background:rgba\(14,33,58,var\(--event-bg-alpha\)\)/);
+ assert.match(css,/\.event strong[\s\S]*opacity:1/);
+});
+
+test('region headers repeat the current year and the map shrinks from bottom right',()=>{
+ const h=text('index.html'),main=text('src/main.js'),css=text('src/style.css');
+ assert.equal((h.match(/class="region-date-badge"/g)||[]).length,4);
+ assert.match(main,/querySelectorAll\('\.region-date-badge'\)/);
+ assert.match(css,/--map-scale:\.94/);
+ assert.match(css,/transform-origin:100% 100%/);
+ assert.match(css,/background-position:right bottom/);
+});
+
 test('page, source and package identify the same release',()=>{
  const v=JSON.parse(text('package.json')).version;
  assert.ok(text('src/main.js').includes(`const PAGE_VERSION='v${v}';`));
