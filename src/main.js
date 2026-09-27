@@ -341,6 +341,29 @@ function searchRank(x,q){
  if([x.title,d.subject].some(v=>String(v).toLocaleLowerCase('ko-KR').includes(n)))return 1;
  return 2;
 }
+function searchDateRange(query){
+ const [y,m=1,d=1]=query.normalized.split('-').map(Number);
+ const start=utc(y,m-1,d);
+ const end=query.precision==='year'?utc(y+1,0,1):query.precision==='month'?utc(y,m,1):utc(y,m-1,d+1);
+ return {start,end};
+}
+function nearbySearchEvents(query){
+ const target=searchDateRange(query);
+ // Clamp leap-day boundaries to February's last day in the adjacent year.
+ const shiftYear=(t,offset)=>{const [y,m,d]=ymd(t),last=ymd(utc(y+offset,m,0))[2];return utc(y+offset,m-1,Math.min(d,last));};
+ const lower=shiftYear(target.start,-1),upper=shiftYear(target.end,1);
+ const before=[],after=[];
+ for(const event of DATA){
+  if(!/^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(event.date))continue;
+  const parsed=parseSearchDateQuery(event.date);if(!parsed)continue;
+  const range=searchDateRange(parsed);
+  // A partial date must fall wholly on one side; never invent its day.
+  if(range.start>=lower&&range.end<=target.start)before.push({event,distance:target.start-range.end});
+  else if(range.start>=target.end&&range.end<=upper)after.push({event,distance:range.start-target.end});
+ }
+ const select=items=>items.sort((a,b)=>(b.event.importance||0)-(a.event.importance||0)||a.distance-b.distance||a.event.id-b.event.id).slice(0,5).map(x=>x.event);
+ return {before:select(before),after:select(after)};
+}
 function searchEvents(raw){
  const q=String(raw??'').trim(); if(!q)return {all:[],shown:[],dateQuery:null};
  const dq=parseSearchDateQuery(q); let all;
@@ -351,7 +374,10 @@ function searchEvents(raw){
   all=DATA.filter(x=>{const d=eventDetails(x);return [x.title,d.subject,d.place,d.description,x.country,x.category,x.region,x.date].some(v=>String(v??'').toLocaleLowerCase('ko-KR').includes(n));});
  }
  all=all.slice().sort((a,b)=>(dq?0:searchRank(a,q)-searchRank(b,q))||a.date.localeCompare(b.date)||(b.importance||0)-(a.importance||0)||a.id-b.id);
- return {all,shown:all.slice(0,100),dateQuery:dq};
+ return {all,shown:all.slice(0,100),dateQuery:dq,nearby:dq&&!all.length?nearbySearchEvents(dq):null};
+}
+function searchResultHTML(x){
+ return `<button type="button" class="search-result" data-id="${x.id}" title="${escapeHTML(eventDetails(x).description||x.title)}"><span class="sr-date">${escapeHTML(x.date)}</span><span class="sr-region">${escapeHTML(x.region)}</span><span class="sr-title">${escapeHTML(x.title)}${eventDetails(x).subject?`<small> · ${escapeHTML(eventDetails(x).subject)}</small>`:''}</span><span class="sr-category">${escapeHTML(x.category||'미분류')}</span><span class="sr-importance">★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
 function renderSearch(){
  const q=searchInput.value, result=searchEvents(q);
@@ -361,8 +387,15 @@ function renderSearch(){
   return;
  }
  searchSummary.textContent=result.all.length>100?`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건 · 상위 100건 표시`:`검색 결과 ${result.all.length.toLocaleString('ko-KR')}건`;
+ if(result.nearby){
+  const {before,after}=result.nearby;
+  searchSummary.textContent+=` · 앞뒤 주요 사건 ${before.length+after.length}건 추천`;
+  const section=(label,items)=>`<section class="search-nearby"><h3>${label} 주요 사건</h3>${items.length?items.map(searchResultHTML).join(''):`<p class="search-nearby-empty">전후 1년 범위에 추천할 ${label} 자료가 없습니다.</p>`}</section>`;
+  searchResults.innerHTML='<div class="search-empty search-date-empty"><b>[해당 날짜의 기록된 자료가 없음]</b><br>검색 날짜 또는 기간 전후 1년 · 중요도 순으로 각각 최대 5건</div>'+section('이전',before)+section('이후',after);
+  return;
+ }
  if(!result.shown.length){searchResults.innerHTML='<div class="search-empty">검색 결과가 없습니다.</div>';return;}
- searchResults.innerHTML=result.shown.map(x=>`<button type="button" class="search-result" data-id="${x.id}" title="${escapeHTML(eventDetails(x).description||x.title)}"><span class="sr-date">${escapeHTML(x.date)}</span><span class="sr-region">${escapeHTML(x.region)}</span><span class="sr-title">${escapeHTML(x.title)}${eventDetails(x).subject?`<small> · ${escapeHTML(eventDetails(x).subject)}</small>`:''}</span><span class="sr-category">${escapeHTML(x.category||'미분류')}</span><span class="sr-importance">★ ${escapeHTML(x.importance??'—')}</span></button>`).join('');
+ searchResults.innerHTML=result.shown.map(searchResultHTML).join('');
 }
 function openSearch(){searchOverlay.classList.add('open');searchInput.value='';renderSearch();requestAnimationFrame(()=>searchInput.focus());}
 function closeSearch(){searchOverlay.classList.remove('open');searchInput.blur();}

@@ -158,6 +158,10 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 .search-result .sr-importance{color:var(--orange);font-weight:800;white-space:nowrap;text-align:right}
 .search-empty{padding:32px 18px 38px;color:#778ca2;text-align:center;line-height:1.8}
 .search-empty b{color:#9eb7ce;font-weight:700}
+.search-date-empty{padding:14px 12px 18px}
+.search-nearby{margin:0 0 16px}
+.search-nearby h3{margin:8px 9px;color:#b9d8f2;font-size:13px}
+.search-nearby-empty{margin:8px 9px;color:#93a9c0;font-size:12px}
 @media(max-width:900px){.search-result{grid-template-columns:104px 145px minmax(220px,1fr) 76px 58px;font-size:11px}.search-modal{width:98vw}.search-overlay{padding-left:8px;padding-right:8px}.brandarea{gap:8px}.search-open{padding:0 10px}}
 
 
