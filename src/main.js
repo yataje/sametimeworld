@@ -268,14 +268,13 @@ function selectTimelineCards(sorted,limit,focusedId){
 function render(){let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=viewport.scrollTop;let lo=Math.max(0,Math.floor(top/level.h)-4),hi=Math.min(bins[z].length-1,Math.ceil((top+height)/level.h)+4);let content='';
  for(let i=lo;i<=hi;i++){let b=bins[z][i], events=maps[z].get(i)||[],groups=REGIONS.map(r=>events.filter(x=>x.region===r));let cardList=groups.map(g=>{let sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||a.date.localeCompare(b.date)||a.id-b.id);let limit=level.limit;let shown=selectTimelineCards(sorted,limit,zoomFocusEventId);
   let cards=shown.map(x=>{let fuzzy=(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일');let labelDate=x.date;return `<div role="button" tabindex="0" class="event ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(fuzzy?' · 정확한 날짜 미상':''))}"><span class="event-text"><strong>${escapeHTML(x.country||'미상')}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;}).join('');return cards+(g.length>limit?`<div class="more">외 ${g.length-limit}건 · 확대하여 보기</div>`:'')||'<div class="blank">·</div>';});
- content+=`<section class="timeline-row" style="top:${b.top}px;height:${b.height}px" data-index="${i}"><div class="date">${dateCellLabel(b,z)}<small>${events.length}건${z===LEVELS.length-1?' · 하루':''}</small></div>${cardList.map(x=>`<div>${x}</div>`).join('')}</section>`;
+ content+=`<section class="timeline-row" style="top:${b.top}px;height:${b.height}px" data-index="${i}"><div class="date date-left">${dateCellLabel(b,z)}</div>${cardList.map(x=>`<div>${x}</div>`).join('')}<div class="date date-right">${dateCellLabel(b,z)}</div></section>`;
  }
  const activeCard=document.activeElement?.closest?.('.event[data-id]');
  const activeCardId=activeCard&&rows.contains(activeCard)?activeCard.dataset.id:null;
  rows.innerHTML=content;
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
- document.querySelectorAll('.region-date-badge').forEach(el=>{el.textContent=String(y);});
  $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위`;
  refreshLeaderHeaders(center);
 }
