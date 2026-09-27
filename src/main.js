@@ -131,10 +131,14 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'&&displaySettingsOverla
 const AUDIO_SETTINGS_KEY='stw-audio-enabled-v1';
 let audioEnabled=true;
 try{audioEnabled=localStorage.getItem(AUDIO_SETTINGS_KEY)!=='0';}catch{}
-let audioContext=null,masterGain=null,resumePending=false;
+let audioContext=null,masterGain=null,resumePending=false,audioResumePromise=null,pendingZoomCueDirection=null;
 let dragAudioBudget=0,lastDragAudioAt=-Infinity;
 const activeAudioVoices=new Set();
-// Never queue sounds while autoplay is blocked. A later click must not release a backlog.
+// Resume audio lazily. Drag ticks are never queued; a single current zoom cue may replay after resume.
+function restoreAudioLevel(ctx=audioContext){
+ if(!audioEnabled||!masterGain||!ctx)return;
+ try{masterGain.gain.cancelScheduledValues(ctx.currentTime);masterGain.gain.setValueAtTime(0.7,ctx.currentTime);}catch{}
+}
 function ensureAudioContext(){
  if(!audioEnabled)return null;
  try{
@@ -145,17 +149,22 @@ function ensureAudioContext(){
    masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);
    masterGain.connect(audioContext.destination);
   }
-  const restoreLevel=()=>{if(audioEnabled&&masterGain&&audioContext){try{masterGain.gain.cancelScheduledValues(audioContext.currentTime);masterGain.gain.setValueAtTime(0.7,audioContext.currentTime);}catch{}}};
-  if(audioContext.state!=='running'&&!resumePending){
+  if(audioContext.state==='running'){restoreAudioLevel(audioContext);return audioContext;}
+  if(!resumePending){
+   const target=audioContext;
    resumePending=true;
-   Promise.resolve(audioContext.resume()).then(()=>{if(audioContext?.state==='running')restoreLevel();}).catch(()=>{}).finally(()=>{resumePending=false;});
+   audioResumePromise=Promise.resolve(target.resume()).then(()=>{
+    if(audioEnabled&&target===audioContext&&target.state==='running'){restoreAudioLevel(target);return target;}
+    return null;
+   }).catch(()=>null).finally(()=>{
+    if(target===audioContext){resumePending=false;audioResumePromise=null;}
+   });
   }
-  if(audioContext.state==='running'){restoreLevel();return audioContext;}
   return null;
  }catch{return null;}
 }
 function silenceNavigationAudio(){
- dragAudioBudget=0;
+ dragAudioBudget=0;pendingZoomCueDirection=null;
  if(masterGain&&audioContext){
   try{masterGain.gain.cancelScheduledValues(audioContext.currentTime);masterGain.gain.setValueAtTime(0,audioContext.currentTime);}catch{}
  }
@@ -185,12 +194,24 @@ function createTone(ctx,time,freq,duration,type='sine',gainValue=0.045,panValue=
  osc.onended=()=>{activeAudioVoices.delete(osc);osc.disconnect();gain.disconnect();};
  osc.start(time);osc.stop(time+duration+0.008);
 }
-function playZoomCue(direction){
- const ctx=ensureAudioContext();if(!ctx)return;
+function playZoomCueNow(ctx,direction){
  try{
   const now=ctx.currentTime+0.004,freqs=direction==='in'?[330,520,820]:[820,520,330];
   freqs.forEach((freq,i)=>createTone(ctx,now+i*0.037,freq,0.064,'sine',0.046-i*0.004));
  }catch{} // Audio device failures cannot cancel zoom or navigation.
+}
+function playZoomCue(direction){
+ const ctx=ensureAudioContext();
+ if(ctx){pendingZoomCueDirection=null;playZoomCueNow(ctx,direction);return;}
+ if(!audioEnabled||!audioContext)return;
+ pendingZoomCueDirection=direction;
+ const pending=audioResumePromise;
+ if(!pending)return;
+ pending.then(ready=>{
+  if(!ready||!audioEnabled||ready!==audioContext){pendingZoomCueDirection=null;return;}
+  const queued=pendingZoomCueDirection;pendingZoomCueDirection=null;
+  if(queued)playZoomCueNow(ready,queued);
+ });
 }
 function playDragTick(speed=0.5){
  const ctx=ensureAudioContext();if(!ctx)return;
@@ -328,7 +349,7 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
  cancelAnimationFrame(animation);
  const previous=zoom;
  playZoomCue(next>previous?'in':'out');
- const anchorDate=next>previous?focusedEventDate(anchorEventId):null;
+ const anchorDate=focusedEventDate(anchorEventId);
  const eventAnchored=Boolean(anchorDate);
  if(eventAnchored)zoomFocusEventId=Number(anchorEventId);
  else zoomFocusEventId=null;
@@ -384,7 +405,7 @@ viewport.addEventListener('wheel',e=>{
   // 장치별 delta 크기를 '여러 단계'로 바꾸지 않고, 한 번에 한 단계만 요청한다.
   // 소비한 입력의 잔여값은 다음 휠 조작에 넘기지 않는다.
   wheelAccum=0;
-  const anchorEventId=direction<0?hoveredEventId(e):null;
+  const anchorEventId=hoveredEventId(e);
   setZoom(base-direction,anchorY,anchorEventId);
  }
 },{passive:false});
