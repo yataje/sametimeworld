@@ -16,3 +16,8 @@ archive/
 *.db-wal
 *.db-shm
 __pycache__/
+
+# Local review artifacts (not for GitHub Pages deployment)
+/test-output/
+/SameTimeWorld_v*_Local.html
+/browser-results.json

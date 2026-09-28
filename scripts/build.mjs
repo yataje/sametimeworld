@@ -26,23 +26,30 @@ function checkedModule(label,code){
  if(r.error||r.status!==0)throw new Error(`${label}: syntax validation failed\n${r.stderr||r.error}`);
 }
 let main=text('src/main.js'),leaders=text('src/leaders.js');
+let mapCore=text('src/map-core.js'),worldData=text('src/world-data.js'),eventMap=text('src/event-map.js');
 let css=text('src/style.css'),html=text('index.html');
 checkedModule('main.js',main);checkedModule('leaders.js',leaders);
+checkedModule('map-core.js',mapCore);checkedModule('world-data.js',worldData);checkedModule('event-map.js',eventMap);
 if(!html.includes('src="/src/main.js"'))throw new Error('Unknown HTML entry; update build.mjs before publishing.');
 if(!main.includes("import './style.css';")||!main.includes("from './leaders.js'"))throw new Error('Unknown module imports; update the production builder.');
 if(!css.includes('./assets/world-map.png'))throw new Error('World-map CSS reference is missing.');
 // Fail closed when new runtime packages/modules are introduced.
-const withoutKnown=main.replace("import './style.css';",'').replace(/import\s+\{[^}]+\}\s+from\s+'\.\/leaders\.js';/,'');
-if(/^\s*import\s/m.test(withoutKnown)||/^\s*import\s/m.test(leaders))throw new Error('New module dependency detected; extend build.mjs or use Vite.');
+const withoutKnown=main.replace("import './style.css';",'').replace(/import\s+\{[^}]+\}\s+from\s+'\.\/leaders\.js';/,'').replace(/import\s+\{[^}]+\}\s+from\s+'\.\/event-map\.js';/,'');
+const mapWithoutKnown=eventMap.replace("import * as C from './map-core.js';",'').replace("import world from './world-data.js';",'');
+if([withoutKnown,leaders,mapCore,worldData,mapWithoutKnown].some(code=>/^\s*import\s/m.test(code)))throw new Error('New module dependency detected; extend build.mjs or use Vite.');
 const mapName=putAsset('world-map','png',read('src/assets/world-map.png'));
 const leaderName=putAsset('leaders','js',leaders);
-main=main.replace("import './style.css';",'').replace("from './leaders.js'",`from './${leaderName}'`);
+const coreName=putAsset('map-core','js',mapCore),worldName=putAsset('world-data','js',worldData);
+eventMap=eventMap.replace("from './map-core.js'",`from './${coreName}'`).replace("from './world-data.js'",`from './${worldName}'`);
+const eventMapName=putAsset('event-map','js',eventMap);
+main=main.replace("import './style.css';",'').replace("from './leaders.js'",`from './${leaderName}'`).replace("from './event-map.js'",`from './${eventMapName}'`);
 const mainName=putAsset('main','js',main);
 css=css.replaceAll('./assets/world-map.png',`./${mapName}`);
 const cssName=putAsset('style','css',css);
 html=html.replace('src="/src/main.js"',`src="./assets/${mainName}"`).replace('</head>',`<link rel="stylesheet" href="./assets/${cssName}">\n</head>`);
 files.set('index.html',Buffer.from(html,'utf8'));
 files.set('.nojekyll',Buffer.alloc(0));
+files.set('MAP_DATA_NOTICE.txt',read('MAP_DATA_NOTICE.txt'));
 const manifest={page_version:pkg.version,build_method:'portable-esm',files:[...files].map(([name,b])=>({path:name,size:b.length,sha256:sha(b)}))};
 files.set('release.json',Buffer.from(JSON.stringify(manifest,null,2)+'\n'));
 const stage=path.join(root,`.stw-dist-stage-${process.pid}`),old=path.join(root,`.stw-dist-old-${process.pid}`),dist=path.join(root,'dist');

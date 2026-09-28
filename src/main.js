@@ -1,9 +1,10 @@
 import './style.css';
+import {createEventMap} from './event-map.js';
 import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.5';
+const PAGE_VERSION='v0.4.6';
 const DB_VERSION_FALLBACK='v15';
 const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
 
@@ -45,6 +46,13 @@ function updateVersionLabels(meta={}){
 const REGIONS=['유럽/아프리카','중동','동아시아/오세아니아','아메리카'];
 const LEVELS=[{name:'10년',kind:'decade',n:10,h:290,limit:10},{name:'5년',kind:'five',n:5,h:320,limit:11},{name:'1년',kind:'year',n:1,h:350,limit:12},{name:'1개월',kind:'month',h:170,limit:5},{name:'보름',kind:'fortnight',h:154,limit:5},{name:'1주',kind:'week',h:138,limit:6},{name:'1일',kind:'day',h:122,limit:7}];
 const $=s=>document.querySelector(s), viewport=$('#viewport'), space=$('#space'), rows=$('#rows');
+
+// Map initialization is independent of Firebase and must not delay the text UI.
+const eventMap=createEventMap({canvas:document.getElementById('eventMapCanvas'),
+ note:document.getElementById('eventMapNote'),motion:document.getElementById('eventMapMotion'),
+ label:document.getElementById('eventMapLabel'),onFailure:error=>console.warn('Background map unavailable:',error)});
+// Local, opt-in inspection only. No data writes or user tracking.
+if(new URLSearchParams(location.search).get('mapDebug')==='1')window.__stwMap=eventMap;
 
 // v3.16 — 모바일에서는 4열을 억지로 축소하지 않고, 같은 날짜를 유지한 채 지역을 탭으로 전환한다.
 const MOBILE_REGION_OPTIONS=[
@@ -90,8 +98,8 @@ function initMobileRegionNav(){
 }
 
 const DISPLAY_SETTINGS_KEY='stw-display-settings-v1';
-const DISPLAY_DEFAULTS=Object.freeze({mapTransparency:58,eventFont:100,cardTransparency:50});
-const DISPLAY_LIMITS={mapTransparency:[0,100],eventFont:[80,140],cardTransparency:[0,100]};
+const DISPLAY_DEFAULTS=Object.freeze({mapTransparency:58,eventFont:100,cardTransparency:50,detailTransparency:40});
+const DISPLAY_LIMITS={mapTransparency:[0,100],eventFont:[80,140],cardTransparency:[0,100],detailTransparency:[0,100]};
 let displaySettings={...DISPLAY_DEFAULTS};
 function displayClamp(key,value){const [lo,hi]=DISPLAY_LIMITS[key];const n=Number(value);return Number.isFinite(n)?Math.min(hi,Math.max(lo,n)):DISPLAY_DEFAULTS[key];}
 function loadDisplaySettings(){try{const raw=JSON.parse(localStorage.getItem(DISPLAY_SETTINGS_KEY)||'{}');for(const k of Object.keys(DISPLAY_DEFAULTS))displaySettings[k]=displayClamp(k,raw[k]??DISPLAY_DEFAULTS[k]);}catch{displaySettings={...DISPLAY_DEFAULTS};}}
@@ -101,6 +109,7 @@ function applyDisplaySettings(shouldRender=false){
  root.setProperty('--map-opacity',String(1-displaySettings.mapTransparency/100));
  root.setProperty('--event-font-size',`${(11*displaySettings.eventFont/100).toFixed(2)}px`);
  root.setProperty('--event-bg-alpha',String(1-displaySettings.cardTransparency/100));
+ root.setProperty('--detail-bg-alpha',String(1-displaySettings.detailTransparency/100));
  syncDisplaySettingsControls();
  if(shouldRender&&typeof requestRender==='function')requestRender();
 }
@@ -108,6 +117,7 @@ const DISPLAY_CONTROL_MAP={
  mapTransparency:['settingMapTransparency','settingMapTransparencyValue',v=>`${v}%`],
  eventFont:['settingEventFont','settingEventFontValue',v=>`${v}%`],
  cardTransparency:['settingCardTransparency','settingCardTransparencyValue',v=>`${v}%`],
+ detailTransparency:['settingDetailTransparency','settingDetailTransparencyValue',v=>`${v}%`],
 };
 function syncDisplaySettingsControls(){for(const [key,[inputId,valueId,format]] of Object.entries(DISPLAY_CONTROL_MAP)){const input=document.getElementById(inputId),out=document.getElementById(valueId);if(input)input.value=displaySettings[key];if(out)out.textContent=format(displaySettings[key]);}}
 loadDisplaySettings();applyDisplaySettings(false);
@@ -117,6 +127,7 @@ const displaySettingsClose=document.getElementById('displaySettingsClose');
 function openDisplaySettings(){displaySettingsOverlay?.classList.add('open');syncDisplaySettingsControls();}
 function closeDisplaySettings(){displaySettingsOverlay?.classList.remove('open');}
 if(displaySettingsOpen)displaySettingsOpen.addEventListener('click',openDisplaySettings);
+document.getElementById('detailDisplaySettings')?.addEventListener('click',openDisplaySettings);
 if(displaySettingsClose)displaySettingsClose.addEventListener('click',closeDisplaySettings);
 if(displaySettingsOverlay)displaySettingsOverlay.addEventListener('click',e=>{if(e.target===displaySettingsOverlay)closeDisplaySettings();});
 for(const [key,[inputId]] of Object.entries(DISPLAY_CONTROL_MAP)){
@@ -286,7 +297,7 @@ function selectTimelineCards(sorted,limit,focusedId){
  const focused=sorted.find(x=>x.id===focusedId);
  return (focused?[focused,...sorted.filter(x=>x.id!==focusedId)]:sorted).slice(0,limit);
 }
-function render(){let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=viewport.scrollTop;let lo=Math.max(0,Math.floor(top/level.h)-4),hi=Math.min(bins[z].length-1,Math.ceil((top+height)/level.h)+4);let content='';
+function render(){if(activeAppTab==='web')return;let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=viewport.scrollTop;let lo=Math.max(0,Math.floor(top/level.h)-4),hi=Math.min(bins[z].length-1,Math.ceil((top+height)/level.h)+4);let content='';
  for(let i=lo;i<=hi;i++){let b=bins[z][i], events=maps[z].get(i)||[],groups=REGIONS.map(r=>events.filter(x=>x.region===r));let cardList=groups.map(g=>{let sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||a.date.localeCompare(b.date)||a.id-b.id);let limit=level.limit;let shown=selectTimelineCards(sorted,limit,zoomFocusEventId);
   let cards=shown.map(x=>{let fuzzy=(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일');let labelDate=x.date;return `<div role="button" tabindex="0" class="event ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(fuzzy?' · 정확한 날짜 미상':''))}"><span class="event-text"><strong>${escapeHTML(x.country||'미상')}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;}).join('');return cards+(g.length>limit?`<div class="more">외 ${g.length-limit}건 · 확대하여 보기</div>`:'')||'<div class="blank">·</div>';});
  content+=`<section class="timeline-row" style="top:${b.top}px;height:${b.height}px" data-index="${i}"><div class="date date-left">${dateCellLabel(b,z)}</div>${cardList.map(x=>`<div>${x}</div>`).join('')}<div class="date date-right">${dateCellLabel(b,z)}</div></section>`;
@@ -421,12 +432,33 @@ viewport.addEventListener('click',e=>{if(performance.now()<suppressClickUntil){e
 const tabExperience=$('#tabExperience'), tabWeb=$('#tabWeb'), tabWebLabel=$('#tabWebLabel'), experiencePanel=$('#experiencePanel'), webPanel=$('#webPanel');
 const webQuery=$('#webQuery'), webEventMeta=$('#webEventMeta');
 const TIMELINE_HISTORY_STATE={stwTab:'experience'};
-let activeAppTab='experience',activeDetailEventId=null;
+let activeAppTab='experience',activeDetailEventId=null,lastDetailEventId=null;
+let timelineBookmark=null;
+tabWeb.disabled=true;
 function setAppTab(name){
- activeAppTab=name==='web'?'web':'experience';
- const web=activeAppTab==='web';
+ const previous=activeAppTab,web=name==='web';
+ if(web&&previous!=='web'){
+  // Stop only transient timeline effects; preserve the selected date and zoom.
+  if(zoomTransition)stopZoomTransition();
+  cancelAnimationFrame(animation);wheelAccum=0;
+  timelineBookmark={scrollTop:viewport.scrollTop,zoom};
+ }
+ activeAppTab=web?'web':'experience';
  tabExperience.classList.toggle('active',!web);tabWeb.classList.toggle('active',web);
+ tabExperience.setAttribute('aria-selected',String(!web));tabWeb.setAttribute('aria-selected',String(web));
  experiencePanel.classList.toggle('active',!web);webPanel.classList.toggle('active',web);
+ document.body.classList.toggle('event-detail-active',web);
+ if(web){
+  const x=byId.get(activeDetailEventId);
+  if(x)eventMap.showEvent({...x,place:eventDetails(x).place});
+ }else{
+  eventMap.showWorld();
+  if(previous==='web'){
+   if(timelineBookmark)viewport.scrollTop=timelineBookmark.scrollTop;
+   syncTimelineHeaderWidth();requestRender();
+   requestAnimationFrame(()=>{if(activeAppTab==='experience'){syncTimelineHeaderWidth();requestRender();}});
+  }
+ }
 }
 function eventDateDisplay(raw){
  const value=String(raw??'').trim();
@@ -453,10 +485,10 @@ function returnToTimeline(){
  activeDetailEventId=null;setAppTab('experience');
 }
 tabExperience.onclick=returnToTimeline;
-tabWeb.onclick=()=>{if(activeDetailEventId!==null)setAppTab('web');};
+tabWeb.onclick=()=>{const id=activeDetailEventId??lastDetailEventId;if(id!==null&&activeAppTab!=='web')openWebForEvent(id);};
 function openWebForEvent(id,{historyMode='push'}={}){
  const x=byId.get(Number(id));if(!x)return;
- const d=eventDetails(x);activeDetailEventId=x.id;
+ const d=eventDetails(x);activeDetailEventId=x.id;lastDetailEventId=x.id;tabWeb.disabled=false;
  tabWebLabel.textContent='사건 상세';
  webQuery.textContent=x.title;
  renderEventMeta(x);
@@ -468,6 +500,7 @@ function openWebForEvent(id,{historyMode='push'}={}){
  const link=$('#externalSearch');link.hidden=false;
  link.href='https://www.google.com/search?q='+encodeURIComponent([x.date,d.subject,x.title].filter(Boolean).join(' '));
  setAppTab('web');
+ webPanel.querySelector('.event-detail').scrollTop=0;
  if(historyMode==='push')history.pushState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
 }
 document.getElementById('backToTimeline')?.addEventListener('click',returnToTimeline);

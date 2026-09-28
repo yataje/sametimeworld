@@ -1,3 +1,9 @@
+# v0.4.6 — Shared event map integration
+
+Local review package: see `README_KO.txt`. Existing timeline/detail tabs and Firebase event/leader loaders are retained. `SameTimeWorld_v0.4.6_Local.html` is an offline snapshot preview only; `dist/` is the live-loader build. No deployment was performed.
+
+---
+
 # SameTimeWorld
 
 같은 시기의 세계 사건과 국가별 지도자를 비교하는 시간축입니다.
