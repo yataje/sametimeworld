@@ -38,7 +38,21 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
     }
     const features=world.features.map(f=>({...f.properties,region:featureRegion(f.properties),paths:makePaths(f.geometry)}));
     const byCode=new Map(features.map(f=>[f.code,f]));
-    function worldCamera(){return C.fitCamera([-180,-90,180,90],state.width,state.height,{padding:Math.min(42,state.width*.06),focusY:state.height*.53});}
+    const subregions=C.SUBREGIONS.map(f=>({...f,paths:makePaths(f.geometry)}));
+    const bySubregion=new Map(subregions.map(f=>[f.id,f]));
+    function worldCamera(){
+      // Use the actual scroll viewport, not the header: the header can be
+      // resized again after leader data arrives. Latitude framing is stable
+      // when changing dates; north remains up and the date rails stay outside.
+      const view=document.querySelector?.('#viewport');
+      const rect=view?.getBoundingClientRect();
+      const rail=state.width>720?64:0;
+      const width=rect?.width>0?view.clientWidth:state.width;
+      const left=rect?.width>0?rect.left:0;
+      const c=C.fitCamera(C.WORLD_BOUNDS,Math.max(1,width-rail*2),state.height,{padding:20,focusY:state.height*.53});
+      c.x-=(left+width/2-state.width/2)/c.scale;
+      return c;
+    }
     function selectionFor(event){
       const r=C.resolve(event);
       if(r.level==='country'&&!r.codes.every(code=>byCode.has(code))){
@@ -48,7 +62,8 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
       return r;
     }
     function boundsFor(r){
-      if(r.level==='world')return [-180,-90,180,90];
+      if(r.level==='world')return C.WORLD_BOUNDS;
+      if(r.level==='subregion')return bySubregion.get(r.subregionId).bounds;
       if(r.level==='region')return C.GROUPS[r.region].bounds;
       let boxes=r.codes.map(c=>byCode.get(c).focus);
       const anchor=(boxes[0][0]+boxes[0][2])/2;
@@ -57,7 +72,7 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
     }
     function cameraFor(r){
       if(r.level==='world')return worldCamera();
-      const mobile=state.width<=720,b=C.expandBounds(boundsFor(r),r.level==='country'?5:1.2);
+      const mobile=state.width<=720,b=C.expandBounds(boundsFor(r),r.level==='region'?1.2:5);
       const cx=state.width*(mobile?.50:.72),cy=state.height*(mobile?.46:.52);
       const c=C.fitCamera(b,state.width*(mobile?.96:.64),state.height*.74,{padding:16}),wc=worldCamera();
       if(c.scale<wc.scale*1.06)return wc;
@@ -70,6 +85,7 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
       const {width:w,height:h,camera:c}=state,s=c.scale;
       ctx.setTransform(state.dpr,0,0,state.dpr,0,0);ctx.fillStyle='#05080d';ctx.fillRect(0,0,w,h);
       ctx.save();ctx.translate(w/2,h/2);ctx.scale(s,s);ctx.translate(-c.x,-c.y);
+      if(!state.animation&&(state.view==='timeline'||state.selection?.level==='world')){const shift=360*Math.round((c.x-150)/360);ctx.beginPath();ctx.rect(C.WORLD_BOUNDS[0]+shift,-90,360,180);ctx.clip();}
       const left=c.x-w/2/s,right=c.x+w/2/s,top=c.y-h/2/s,bottom=c.y+h/2/s;
       ctx.lineWidth=.65/s;ctx.strokeStyle=`rgba(176,196,218,${state.opacity*.11})`;ctx.beginPath();
       const step=s>25?5:s>10?10:30;
@@ -83,12 +99,24 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
         ctx.fillStyle=highlighted(f)?'#f05255':'#f0f2f5';
         for(let wrap=wrapMin;wrap<=wrapMax;wrap++){ctx.save();ctx.translate(wrap*360,0);for(const p of f.paths){ctx.fill(p,'evenodd');ctx.stroke(p);}ctx.restore();}
       }
+      if(r?.level==='subregion'){
+        // Country fill remains white. Only the selected administrative polygon
+        // is red; a bounding rectangle is never used as a false boundary.
+        for(const f of subregions){
+          if(f.parentCode!==r.codes[0])continue;
+          const active=f.id===r.subregionId;ctx.strokeStyle=active?'#fff0f0':'#66717c';ctx.lineWidth=(active?1.1:.55)/s;
+          if(active)ctx.fillStyle='#f05255';
+          for(let wrap=wrapMin;wrap<=wrapMax;wrap++){ctx.save();ctx.translate(wrap*360,0);for(const p of f.paths){if(active)ctx.fill(p,'evenodd');if(active||s>=8)ctx.stroke(p);}ctx.restore();}
+        }
+      }
       ctx.restore();
-      if(state.view==='detail'&&r&&r.level!=='world'){
+      if(state.view==='detail' &&r&&r.level!=='world'){
         ctx.save();ctx.globalAlpha=.95;ctx.textAlign='center';ctx.textBaseline='middle';
+        const local=r.level==='subregion'?bySubregion.get(r.subregionId):null;
+        if(local){let x=local.labelPoint[0];x+=360*Math.round((c.x-x)/360);const px=(x-c.x)*s+w/2,py=(local.labelPoint[1]-c.y)*s+h/2;ctx.font="600 13px Arial, 'Malgun Gothic', sans-serif";ctx.lineWidth=3;ctx.strokeStyle='#0b121bd0';ctx.fillStyle='#fff5f5';ctx.strokeText(local.label,px,py);ctx.fillText(local.label,px,py);}
         const labels=features.filter(f=>highlighted(f)||(s>=8&&(f.focus[2]-f.focus[0])*s>55&&(f.focus[3]-f.focus[1])*s>30)),occupied=[];
         for(const f of labels.sort((a,b)=>Number(highlighted(b))-Number(highlighted(a)))){
-          if(f.code==='ATA')continue;
+          if(f.code==='ATA'||(local&&f.code===local.parentCode))continue;
           let x=f.labelPoint[0];x+=360*Math.round((c.x-x)/360);
           const px=(x-c.x)*s+w/2,py=(f.labelPoint[1]-c.y)*s+h/2;
           if(px<25||px>w-25||py<65||py>h-55)continue;
@@ -131,12 +159,13 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
     }
     function updateNote(event,r){
       const names=r.codes.map(c=>reverseNames[c]||byCode.get(c)?.name||c),peninsula=r.codes.includes('KOR')&&r.codes.includes('PRK');
-      const name=r.level==='world'?'세계 전체':r.level==='region'?C.GROUPS[r.region].label:peninsula?'한반도':names.join(' · ');
+      const name=r.level==='subregion'?r.label:r.level==='world'?'세계 전체':r.level==='region'?C.GROUPS[r.region].label:peninsula?'한반도':names.join(' · ');
       if(label)label.textContent=name;
       let text=r.level==='country'?'국가 기준 · 주변 범위 면적 약 5배. 도시·시설 경계는 미연결입니다.':r.level==='region'?'대륙 대체 표시 · 빨간 영역 전체에서 일어났다는 뜻은 아닙니다.':'특정 위치 미상 또는 전 지구 사건 · 영역 강조 없음.';
+      if(r.level==='subregion')text=`${r.label} 기준 · 주변 범위 면적 약 5배. ${r.note} 도시·시설은 해당 주 범위로 표시합니다.`;
       if(r.level!=='world')text+=' 현대 윤곽을 사용한 위치 참고용이며 당시 국경이 아닙니다.';
       if(note)note.textContent=text;
-      canvas.dataset.level=r.level;canvas.dataset.codes=r.codes.join(',');
+      canvas.dataset.level=r.level;canvas.dataset.codes=r.codes.join(',');canvas.dataset.subregion=r.subregionId||'';canvas.dataset.basis=r.basis;
     }
     function resize(){
       if(disposed)return;

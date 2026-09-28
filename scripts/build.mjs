@@ -26,6 +26,7 @@ function checkedModule(label,code){
  if(r.error||r.status!==0)throw new Error(`${label}: syntax validation failed\n${r.stderr||r.error}`);
 }
 let main=text('src/main.js'),leaders=text('src/leaders.js');
+let subregions=text('src/subregions.js');checkedModule('subregions.js',subregions);
 let mapCore=text('src/map-core.js'),worldData=text('src/world-data.js'),eventMap=text('src/event-map.js');
 let css=text('src/style.css'),html=text('index.html');
 checkedModule('main.js',main);checkedModule('leaders.js',leaders);
@@ -36,9 +37,11 @@ if(!css.includes('./assets/world-map.png'))throw new Error('World-map CSS refere
 // Fail closed when new runtime packages/modules are introduced.
 const withoutKnown=main.replace("import './style.css';",'').replace(/import\s+\{[^}]+\}\s+from\s+'\.\/leaders\.js';/,'').replace(/import\s+\{[^}]+\}\s+from\s+'\.\/event-map\.js';/,'');
 const mapWithoutKnown=eventMap.replace("import * as C from './map-core.js';",'').replace("import world from './world-data.js';",'');
-if([withoutKnown,leaders,mapCore,worldData,mapWithoutKnown].some(code=>/^\s*import\s/m.test(code)))throw new Error('New module dependency detected; extend build.mjs or use Vite.');
+if([withoutKnown,leaders,mapCore.replace("import {SUBREGIONS,resolveSubregion} from './subregions.js';",''),worldData,mapWithoutKnown,subregions].some(code=>/^\s*import\s/m.test(code)))throw new Error('New module dependency detected; extend build.mjs or use Vite.');
 const mapName=putAsset('world-map','png',read('src/assets/world-map.png'));
 const leaderName=putAsset('leaders','js',leaders);
+const subregionName=putAsset('subregions','js',subregions);
+mapCore=mapCore.replace("from './subregions.js'",`from './${subregionName}'`);
 const coreName=putAsset('map-core','js',mapCore),worldName=putAsset('world-data','js',worldData);
 eventMap=eventMap.replace("from './map-core.js'",`from './${coreName}'`).replace("from './world-data.js'",`from './${worldName}'`);
 const eventMapName=putAsset('event-map','js',eventMap);

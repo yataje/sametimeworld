@@ -49,3 +49,17 @@ test('resize settles the selected event and cancels the old camera tween',async(
 test('lack of Canvas never breaks the text UI and shows an explicit map-unavailable note',async()=>{
  const h=await harness({noCanvas:true});assert.equal(h.api.snapshot().available,false);assert.doesNotThrow(()=>h.api.showEvent(egypt));assert.ok(!h.classes.has('event-map-ready'));assert.match(h.note.textContent||'',/표시하지 못/);
 });
+test('subregion selection keeps country scope as parent and returns to the same rotated overview',async()=>{
+ const h=await harness(),world=h.api.snapshot().camera;
+ h.api.showEvent({id:2109,country:'미국',place:'캘리포니아 샌버너디노',region:'아메리카'});
+ assert.equal(h.api.snapshot().selection.subregionId,'US-CA');assert.equal(h.canvas.dataset.level,'subregion');
+ assert.equal(h.canvas.dataset.subregion,'US-CA');assert.match(h.note.textContent,/캘리포니아주/);
+ h.advance(2000);assert.ok(h.api.snapshot().camera.scale>world.scale*5);h.api.showWorld();h.advance(500);
+ assert.deepEqual(h.api.snapshot().camera,world);assert.equal(h.errors.length,0);h.api.destroy();
+});
+test('description-derived geography survives resize and cancelled transitions',async()=>{
+ const h=await harness();h.api.showEvent({id:1078,country:'미국',region:'아메리카',description:'미국 캘리포니아 윌로우스에서 비행사 양성을 추진했다.'});
+ assert.equal(h.api.snapshot().selection.basis,'description');h.advance(200);
+ global.innerWidth=390;global.innerHeight=844;h.listeners.get('resize')();h.advance(10);
+ assert.equal(h.api.snapshot().selection.subregionId,'US-CA');assert.equal(h.errors.length,0);h.api.destroy();
+});

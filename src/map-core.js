@@ -1,5 +1,7 @@
+import {SUBREGIONS,resolveSubregion} from './subregions.js';
 // Accepted map prototype v0.3 motion. Map coordinates: longitude, minus latitude.
   'use strict';
+  const WORLD_BOUNDS=Object.freeze([-30,-90,330,90]); // Pacific-centred, Europe left / Americas right.
   const GROUPS={
     europe:{label:'유럽 / 아프리카',bounds:[-25,-76,70,38]},
     middle:{label:'중동',bounds:[24,-50,76,-7]},
@@ -69,7 +71,7 @@
       pan=panEase(t/APPROACH_TIMING.panEnd);
       zoom=ease((t-APPROACH_TIMING.zoomStart)/(1-APPROACH_TIMING.zoomStart));
     }
-    const scale=Math.exp(Math.log(a.scale)+(Math.log(dest.scale)-Math.log(a.scale))*zoom);
+    const scale=zoom===0?a.scale:zoom===1?dest.scale:Math.exp(Math.log(a.scale)+(Math.log(dest.scale)-Math.log(a.scale))*zoom);
     // One straight, shortest segment on this horizontally wrapping flat map.
     // No intermediate destination, overshoot, or zoom-dependent translation.
     return {x:a.x+(dest.x-a.x)*pan,y:a.y+(dest.y-a.y)*pan,scale};
@@ -106,6 +108,7 @@
     if(/해역|연안|인근|해협|태평양|대서양|북해|흑해|발트해|필리핀해|카리브해|산호해|바렌츠해/.test(place||country))
       return fallback('해역·이동 경로 미연결 · 기록된 대륙으로 대체');
     const p=placeCountry(place),c=countryCodes(country),codes=p.length?p:c;
+    const local=codes.length<=1?resolveSubregion(e,codes):null;if(local)return local;
     if(codes.length){
       const historical=/제국|프로이센|일제|조선|대한|청|소련|연방|령|작센|바이에른/.test(country);
       return {level:'country',region:r,codes,label:p.length?place:country,basis:p.length?'place':'country',historical,
@@ -114,4 +117,4 @@
     return fallback('정확한 위치 미연결 · 기록된 대륙으로 대체');
   }
   function formatDate(s){const p=String(s).split('-');return `${p[0]}년`+(p[1]?` ${Number(p[1])}월`:'')+(p[2]?` ${Number(p[2])}일`:'');}
-export {GROUPS,ALIASES,MIDDLE,APPROACH_TIMING,nearestCamera,panEase,regionId,ease,expandBounds,fitCamera,cameraAt,resolve,formatDate};
+export {WORLD_BOUNDS,SUBREGIONS,GROUPS,ALIASES,MIDDLE,APPROACH_TIMING,nearestCamera,panEase,regionId,ease,expandBounds,fitCamera,cameraAt,resolve,formatDate};
