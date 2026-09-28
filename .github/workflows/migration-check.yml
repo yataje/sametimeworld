@@ -1,0 +1,36 @@
+name: Migration snapshot
+on:
+  push:
+    branches: ["migration/github-static-v0.5.0"]
+    paths: [".github/workflows/migration-check.yml"]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy current source and read existing public records
+        shell: bash
+        run: |
+          mkdir -p /tmp/stw-snapshot
+          git archive HEAD | tar -x -C /tmp/stw-snapshot
+          python3 - <<'PY'
+          import json, urllib.request, pathlib
+          root = pathlib.Path('/tmp/stw-snapshot')
+          base = 'https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app'
+          for name in ('events', 'leaders'):
+              with urllib.request.urlopen(base + '/' + name + '.json', timeout=90) as response:
+                  content = response.read()
+              value = json.loads(content)
+              if not value:
+                  raise RuntimeError('Empty input: ' + name)
+              (root / ('migration-' + name + '.json')).write_bytes(content)
+              print(name, len(content), 'bytes')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: migration-snapshot
+          path: /tmp/stw-snapshot
+          include-hidden-files: true
+          retention-days: 1
