@@ -1,4 +1,4 @@
-const FIREBASE_LEADER_GROUP_ALIASES={
+const PACKAGED_LEADER_GROUP_ALIASES={
   '영국':'United Kingdom','United Kingdom':'United Kingdom',
   '프랑스':'France','France':'France',
   '독일':'Germany','Germany':'Germany',
@@ -35,7 +35,7 @@ const FIREBASE_LEADER_GROUP_ALIASES={
   '네덜란드':'Netherlands','Netherlands':'Netherlands'
 };
 
-const FIREBASE_POLITY_ALIASES={
+const PACKAGED_POLITY_ALIASES={
   '영국':'United Kingdom',
   '프랑스 제2공화국':'French Second Republic',
   '프랑스 제2제국':'Second French Empire',
@@ -71,18 +71,18 @@ function leaderDateBound(value,isEnd=false){
  if(/^\d{4}$/.test(v))return `${v}-${isEnd?'12-31':'01-01'}`;
  return '';
 }
-export async function loadFirebaseLeaderGroups(fetchJSON){
+export async function loadPackagedLeaderGroups(fetchJSON){
  const raw=await fetchJSON('leaders');
  if(!raw||typeof raw!=='object')throw new Error('지도자 자료가 비어 있습니다.');
  const groups={};
  for(const x of Object.values(raw)){
   if(!x||typeof x!=='object')continue;
-  const country=String(x.country_en||x.country||'').trim(),group=FIREBASE_LEADER_GROUP_ALIASES[country]||country;
+  const country=String(x.country_en||x.country||'').trim(),group=PACKAGED_LEADER_GROUP_ALIASES[country]||country;
   const polity=String(x.polity_en||x.polity||'');
   const from=x.possible_from||leaderDateBound(x.start),to=x.possible_to||leaderDateBound(x.end,true);
   const name=String(x.name_ko||x.name||x.name_en||'').trim();
   if(!group||!name||!from||!to||from>to)continue;
-  (groups[group]??=[]).push({id:x.id,grp:group,polity:FIREBASE_POLITY_ALIASES[polity]||polity,name,
+  (groups[group]??=[]).push({id:x.id,grp:group,polity:PACKAGED_POLITY_ALIASES[polity]||polity,name,
    role_type:x.role_type||'other_leader',office:x.office||x.office_en||'',active_from:from,active_to:to,
    start_precision:x.start_precision||'unknown',end_precision:x.end_precision||'unknown',
    is_acting:x.acting?1:0,verification_status:x.verification||x.verification_status||'',review_required:x.review_required?1:0});
@@ -120,7 +120,7 @@ export function refreshLeaderHeaders(centerT){
 export async function loadLeaderHeaders(currentDate,fetchJSON){
  refreshLeaderHeaders(currentDate());
  try{
-  setLeaderData(await loadFirebaseLeaderGroups(fetchJSON));
+  setLeaderData(await loadPackagedLeaderGroups(fetchJSON));
  }catch(error){
   failed=true;lastDate='';console.error('지도자 자료 불러오기 실패',error);
  }

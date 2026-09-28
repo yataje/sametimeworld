@@ -1,7 +1,10 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-"C:\SameTimeWorldTools\SameTimeWorld_FirebaseUpdater.exe" --publish
-set "RESULT=%ERRORLEVEL%"
-pause
-exit /b %RESULT%
+where py >nul 2>nul
+if not errorlevel 1 (
+  py -3 "_local\tools\manager.py" --publish
+) else (
+  python "_local\tools\manager.py" --publish
+)
+if errorlevel 1 pause
