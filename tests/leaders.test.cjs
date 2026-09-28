@@ -10,16 +10,16 @@ async function model() {
   return import(pathToFileURL(file));
 }
 const row = (name, from, to, polity='United States') => ({name, polity, role_type:'head_of_state', active_from:from, active_to:to, start_precision:'day', end_precision:'day'});
-test('Firebase leader data is fetched separately and normalized without losing date precision', async () => {
+test('Packaged leader data is selected and normalized without losing date precision', async () => {
   const m=await model();
-  assert.equal(typeof m.loadFirebaseLeaderGroups,'function');
-  const groups=await m.loadFirebaseLeaderGroups(async path=>{
+  assert.equal(typeof m.loadPackagedLeaderGroups,'function');
+  const groups=await m.loadPackagedLeaderGroups(async path=>{
     assert.equal(path,'leaders');
     return {l1:{id:1,country:'한반도',country_en:'Korea',polity:'대한제국',polity_en:'Korean Empire',name:'고종',name_ko:'고종',start:'1897-10-12',end:'1907-07-19',possible_from:'1897-10-12',possible_to:'1907-07-19',start_precision:'day',end_precision:'day',role_type:'monarch_or_traditional_ruler'}};
   });
   m.setLeaderData(groups);
   assert.equal(m.leadersForDate('1900-06-01')['east:korea'][0].name,'고종');
-  await assert.rejects(m.loadFirebaseLeaderGroups(async()=>null),/비어/);
+  await assert.rejects(m.loadPackagedLeaderGroups(async()=>null),/비어/);
 });
 test('date changes replace leaders and exclude other polities in the same country group', async () => {
   const m = await model();

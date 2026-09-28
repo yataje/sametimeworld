@@ -1,43 +1,34 @@
 import './style.css';
+import {fetchDataset} from './packets.js';
 import {createEventMap} from './event-map.js';
 import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.4.7';
-const DB_VERSION_FALLBACK='v15';
-const FIREBASE_DB_ROOT='https://sametimeworld-default-rtdb.asia-southeast1.firebasedatabase.app';
-
-function firebaseURL(path){
-  return `${FIREBASE_DB_ROOT}/${String(path).replace(/^\/+/,'')}.json`;
-}
-async function fetchFirebaseJSON(path){
-  const res=await fetch(firebaseURL(path),{cache:'no-cache',signal:AbortSignal.timeout(20000)});
-  if(!res.ok)throw new Error(`${path}: HTTP ${res.status}`);
-  return await res.json();
-}
-function normalizeFirebaseRegion(value){
+const PAGE_VERSION='v0.5.0';
+const DB_VERSION_FALLBACK='v16';
+function normalizeRegion(value){
   const v=String(value??'').trim();
   if(v==='아메리카/하와이'||v==='아메리카·하와이')return '아메리카';
   return v;
 }
-function normalizeFirebaseEvents(raw){
+function normalizeEvents(raw){
   return Object.values(raw||{}).filter(Boolean).map((x,i)=>({
     id:Number(x.id??i+1),
     date:String(x.date??''),
-    region:normalizeFirebaseRegion(x.region),
+    region:normalizeRegion(x.region),
     importance:Number(x.importance??0),
     country:String(x.country??''),
     category:String(x.category??''),
     title:String(x.title??''),
-    description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),verification:String(x.verification??'')
+    description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),verification:String(x.verification??''),locality:String(x.locality??'')
   }));
 }
 function updateVersionLabels(meta={}){
   const page=document.getElementById('pageVersionLabel');
   const db=document.getElementById('dbVersionLabel');
   if(page)page.textContent=PAGE_VERSION;
-  let dbVersion=String(meta.events_db_version||meta.db_version||DB_VERSION_FALLBACK);
+  let dbVersion=String(meta.events_db_version||meta['db_version']||DB_VERSION_FALLBACK);
   if(dbVersion&&!/^v/i.test(dbVersion))dbVersion=`v${dbVersion}`;
   if(db)db.textContent=`DB ${dbVersion}`;
   document.title=`The World at the Same Time — ${PAGE_VERSION} · DB ${dbVersion}`;
@@ -47,7 +38,7 @@ const REGIONS=['유럽/아프리카','중동','동아시아/오세아니아','�
 const LEVELS=[{name:'10년',kind:'decade',n:10,h:290,limit:10},{name:'5년',kind:'five',n:5,h:320,limit:11},{name:'1년',kind:'year',n:1,h:350,limit:12},{name:'1개월',kind:'month',h:170,limit:5},{name:'보름',kind:'fortnight',h:154,limit:5},{name:'1주',kind:'week',h:138,limit:6},{name:'1일',kind:'day',h:122,limit:7}];
 const $=s=>document.querySelector(s), viewport=$('#viewport'), space=$('#space'), rows=$('#rows');
 
-// Map initialization is independent of Firebase and must not delay the text UI.
+// Map initialization is independent of packaged records and must not delay the text UI.
 const eventMap=createEventMap({canvas:document.getElementById('eventMapCanvas'),
  note:document.getElementById('eventMapNote'),motion:document.getElementById('eventMapMotion'),
  label:document.getElementById('eventMapLabel'),onFailure:error=>console.warn('Background map unavailable:',error)});
@@ -469,7 +460,7 @@ function eventDateDisplay(raw){
  return {precision:'—',display:value||'날짜 미상',raw:value};
 }
 function renderEventMeta(x){
- const date=eventDateDisplay(x.date),fields=[['날짜',date.display,date.precision],['대륙',x.region],['국가',x.country],['카테고리',x.category]];
+ const date=eventDateDisplay(x.date),fields=[['날짜',date.display,date.precision],['대륙',x.region],['국가',x.country],['지역',x.locality],['카테고리',x.category]];
  webEventMeta.replaceChildren();
  for(const [label,value,precision] of fields){
   if(!value)continue;
@@ -621,16 +612,16 @@ document.addEventListener('pointerdown',e=>{if(!headerSearch.contains(e.target))
 
 async function bootSameTimeWorld(){
  const statusEl=$('#status');
- loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchFirebaseJSON);
+ loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchDataset);
  try{
-  if(statusEl)statusEl.textContent='Firebase 사건 DB를 불러오는 중…';
+  if(statusEl)statusEl.textContent='자료를 확인하고 있습니다…';
   updateVersionLabels({});
   const [rawEvents,meta]=await Promise.all([
-    fetchFirebaseJSON('events'),
-    fetchFirebaseJSON('meta').catch(()=>({}))
+    fetchDataset('events'),
+    fetchDataset('meta').catch(()=>({}))
   ]);
-  DATA=normalizeFirebaseEvents(rawEvents);
-  if(!DATA.length)throw new Error('Firebase /events가 비어 있습니다.');
+  DATA=normalizeEvents(rawEvents);
+  if(!DATA.length)throw new Error('사건 자료가 비어 있습니다.');
   rebuildEventIndexes();
   updateVersionLabels(meta||{});
   initMobileRegionNav();
@@ -640,8 +631,8 @@ async function bootSameTimeWorld(){
   $('#level').textContent=LEVELS[zoom].name;
   render();
  }catch(error){
-  console.error('Firebase events load failed:',error);
-  if(statusEl)statusEl.textContent=`Firebase DB 로드 실패 · ${error?.message||error}`;
+  console.error('Packaged events load failed:',error);
+  if(statusEl)statusEl.textContent=`자료 로드 실패 · ${error?.message||error}`;
  }
 }
 bootSameTimeWorld();
