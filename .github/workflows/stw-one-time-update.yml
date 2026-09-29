@@ -1,0 +1,81 @@
+name: SameTimeWorld one-time data merge
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".stw-update/manifest.json"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Merge Koreanized events
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .stw-update/manifest.json
+          cat .stw-update/events-*.jsonl > /tmp/stw-delta.jsonl
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {readDescriptor,unseal,seal} from './scripts/seal.mjs';
+          const root=process.cwd();
+          const manifest=JSON.parse(fs.readFileSync('.stw-update/manifest.json','utf8'));
+          const delta=fs.readFileSync('/tmp/stw-delta.jsonl','utf8').trim().split('\n').filter(Boolean).map(JSON.parse);
+          const old=readDescriptor(root);
+          if(!old) throw new Error('Existing packet descriptor missing');
+          const data=unseal(fs.readFileSync(path.join(root,'public',old.f)),old);
+          if(data.events.length!==manifest.base_events) throw new Error('Unexpected base event count: '+data.events.length);
+          if(delta.length!==manifest.delta_events) throw new Error('Unexpected delta count: '+delta.length);
+          const byId=new Map(data.events.map(x=>[x.id,x]));
+          for(const e of delta){
+            if(!Number.isSafeInteger(e.id)) throw new Error('Invalid event id');
+            byId.set(e.id,e);
+          }
+          const events=[...byId.values()].sort((a,b)=>a.id-b.id);
+          if(events.length!==manifest.target_events) throw new Error('Unexpected merged count: '+events.length);
+          if(new Set(events.map(x=>x.id)).size!==events.length) throw new Error('Duplicate event ids');
+          const {bytes,descriptor}=seal({events,leaders:data.leaders},manifest.target_revision);
+          const target=path.join(root,'public',descriptor.f);
+          fs.mkdirSync(path.dirname(target),{recursive:true});
+          fs.writeFileSync(target,bytes);
+          fs.writeFileSync(path.join(root,'src','packet-config.js'),
+            '// Generated public reader descriptor. Not a secret.\nexport default '+JSON.stringify(descriptor)+';\n');
+          const oldPath=path.join(root,'public',old.f);
+          if(oldPath!==target && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+          console.log('Merged '+delta.length+' events -> '+events.length+', data v'+descriptor.r);
+          NODE
+          npm test
+          npm run build
+
+      - name: Commit sealed package and remove temporary update files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .stw-update .stw-migration
+          rm -f .github/workflows/stw-one-time-update.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "data: add Koreanized industrial revolution events"
+          git push origin HEAD:main
+
+      - name: Deploy updated main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

@@ -1,0 +1,8 @@
+{
+  "target_revision": 18,
+  "base_events": 4470,
+  "target_events": 4852,
+  "delta_events": 382,
+  "encoding": "jsonl",
+  "chunks": 7
+}
