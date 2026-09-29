@@ -5,8 +5,8 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.5.0';
-const DB_VERSION_FALLBACK='v16';
+const PAGE_VERSION='v0.5.1';
+const DB_VERSION_FALLBACK='v18';
 function normalizeRegion(value){
   const v=String(value??'').trim();
   if(v==='아메리카/하와이'||v==='아메리카·하와이')return '아메리카';
@@ -243,7 +243,8 @@ function syncTimelineHeaderWidth(){document.documentElement.style.setProperty('-
 syncTimelineHeaderWidth();
 window.addEventListener('resize',syncTimelineHeaderWidth,{passive:true});
 if(window.ResizeObserver){new ResizeObserver(syncTimelineHeaderWidth).observe(viewport);}
-const DAY=86400000, start=Date.UTC(1830,0,1), end=Date.UTC(1961,0,1);
+const DAY=86400000, DEFAULT_START_YEAR=1830, end=Date.UTC(1961,0,1);
+let start=Date.UTC(DEFAULT_START_YEAR,0,1);
 const utc=(y,m=0,d=1)=>Date.UTC(y,m,d);
 const ymd=t=>{let d=new Date(t);return [d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()]};
 const pad=n=>String(n).padStart(2,'0');
@@ -253,24 +254,33 @@ let zoomFocusEventId=null; // 사건 위에서 확대할 때 해당 사건을 �
 let zoomTransition=false, queuedZoom=null, activeZoomFx=null; const ZOOM_DURATION=800;
 let byId=new Map();
 function parseDate(x){let m=/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/.exec(x.date||'');if(!m)return null;let y=+m[1],mo=+(m[2]||1),d=+(m[3]||1);if(m[3]&&!(mo>=1&&mo<=12&&d>=1&&d<=31))return null;return {y,mo,d,t:utc(y,mo-1,d),precision:m[3]?'일':m[2]?'월':'연도'};}
-for(let z=0;z<LEVELS.length;z++){
- let level=LEVELS[z], arr=[], p=start, index=0;
- while(p<end){let [y,m]=ymd(p),n;
-  if(level.kind==='decade')n=utc(y+10,0,1);
-  else if(level.kind==='five')n=utc(y+5,0,1);
-  else if(level.kind==='year')n=utc(y+1,0,1);
-  else if(level.kind==='month')n=utc(y,m,1);
-  else if(level.kind==='fortnight'){
-   const d=ymd(p)[2]; n=d<16?utc(y,m-1,16):utc(y,m,1);
+function configureTimelineStart(events){
+ let earliest=Infinity;
+ for(const x of events){const m=/^(\d{4})/.exec(String(x?.date??''));if(!m)continue;const y=Number(m[1]);if(Number.isInteger(y))earliest=Math.min(earliest,y);}
+ start=utc(Number.isFinite(earliest)?earliest:DEFAULT_START_YEAR,0,1);
+}
+function rebuildTimelineBins(){
+ bins=[];maps=[];
+ for(let z=0;z<LEVELS.length;z++){
+  let level=LEVELS[z], arr=[], p=start, index=0;
+  while(p<end){let [y,m]=ymd(p),n;
+   if(level.kind==='decade')n=utc(y+10,0,1);
+   else if(level.kind==='five')n=utc(y+5,0,1);
+   else if(level.kind==='year')n=utc(y+1,0,1);
+   else if(level.kind==='month')n=utc(y,m,1);
+   else if(level.kind==='fortnight'){
+    const d=ymd(p)[2]; n=d<16?utc(y,m-1,16):utc(y,m,1);
+   }
+   else if(level.kind==='week'){
+    const d=ymd(p)[2];
+    if(d<8)n=utc(y,m-1,8); else if(d<15)n=utc(y,m-1,15); else if(d<22)n=utc(y,m-1,22); else n=utc(y,m,1);
+   }
+   else n=p+DAY;
+   arr.push({t:p,end:Math.min(n,end),idx:index++,top:0,height:level.h});p=n;
   }
-  else if(level.kind==='week'){
-   const d=ymd(p)[2];
-   if(d<8)n=utc(y,m-1,8); else if(d<15)n=utc(y,m-1,15); else if(d<22)n=utc(y,m-1,22); else n=utc(y,m,1);
-  }
-  else n=p+DAY;
-  arr.push({t:p,end:Math.min(n,end),idx:index++,top:0,height:level.h});p=n;
+  bins.push(arr);maps.push(new Map());
  }
- bins.push(arr);maps.push(new Map());
+ for(let z=0;z<LEVELS.length;z++){let h=LEVELS[z].h;bins[z].forEach((b,i)=>b.top=i*h);}
 }
 function indexFor(t,z){let arr=bins[z],lo=0,hi=arr.length-1;while(lo<=hi){let mid=(lo+hi)>>1, b=arr[mid];if(t<b.t)hi=mid-1;else if(t>=b.end)lo=mid+1;else return mid;}return Math.max(0,Math.min(arr.length-1,lo));}
 function rebuildEventIndexes(){
@@ -278,7 +288,6 @@ function rebuildEventIndexes(){
  maps=LEVELS.map(()=>new Map());
  for(let x of DATA){let dt=parseDate(x);if(!dt)continue;for(let z=0;z<LEVELS.length;z++){let i=indexFor(dt.t,z),m=maps[z];if(!m.has(i))m.set(i,[]);m.get(i).push({...x,precision:dt.precision});}}
 }
-for(let z=0;z<LEVELS.length;z++){let h=LEVELS[z].h;bins[z].forEach((b,i)=>b.top=i*h);}
 function totalHeight(z){return bins[z].length*LEVELS[z].h;}
 function topAt(t,z){let i=indexFor(t,z),b=bins[z][i];return b.top+(Math.min(Math.max(t,b.t),b.end)-b.t)/(b.end-b.t)*b.height;}
 function timeAt(pos,z){let arr=bins[z], i=Math.min(arr.length-1,Math.max(0,Math.floor(pos/LEVELS[z].h))),b=arr[i];return b.t+(Math.max(0,Math.min(b.height,pos-b.top))/b.height)*(b.end-b.t);}
@@ -612,7 +621,6 @@ document.addEventListener('pointerdown',e=>{if(!headerSearch.contains(e.target))
 
 async function bootSameTimeWorld(){
  const statusEl=$('#status');
- loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchDataset);
  try{
   if(statusEl)statusEl.textContent='자료를 확인하고 있습니다…';
   updateVersionLabels({});
@@ -622,7 +630,10 @@ async function bootSameTimeWorld(){
   ]);
   DATA=normalizeEvents(rawEvents);
   if(!DATA.length)throw new Error('사건 자료가 비어 있습니다.');
+  configureTimelineStart(DATA);
+  rebuildTimelineBins();
   rebuildEventIndexes();
+  loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchDataset);
   updateVersionLabels(meta||{});
   initMobileRegionNav();
   window.addEventListener('resize',requestRender);
