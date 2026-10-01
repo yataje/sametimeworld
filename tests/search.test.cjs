@@ -44,13 +44,13 @@ test('autocomplete sorts all matching fields by date ascending',()=>{
  ];
  assert.deepEqual(Array.from(context(data).searchEvents('알파').all,x=>x.id),[4,3,1,2]);
 });
-test('selected event stays first and visible even below the card limit',()=>{
+test('selected event stays visible without breaking chronological order',()=>{
  assert.ok(source.includes('function selectTimelineCards('),'Focused card selection is missing');
  const ctx={};vm.createContext(ctx);
  vm.runInContext(source.slice(source.indexOf('function selectTimelineCards('),source.indexOf('function render(){')),ctx);
  const items=[{id:1},{id:2},{id:3},{id:4}];
- assert.deepEqual(Array.from(ctx.selectTimelineCards(items,7,4),x=>x.id),[4,1,2,3]);
- assert.deepEqual(Array.from(ctx.selectTimelineCards(items,2,4),x=>x.id),[4,1]);
+ assert.deepEqual(Array.from(ctx.selectTimelineCards(items,7,4),x=>x.id),[1,2,3,4]);
+ assert.deepEqual(Array.from(ctx.selectTimelineCards(items,2,4),x=>x.id),[1,4]);
 });
 test('Enter and magnifier use the best autocomplete result',()=>{
  assert.match(source,/function goToBestSearchResult\(\)[\s\S]*searchEvents\(searchInput\.value\)\.shown\[0\]/);
