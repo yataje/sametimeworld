@@ -4,6 +4,11 @@ import {ALIASES,GROUPS,regionId} from './map-core.js';
 
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[“”"'「」『』]/g,'').replace(/\s+/g,' ').trim();
 const trimSuffix=s=>norm(s).replace(/특별시$|광역시$|자치시$|자치도$|자치구$|직할시$|도$|주$|현$|부$|시$/,'');
+const SPECIAL_POINTS=new Map([
+ ['배핀섬 요크사운드 일대',{name:'배핀섬 요크사운드 일대',lat:62.408333,lon:-66.483333,precision:'named_region'}],
+ ['요크사운드',{name:'요크사운드',lat:62.408333,lon:-66.483333,precision:'named_region'}],
+ ['york sound',{name:'York Sound',lat:62.408333,lon:-66.483333,precision:'named_region'}]
+]);
 const HISTORICAL=new Map([
  ['한양','서울'],['한성','서울'],['경성','서울'],
  ['스탈린그라드','볼고그라드'],['차리친','볼고그라드'],
@@ -46,7 +51,7 @@ function choose(index,name,codes){
  if(direct.length)return direct.slice().sort((a,b)=>scoreCandidate(b,codes)-scoreCandidate(a,codes))[0];
  let best=null,bestLen=0;
  for(const [k,rows] of index){
-  if(k.length<2||(!key.includes(k)&&!k.includes(key)))continue;
+  if(k.length<3||(!key.includes(k)&&!k.includes(key)))continue;
   const ranked=rows.slice().sort((a,b)=>scoreCandidate(b,codes)-scoreCandidate(a,codes))[0];
   const score=scoreCandidate(ranked,codes);
   if(score<0)continue;
@@ -55,7 +60,7 @@ function choose(index,name,codes){
  return best;
 }
 function candidateNames(event){
- const vals=[event.map_region,event.locality,event.place].filter(Boolean).map(cleanCandidate).filter(Boolean);
+ const vals=[event.place,event.locality,event.map_region].filter(Boolean).map(cleanCandidate).filter(Boolean);
  const out=[];
  for(let v of vals){
   const h=HISTORICAL.get(v);if(h)v=h;
@@ -73,10 +78,11 @@ export function resolvePoint(event){
  if(Number.isFinite(lat)&&Number.isFinite(lon))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
  const codes=countryCodes(event.country);
  for(const name of candidateNames(event)){
+  const special=SPECIAL_POINTS.get(norm(name));if(special)return {...special,name:String(event.place||name).trim()||special.name};
   const wantsAdmin=/(?:주|도|현|부|성|자치구|직할시|특별시|광역시)$/.test(name);
-  const first=wantsAdmin?choose(adminIndex,name,codes):choose(cityIndex,name,codes);
-  const second=wantsAdmin?choose(cityIndex,name,codes):choose(adminIndex,name,codes);
-  const hit=first||second;if(hit)return {name,lon:hit.x,lat:hit.y,precision:first===choose(adminIndex,name,codes)?'admin1':'city'};
+  const adminHit=choose(adminIndex,name,codes),cityHit=choose(cityIndex,name,codes);
+  const hit=wantsAdmin?(adminHit||cityHit):(cityHit||adminHit);
+  if(hit)return {name,lon:hit.x,lat:hit.y,precision:hit===adminHit?'admin1':'city'};
  }
  const pts=codes.map(c=>countryByCode.get(c)).filter(Boolean);
  if(pts.length){
