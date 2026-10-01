@@ -64,7 +64,7 @@ import {SUBREGIONS,resolveSubregion} from './subregions.js';
   }
   function cameraAt(a,b,t,{kind='direct'}={}){
     if(t<=0)return {...a};
-    const dest=nearestCamera(a,b);
+    const dest=(kind==='approach'||kind==='return')?{...b}:nearestCamera(a,b);
     if(t>=1)return dest;
     let pan=ease(t),zoom=pan;
     if(kind==='approach'){
@@ -72,8 +72,8 @@ import {SUBREGIONS,resolveSubregion} from './subregions.js';
       zoom=ease((t-APPROACH_TIMING.zoomStart)/(1-APPROACH_TIMING.zoomStart));
     }
     const scale=zoom===0?a.scale:zoom===1?dest.scale:Math.exp(Math.log(a.scale)+(Math.log(dest.scale)-Math.log(a.scale))*zoom);
-    // One straight, shortest segment on this horizontally wrapping flat map.
-    // No intermediate destination, overshoot, or zoom-dependent translation.
+    // Detail approach/return preserves the canonical Pacific-centred world orientation.
+    // Other direct moves may still use the shortest wrapped segment.
     return {x:a.x+(dest.x-a.x)*pan,y:a.y+(dest.y-a.y)*pan,scale};
   }
   function countryCodes(s){
