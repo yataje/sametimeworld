@@ -25,7 +25,7 @@ export function seal(data,revision=16){
  const cipher=createCipheriv('aes-256-gcm',key,iv);
  const bytes=Buffer.concat([Buffer.from('STW1'),iv,cipher.update(gzipSync(Buffer.from(canonical(payload),'utf8'),{level:9})),cipher.final(),cipher.getAuthTag()]);
  const h=hash(bytes);
- return {bytes,descriptor:{f:`p/${h.slice(0,24)}.bin`,k:key.toString('base64'),h,d,r:revision,n:[data.events.length,data.leaders.length]}};
+ return {bytes,descriptor:{f:`t/${h.slice(0,24)}.txt`,k:key.toString('base64'),h,d,r:revision,n:[data.events.length,data.leaders.length]}};
 }
 export function unseal(bytes,descriptor){
  if(hash(bytes)!==descriptor.h||bytes.subarray(0,4).toString()!=='STW1')throw new Error('Packet integrity check failed');
@@ -42,21 +42,37 @@ export function readDescriptor(root){
  if(!fs.existsSync(p))return null;
  return JSON.parse(fs.readFileSync(p,'utf8').match(/export default ([\s\S]*);\s*$/)?.[1]||'null');
 }
+export function packetFiles(descriptor){
+ const paths=descriptor.parts??[descriptor.f];
+ if(!Array.isArray(paths)||!paths.length||paths.length>4096||paths.some(p=>typeof p!=='string'||!/^t\/[a-f0-9]{24}\.txt$/.test(p)))throw new Error('Invalid packet part path');
+ return paths;
+}
+export function readPacket(root,descriptor){
+ const encoded=packetFiles(descriptor).map(name=>fs.readFileSync(path.join(root,'public',name),'utf8').trim()).join('');
+ if(!/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)||encoded.length%4)throw new Error('Invalid Base64 packet');
+ return Buffer.from(encoded,'base64');
+}
 export function writePacket(root,data){
  validate(data);
- const d=hash(canonical(data)),old=readDescriptor(root);
+ const d=hash(canonical(data)),old=readDescriptor(root);let bytes,descriptor;
+ const chunkSize=192*1024-(192*1024)%4;
  if(old?.d===d){
-  unseal(fs.readFileSync(path.join(root,'public',old.f)),old);return old;
- }
- const {bytes,descriptor}=seal(data,(old?.r||15)+1);
- const target=path.join(root,'public',descriptor.f);
- fs.mkdirSync(path.dirname(target),{recursive:true});fs.mkdirSync(path.join(root,'src'),{recursive:true});
- fs.writeFileSync(target,bytes);
- unseal(fs.readFileSync(target),descriptor);
+  bytes=readPacket(root,old);unseal(bytes,old);
+  const alreadyChunked=Array.isArray(old.parts)&&old.parts.length>1&&packetFiles(old).every(name=>fs.statSync(path.join(root,'public',name)).size<=chunkSize);
+  if(alreadyChunked||bytes.toString('base64').length<=chunkSize)return old;
+  descriptor={...old};
+ }else ({bytes,descriptor}=seal(data,(old?.r||15)+1));
+ const encoded=bytes.toString('base64');
+ const folder=path.join(root,'public','t');fs.mkdirSync(folder,{recursive:true});fs.mkdirSync(path.join(root,'src'),{recursive:true});
+ descriptor.parts=[];
+ for(let offset=0;offset<encoded.length;offset+=chunkSize){const part=encoded.slice(offset,offset+chunkSize),name=`t/${hash(part).slice(0,24)}.txt`;fs.writeFileSync(path.join(root,'public',name),part);descriptor.parts.push(name);}
+ descriptor.f=descriptor.parts[0];
+ unseal(readPacket(root,descriptor),descriptor);
  const config=path.join(root,'src/packet-config.js'),temp=config+'.tmp';
- fs.writeFileSync(temp,'// Generated public reader descriptor. Not a secret.\nexport default '+JSON.stringify(descriptor)+';\n');
- fs.renameSync(temp,config);
- for(const name of fs.readdirSync(path.dirname(target)))if(name.endsWith('.bin')&&name!==path.basename(target))fs.unlinkSync(path.join(path.dirname(target),name));
+ fs.writeFileSync(temp,'// Generated public reader descriptor. Not a secret.\nexport default '+JSON.stringify(descriptor)+';\n');fs.renameSync(temp,config);
+ const keep=new Set(packetFiles(descriptor).map(name=>path.basename(name)));
+ for(const name of fs.readdirSync(folder))if(name.endsWith('.txt')&&!keep.has(name))fs.unlinkSync(path.join(folder,name));
+ const legacy=path.join(root,'public','p');if(fs.existsSync(legacy))fs.rmSync(legacy,{recursive:true,force:true});
  return descriptor;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

@@ -1,0 +1,32 @@
+{
+  "src/leaders.js": {
+    "file": "source-pack/2643797f69fe08768cd3d4b8.txt",
+    "sha256": "2643797f69fe08768cd3d4b8ea6fcc7d85af140a018b6572953cc429e970175d",
+    "size": 26823
+  },
+  "src/main.js": {
+    "file": "source-pack/aaa0ef2db84e36ad7cb96dd9.txt",
+    "sha256": "aaa0ef2db84e36ad7cb96dd967dc49d879ad2440fdb0e37cb577a905aa79930c",
+    "size": 45604
+  },
+  "src/style.css": {
+    "file": "source-pack/b0a4e7fcaec81db412bfd7ef.txt",
+    "sha256": "b0a4e7fcaec81db412bfd7ef855369dab1182283fb06a84a555b97b5be9d236f",
+    "size": 36730
+  },
+  "tests/browser-smoke.py": {
+    "file": "source-pack/7e12eaf1852f14012e977a95.txt",
+    "sha256": "7e12eaf1852f14012e977a9550ca6d4e8a26cc85db7cfa5a8f345aeae521d099",
+    "size": 5200
+  },
+  "tests/date-precision.test.cjs": {
+    "file": "source-pack/7ad7f6fa53800c7dabb702dc.txt",
+    "sha256": "7ad7f6fa53800c7dabb702dc7f12bdcf73dfb7e7dda8e6af5b4a8c3341dc3573",
+    "size": 7570
+  },
+  "tests/leaders.test.cjs": {
+    "file": "source-pack/b03cabafce499ee499b073d7.txt",
+    "sha256": "b03cabafce499ee499b073d7027d74a2be1572201e92d9ea1e8fb886510fc919",
+    "size": 6422
+  }
+}

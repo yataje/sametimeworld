@@ -14,3 +14,16 @@ export async function decodePacket(input,descriptor){
  if(value.events.length!==descriptor.n[0]||value.leaders.length!==descriptor.n[1])throw new Error('자료 건수가 일치하지 않습니다.');
  return value;
 }
+
+/** Text transport: Base64 pieces are reassembled and converted back to the authenticated ciphertext. */
+export async function fetchPacketBytes(descriptor,fetchText){
+ const paths=descriptor.parts??[descriptor.f];
+ if(!Array.isArray(paths)||!paths.length||paths.length>4096||paths.some(p=>typeof p!=='string'||!/^t\/[a-f0-9]{24}\.txt$/.test(p)))throw new Error('자료 경로가 올바르지 않습니다.');
+ const chunks=await Promise.all(paths.map(async name=>(await fetchText(name)).trim()));
+ const encoded=chunks.join('');
+ if(encoded.length>192*1024*1024)throw new Error('자료 크기가 허용 범위를 넘었습니다.');
+ if(!/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)||encoded.length%4)throw new Error('자료 인코딩이 올바르지 않습니다.');
+ const binary=atob(encoded);const bytes=new Uint8Array(binary.length);
+ for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+ return bytes;
+}

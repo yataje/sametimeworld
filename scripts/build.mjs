@@ -3,14 +3,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
-import {hash,readDescriptor,unseal} from './seal.mjs';
+import {hash,readDescriptor,unseal,readPacket,packetFiles} from './seal.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const read=f=>fs.readFileSync(path.join(root,f));
 const text=f=>read(f).toString('utf8').replace(/^\uFEFF/,'').replace(/\r\n/g,'\n');
 const pkg=JSON.parse(read('package.json'));
 const descriptor=readDescriptor(root);
-if(!descriptor||!/^p\/[a-f0-9]{24}\.bin$/.test(descriptor.f))throw new Error('Validated public package is missing. Run the local manager first.');
-const packet=read('public/'+descriptor.f),data=unseal(packet,descriptor);
+if(!descriptor||!/^t\/[a-f0-9]{24}\.txt$/.test(descriptor.f))throw new Error('Validated public package is missing. Run the local manager first.');
+const packet=readPacket(root,descriptor),data=unseal(packet,descriptor);
 const files=new Map(),built=new Map(),visiting=new Set();
 function putAsset(label,ext,content){
  const b=Buffer.isBuffer(content)?content:Buffer.from(content,'utf8');
@@ -40,7 +40,7 @@ const cssName=putAsset('style','css',text('src/style.css').replaceAll('./assets/
 let html=text('index.html');
 if(!html.includes('src="/src/main.js"'))throw new Error('Unknown application entry');
 html=html.replace('src="/src/main.js"',`src="./assets/${mainName}"`).replace('</head>',`<link rel="stylesheet" href="./assets/${cssName}">\n</head>`);
-files.set('index.html',Buffer.from(html));files.set(descriptor.f,packet);
+files.set('index.html',Buffer.from(html));for(const name of packetFiles(descriptor))files.set(name,read('public/'+name));
 files.set('.nojekyll',Buffer.alloc(0));files.set('MAP_DATA_NOTICE.txt',read('MAP_DATA_NOTICE.txt'));
 for(const [name,bytes] of files){
  if(/\.(?:d[b]|sqlite3?|sql|zip|bak|map)$/i.test(name)||name.includes('_local'))throw new Error('Private artifact in output');
