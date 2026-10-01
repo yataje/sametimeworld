@@ -31,8 +31,12 @@ source=source.replace(
  "const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};"
 );
 source=source.replace(
+ "function eventDetails(x){\n const result={subject:x.subject||'',place:x.place||'',original_date:x.original_date||'',verification:x.verification||'',description:''};",
+ "function eventDetails(x){\n const result={subject:x.subject||'',place:x.place||'',original_date:x.original_date||'',verification:x.verification||'',description:''};\n const INTERNAL_DETAIL_LABEL=/^(?:원역법|날짜 검증|검증 상태)(?:\\s*[:：]|\\s+|$)/;"
+);
+source=source.replace(
  "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(trimmed.startsWith('출처 파일:'))continue;",
- "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(/^(?:원역법|날짜 검증|검증 상태)(?:\s*[:：]|\s+)/.test(trimmed))continue;\n  if(trimmed.startsWith('출처 파일:'))continue;"
+ "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(INTERNAL_DETAIL_LABEL.test(trimmed))continue;\n  if(trimmed.startsWith('출처 파일:'))continue;"
 );
 
 for(const old of ['function displayCountryName(value)','function displayTimelinePlace(x)']){
