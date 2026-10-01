@@ -23,7 +23,7 @@ source=source.replace(
 );
 source=source.replace(
  "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(trimmed.startsWith('출처 파일:'))continue;",
- "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(/^(?:원역법|날짜 검증|검증 상태)\s*:/.test(trimmed))continue;\n  if(trimmed.startsWith('출처 파일:'))continue;"
+ "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(/^(?:원역법|날짜 검증|검증 상태)(?:\s*[:：]|\s+)/.test(trimmed))continue;\n  if(trimmed.startsWith('출처 파일:'))continue;"
 );
 
 for(const old of ['function displayCountryName(value)','function displayTimelinePlace(x)']){
