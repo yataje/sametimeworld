@@ -49,6 +49,7 @@ jobs:
           name: sametimeworld-recovered-db
           path: |
             .recovery/sametimeworld.db
+            .recovery/world_leaders.db
             .recovery/recovery-report.json
           if-no-files-found: error
           retention-days: 30
