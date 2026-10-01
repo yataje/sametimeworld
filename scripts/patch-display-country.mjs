@@ -5,6 +5,8 @@ import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const target=path.join(root,'src/main.js');
 let source=fs.readFileSync(target,'utf8');
+const packageVersion=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
+source=source.replace(/const PAGE_VERSION='v[^']+';/,`const PAGE_VERSION='v${packageVersion}';`);
 
 const localityField="locality:String(x.locality??'')";
 const geoFields="locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:x.latitude==null?null:Number(x.latitude),longitude:x.longitude==null?null:Number(x.longitude),location_precision:String(x.location_precision??'')";
