@@ -24,7 +24,7 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
    if(!p)return worldCamera();
    const span=p.precision==='city'||p.precision==='historical_city'||p.precision==='db'?7:p.precision==='admin1'?18:p.precision==='named_region'?24:p.precision==='country'?44:90;
    const b=[p.lon-span,-p.lat-span*.62,p.lon+span,-p.lat+span*.62],mobile=state.width<=720,c=C.fitCamera(b,state.width*(mobile?.96:.68),state.height*.75,{padding:18});
-   const cx=state.width*(mobile?.50:.72),cy=state.height*(mobile?.46:.52);c.x=p.lon-(cx-state.width/2)/c.scale;c.y=-p.lat-(cy-state.height/2)/c.scale;return C.nearestCamera(worldCamera(),c);
+   const canonicalLon=p.lon<C.WORLD_BOUNDS[0]?p.lon+360:p.lon;const cx=state.width*(mobile?.50:.72),cy=state.height*(mobile?.46:.52);c.x=canonicalLon-(cx-state.width/2)/c.scale;c.y=-p.lat-(cy-state.height/2)/c.scale;return c;
   }
   function draw(){
    if(disposed||!state.camera)return;
@@ -49,7 +49,7 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
   function setMotion(text){if(motion&&motion.textContent!==text)motion.textContent=text;}
   function stop(reason='interrupted'){cancelAnimationFrame(frame);frame=0;const a=state.animation;if(a){state.metrics.push({kind:a.kind,durationMs:a.durationMs,actualMs:performance.now()-a.started,cancelled:true,reason});state.animation=null;}if(state.metrics.length>30)state.metrics.shift();}
   function flyTo(target,duration,kind){
-   stop();const from={...state.camera};target=C.nearestCamera(from,target);const startOpacity=state.opacity,targetOpacity=state.view==='detail'?1:.6;
+   stop();const from={...state.camera};if(kind!=='approach'&&kind!=='return')target=C.nearestCamera(from,target);const startOpacity=state.opacity,targetOpacity=state.view==='detail'?1:.6;
    const a={kind,from,to:target,durationMs:preference.matches?0:duration,started:performance.now(),panDistance:Math.hypot(target.x-from.x,target.y-from.y)};state.animation=a;canvas.dataset.motion=kind;
    function tick(now){if(disposed||state.animation!==a)return;try{const t=a.durationMs?Math.min(1,(now-a.started)/a.durationMs):1;state.camera=C.cameraAt(from,target,t,{kind});state.opacity=startOpacity+(targetOpacity-startOpacity)*C.ease(t);setMotion(kind==='return'?'세계지도로 복귀 중':t<C.APPROACH_TIMING.zoomStart?'장소로 이동 중':t<C.APPROACH_TIMING.panEnd?'이동 · 확대 중':'확대 중');draw();if(t<1){frame=requestAnimationFrame(tick);return;}state.camera=kind==='return'?worldCamera():{...target};state.opacity=targetOpacity;state.metrics.push({kind,durationMs:a.durationMs,actualMs:now-a.started,cancelled:false,panDistance:a.panDistance});if(state.metrics.length>30)state.metrics.shift();state.animation=null;frame=0;canvas.dataset.motion='idle';setMotion(kind==='return'?'세계지도':'위치 표시 완료');draw();}catch(error){fail(error);}}
    if(a.durationMs===0)tick(performance.now());else frame=requestAnimationFrame(tick);
