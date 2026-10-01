@@ -74,8 +74,8 @@ function regionFallback(event){
  const b=GROUPS[id].bounds;return {name:GROUPS[id].label,lon:(b[0]+b[2])/2,lat:-(b[1]+b[3])/2,precision:'region'};
 }
 export function resolvePoint(event){
- const lat=Number(event.latitude),lon=Number(event.longitude);
- if(Number.isFinite(lat)&&Number.isFinite(lon))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
+ const rawLat=event.latitude,rawLon=event.longitude,lat=Number(rawLat),lon=Number(rawLon);
+ if(rawLat!==null&&rawLat!==undefined&&rawLat!==''&&rawLon!==null&&rawLon!==undefined&&rawLon!==''&&Number.isFinite(lat)&&Number.isFinite(lon))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
  const codes=countryCodes(event.country);
  for(const name of candidateNames(event)){
   const special=SPECIAL_POINTS.get(norm(name));if(special)return {...special,name:String(event.place||name).trim()||special.name};
