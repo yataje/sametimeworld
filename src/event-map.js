@@ -22,7 +22,7 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
   }
   function pointCamera(p){
    if(!p)return worldCamera();
-   const span=p.precision==='city'||p.precision==='historical_city'||p.precision==='db'?3.5:p.precision==='admin1'?9:p.precision==='named_region'?12:p.precision==='country'?22:45;
+   const span=p.precision==='city'||p.precision==='historical_city'||p.precision==='db'?7:p.precision==='admin1'?18:p.precision==='named_region'?24:p.precision==='country'?44:90;
    const b=[p.lon-span,-p.lat-span*.62,p.lon+span,-p.lat+span*.62],mobile=state.width<=720,c=C.fitCamera(b,state.width*(mobile?.96:.68),state.height*.75,{padding:18});
    const cx=state.width*(mobile?.50:.72),cy=state.height*(mobile?.46:.52);c.x=p.lon-(cx-state.width/2)/c.scale;c.y=-p.lat-(cy-state.height/2)/c.scale;return C.nearestCamera(worldCamera(),c);
   }
