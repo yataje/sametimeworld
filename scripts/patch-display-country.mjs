@@ -12,6 +12,20 @@ const localityField="locality:String(x.locality??'')";
 const geoFields="locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:x.latitude==null?null:Number(x.latitude),longitude:x.longitude==null?null:Number(x.longitude),location_precision:String(x.location_precision??'')";
 if(source.includes(localityField)&&!source.includes("map_region:String(x.map_region??'')"))source=source.replace(localityField,geoFields);
 
+
+source=source.replace(
+ "for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date],['검증 상태',d.verification]]){",
+ "for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date]]){"
+);
+source=source.replace(
+ "const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification'};",
+ "const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};"
+);
+source=source.replace(
+ "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(trimmed.startsWith('출처 파일:'))continue;",
+ "if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}\n  if(/^(?:원역법|날짜 검증|검증 상태)\s*:/.test(trimmed))continue;\n  if(trimmed.startsWith('출처 파일:'))continue;"
+);
+
 for(const old of ['function displayCountryName(value)','function displayTimelinePlace(x)']){
  if(!source.includes(old))continue;
  const starts=[source.indexOf('const DISPLAY_COUNTRY_ALIASES='),source.indexOf('const DISPLAY_PLACE_ALIASES=')].filter(n=>n>=0);
