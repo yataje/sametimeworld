@@ -8,6 +8,8 @@ on:
       - "scripts/recover-and-enrich.mjs"
       - "scripts/rebuild-sqlite.py"
       - "scripts/patch-display-country.mjs"
+      - "src/point-resolver.js"
+      - "src/event-map.js"
   workflow_dispatch:
 
 permissions:
