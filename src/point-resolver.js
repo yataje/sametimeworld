@@ -55,7 +55,7 @@ function choose(index,name,codes){
  return best;
 }
 function candidateNames(event){
- const vals=[event.map_region,event.locality,event.place,event.country].filter(Boolean).map(cleanCandidate).filter(Boolean);
+ const vals=[event.map_region,event.locality,event.place].filter(Boolean).map(cleanCandidate).filter(Boolean);
  const out=[];
  for(let v of vals){
   const h=HISTORICAL.get(v);if(h)v=h;
