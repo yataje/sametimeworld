@@ -20,11 +20,10 @@ test('search navigation interrupts zoom instead of waiting for its timeout',()=>
   assert.ok(!block.includes('setTimeout'));
 });
 
-test('zoom anchors the hovered card center and its rendered timeline placement',()=>{
-  assert.match(main,/function focusedEventPlacementTime\(id,z=zoom\)/);
-  assert.match(main,/const anchorPlacementTime=focusedEventPlacementTime\(anchorEventId,zoom\);/);
-  assert.match(main,/const oldTime=eventAnchored\?anchorPlacementTime:/);
-  assert.match(main,/function hoveredEventAnchor\(e\)/);
-  assert.match(main,/setZoom\(base-direction,anchor\?\.y\?\?pointerY,anchor\?\.id\?\?null\);/);
+test('zoom-out anchors the hovered card exactly like zoom-in',()=>{
+  assert.match(main,/const anchorDate=focusedEventDate\(anchorEventId\);/);
+  assert.doesNotMatch(main,/next>previous\?focusedEventDate\(anchorEventId\):null/);
+  assert.match(main,/const anchor=hoveredEventAnchor\(e\);\s*setZoom\(base-direction,anchor\?\.anchorY\?\?anchorY,anchor\?\.id\?\?null,anchor\?\.time\?\?null\);/);
+  assert.match(main,/anchorY:er\.top\+er\.height\/2-vr\.top/);
   assert.match(main,/if\(eventAnchored\)reanchorFocusedEvent\(anchorEventId,anchorY\);/);
 });

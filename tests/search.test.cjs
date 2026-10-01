@@ -18,14 +18,14 @@ function context(data=rows){
  return ctx;
 }
 for(const [q,expected] of [['해병대',[2,4]],['이지중대',[3,5]],['엔터프라이즈',[1]],['노르망디',[5]],['사용자 제공',[]]]){
- test('text search results are chronological: '+q,()=>assert.deepEqual(Array.from(context().searchEvents(q).all,x=>x.id),expected));
+ test('semantic search ranking: '+q,()=>assert.deepEqual(Array.from(context().searchEvents(q).all,x=>x.id),expected));
 }
 test('partial dates remain searchable',()=>{
  assert.deepEqual(Array.from(context().searchEvents('1942년 8월').all,x=>x.id),[3]);
  assert.deepEqual(Array.from(context().searchEvents('1944년 6월 6일').all,x=>x.id),[5]);
  assert.equal(context().parseSearchDateQuery('1944-02-31'),null);
 });
-test('older matching event appears before a newer stronger match',()=>{
+test('autocomplete is chronological even when an older match is weaker',()=>{
  const data=[{id:1,date:'1800',title:'기타',description:'이지중대 언급'},{id:2,date:'1944',title:'이지중대',description:''}];
  assert.deepEqual(Array.from(context(data).searchEvents('이지중대').all,x=>x.id),[1,2]);
 });
@@ -35,7 +35,7 @@ test('autocomplete is capped at ten while preserving the full match count',()=>{
  assert.equal(r.all.length,25);
  assert.equal(r.shown.length,10);
 });
-test('exact title match outranks subject, country and description matches',()=>{
+test('autocomplete sorts all matching fields by date ascending',()=>{
  const data=[
   {id:1,date:'1940',title:'다른 사건',subject:'알파'},
   {id:2,date:'1941',title:'알파'},
