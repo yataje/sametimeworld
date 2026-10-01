@@ -13,10 +13,11 @@ if(!descriptor)throw new Error('packet descriptor missing');
 const payload=unseal(readPacket(root,descriptor),descriptor);
 const sourceVersion=payload?.meta?.events_db_version||('v'+descriptor.r);
 const precisionCounts={};
-let changed=0;
+let changed=0, explicitPlaceFallbacks=0;
 
 const events=payload.events.map(event=>{
-  const point=resolvePoint(event);
+  const basis={...event,latitude:null,longitude:null,map_region:''};
+  const point=resolvePoint(basis);
   const next={...event};
   const mapRegion=String(point?.name||event.map_region||event.locality||event.place||event.country||'').trim();
   const latitude=Number(point?.lat);
@@ -28,6 +29,7 @@ const events=payload.events.map(event=>{
   if(precision)next.location_precision=precision;
   if(next.map_region!==event.map_region||next.latitude!==event.latitude||next.longitude!==event.longitude||next.location_precision!==event.location_precision)changed++;
   precisionCounts[next.location_precision||'unknown']=(precisionCounts[next.location_precision||'unknown']||0)+1;
+  if(String(event.place||'').trim()&&['country','region','world'].includes(next.location_precision))explicitPlaceFallbacks++;
   return next;
 });
 const data={events,leaders:payload.leaders};
@@ -40,6 +42,7 @@ const report={
   leaders:payload.leaders.length,
   records_enriched:changed,
   precision_counts:precisionCounts,
+  explicit_place_fallbacks:explicitPlaceFallbacks,
   generated_at:new Date().toISOString()
 };
 fs.writeFileSync(path.join(recoveryDir,'recovery-report.json'),JSON.stringify(report,null,2)+'\n');
