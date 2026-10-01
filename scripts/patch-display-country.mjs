@@ -55,7 +55,7 @@ function compactPurePlace(value,{locality=false}={}){
  return cleaned.join('·')||stripPlaceStatus(text)||original;
 }
 function displayTimelinePlace(x){
- const locality=compactPurePlace(x?.locality,{locality:true});
+ const locality=compactPurePlace(x?.map_region,{locality:true})||compactPurePlace(x?.locality,{locality:true});
  if(locality)return locality;
  return compactPurePlace(x?.country)||'미상';
 }
