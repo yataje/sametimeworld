@@ -1,0 +1,60 @@
+name: Recover and enrich event database
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/recover-db.yml"
+      - "scripts/recover-and-enrich.mjs"
+      - "scripts/rebuild-sqlite.py"
+      - "scripts/patch-display-country.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Recover 10k dataset and add representative coordinates
+        run: node scripts/recover-and-enrich.mjs
+
+      - name: Rebuild SQLite database
+        run: python3 scripts/rebuild-sqlite.py .recovery/recovered-data.json .recovery/sametimeworld.db
+
+      - name: Verify tests and production build
+        run: |
+          npm test
+          npm run build
+
+      - name: Upload recovered database
+        uses: actions/upload-artifact@v4
+        with:
+          name: sametimeworld-recovered-db
+          path: |
+            .recovery/sametimeworld.db
+            .recovery/recovery-report.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit enriched public packet
+        run: |
+          git config user.name "SameTimeWorld Recovery"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A public/t src/packet-config.js
+          if git diff --cached --quiet; then
+            echo "No packet changes to commit."
+          else
+            git commit -m "data: recover 10101 events with map coordinates"
+            git push
+          fi
