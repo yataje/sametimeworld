@@ -6,6 +6,10 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const target=path.join(root,'src/main.js');
 let source=fs.readFileSync(target,'utf8');
 
+const localityField="locality:String(x.locality??'')";
+const geoFields="locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:x.latitude==null?null:Number(x.latitude),longitude:x.longitude==null?null:Number(x.longitude),location_precision:String(x.location_precision??'')";
+if(source.includes(localityField)&&!source.includes("map_region:String(x.map_region??'')"))source=source.replace(localityField,geoFields);
+
 for(const old of ['function displayCountryName(value)','function displayTimelinePlace(x)']){
  if(!source.includes(old))continue;
  const starts=[source.indexOf('const DISPLAY_COUNTRY_ALIASES='),source.indexOf('const DISPLAY_PLACE_ALIASES=')].filter(n=>n>=0);
