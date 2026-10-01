@@ -12,6 +12,15 @@ const localityField="locality:String(x.locality??'')";
 const geoFields="locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:x.latitude==null?null:Number(x.latitude),longitude:x.longitude==null?null:Number(x.longitude),location_precision:String(x.location_precision??'')";
 if(source.includes(localityField)&&!source.includes("map_region:String(x.map_region??'')"))source=source.replace(localityField,geoFields);
 
+source=source.replace(
+ "function selectTimelineCards(sorted,limit,focusedId){\n const focused=sorted.find(x=>x.id===focusedId);\n return (focused?[focused,...sorted.filter(x=>x.id!==focusedId)]:sorted).slice(0,limit);\n}",
+ "function selectTimelineCards(sorted,limit,focusedId){\n const shown=sorted.slice(0,limit),focused=sorted.find(x=>x.id===focusedId);\n if(focused&&!shown.some(x=>x.id===focused.id)){shown[Math.max(0,limit-1)]=focused;const rank=new Map(sorted.map((x,i)=>[x.id,i]));shown.sort((a,b)=>(rank.get(a.id)??Infinity)-(rank.get(b.id)??Infinity));}\n return shown;\n}"
+);
+source=source.replace(
+ "let sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||a.date.localeCompare(b.date)||a.id-b.id);",
+ "let sorted=g.slice().sort((a,b)=>{const imp=(b.importance||0)-(a.importance||0);if(imp)return imp;const ad=parseDate(a),bd=parseDate(b),at=ad?.t??Infinity,bt=bd?.t??Infinity;if(at!==bt)return at-bt;return String(a.date||'').localeCompare(String(b.date||''))||a.id-b.id;});"
+);
+
 
 source=source.replace(
  "for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date],['검증 상태',d.verification]]){",
