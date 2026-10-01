@@ -26,3 +26,11 @@ test('search stays in the timeline header without the old modal',()=>{
  assert.doesNotMatch(html,/class="search-overlay"/);
  assert.doesNotMatch(main,/SEARCH_HISTORY_KEY|SEARCH_HISTORY_LIMIT|searchOverlay|openSearch\(/);
 });
+
+
+test('internal calendar verification metadata never renders in event detail',()=>{
+ assert.doesNotMatch(main,/\['원역법',x\.source_calendar\]/);
+ assert.doesNotMatch(main,/\['날짜 검증',x\.normalization_note\]/);
+ assert.doesNotMatch(main,/\['검증 상태',d\.verification\]/);
+ assert.match(main,/INTERNAL_DETAIL_LABEL/);
+});
