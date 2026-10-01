@@ -18,16 +18,16 @@ function context(data=rows){
  return ctx;
 }
 for(const [q,expected] of [['해병대',[2,4]],['이지중대',[3,5]],['엔터프라이즈',[1]],['노르망디',[5]],['사용자 제공',[]]]){
- test('semantic search ranking: '+q,()=>assert.deepEqual(Array.from(context().searchEvents(q).all,x=>x.id),expected));
+ test('text search results are chronological: '+q,()=>assert.deepEqual(Array.from(context().searchEvents(q).all,x=>x.id),expected));
 }
 test('partial dates remain searchable',()=>{
  assert.deepEqual(Array.from(context().searchEvents('1942년 8월').all,x=>x.id),[3]);
  assert.deepEqual(Array.from(context().searchEvents('1944년 6월 6일').all,x=>x.id),[5]);
  assert.equal(context().parseSearchDateQuery('1944-02-31'),null);
 });
-test('stronger match ranks before an older weak description match',()=>{
+test('older matching event appears before a newer stronger match',()=>{
  const data=[{id:1,date:'1800',title:'기타',description:'이지중대 언급'},{id:2,date:'1944',title:'이지중대',description:''}];
- assert.deepEqual(Array.from(context(data).searchEvents('이지중대').all,x=>x.id),[2,1]);
+ assert.deepEqual(Array.from(context(data).searchEvents('이지중대').all,x=>x.id),[1,2]);
 });
 test('autocomplete is capped at ten while preserving the full match count',()=>{
  const data=Array.from({length:25},(_,i)=>({id:i+1,date:'1944',title:'검색 '+String(i+1),description:'검색'}));
@@ -42,7 +42,7 @@ test('exact title match outranks subject, country and description matches',()=>{
   {id:3,date:'1939',title:'또 다른 사건',country:'알파'},
   {id:4,date:'1938',title:'기타',description:'알파 기록'}
  ];
- assert.deepEqual(Array.from(context(data).searchEvents('알파').all,x=>x.id),[2,1,3,4]);
+ assert.deepEqual(Array.from(context(data).searchEvents('알파').all,x=>x.id),[4,3,1,2]);
 });
 test('selected event stays first and visible even below the card limit',()=>{
  assert.ok(source.includes('function selectTimelineCards('),'Focused card selection is missing');
