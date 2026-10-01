@@ -26,6 +26,9 @@ source=source.replace(
  "for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date],['검증 상태',d.verification]]){",
  "for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date]]){"
 );
+source=source.replace(/,\['원역법',x\.source_calendar\]/g,'');
+source=source.replace(/,\['날짜 검증',x\.normalization_note\]/g,'');
+source=source.replace(/,\['검증 상태',d\.verification\]/g,'');
 source=source.replace(
  "const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification'};",
  "const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};"
