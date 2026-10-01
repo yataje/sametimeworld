@@ -13,6 +13,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: "recover-db"
+  cancel-in-progress: true
+
 jobs:
   recover:
     runs-on: ubuntu-latest
@@ -56,5 +60,6 @@ jobs:
             echo "No packet changes to commit."
           else
             git commit -m "data: recover 10101 events with map coordinates"
+            git pull --rebase origin main
             git push
           fi
