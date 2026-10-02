@@ -74,6 +74,14 @@ function regionFallback(event){
  const b=GROUPS[id].bounds;return {name:GROUPS[id].label,lon:(b[0]+b[2])/2,lat:-(b[1]+b[3])/2,precision:'region'};
 }
 export function resolvePoint(event){
+ // Integrated records have an authoritative map decision; never override a withheld point.
+ if(Object.prototype.hasOwnProperty.call(event,'map_status')){
+  if(!['reference_coordinate_checked','inherited_context_checked_not_reverified'].includes(event.map_status))return null;
+  const valid=v=>v!==null&&v!==undefined&&typeof v!=='boolean'&&String(v).trim()!==''&&Number.isFinite(Number(v));
+  if(!valid(event.latitude)||!valid(event.longitude))return null;
+  const lat=Number(event.latitude),lon=Number(event.longitude);if(lat< -90||lat>90||lon< -180||lon>180)return null;
+  return {name:event.resolved_place||event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db',status:event.map_status};
+ }
  const rawLat=event.latitude,rawLon=event.longitude,lat=Number(rawLat),lon=Number(rawLon);
  if(rawLat!==null&&rawLat!==undefined&&rawLat!==''&&rawLon!==null&&rawLon!==undefined&&rawLon!==''&&Number.isFinite(lat)&&Number.isFinite(lon))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
  const codes=countryCodes(event.country);

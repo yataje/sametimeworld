@@ -1,0 +1,12 @@
+{
+  "page_version": "0.6.0",
+  "data_version": "v22",
+  "events": 38920,
+  "leaders": 6338,
+  "leaders_sha256": "34af3ba87bb3c136184d15de8d567aa2c07a31e2277ff043400b79eb2f06cf16",
+  "data_hash": "70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467",
+  "master_sha256": "76fa63c6cc6b81ebb3ae9ec4622fdb04d5000a20543dbbd00d8915de78ec646d",
+  "export_sha256": "b0323d1fbd18ce8d0dca63a1b4ad4084b6b03d15ba8906d9d713c5310049832d",
+  "coordinate_points": 7958,
+  "unclassified": 89
+}
