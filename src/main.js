@@ -5,24 +5,28 @@ import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
 
-const PAGE_VERSION='v0.5.1';
-const DB_VERSION_FALLBACK='v18';
+const PAGE_VERSION='v0.6.0';
+const DB_VERSION_FALLBACK='v22';
 function normalizeRegion(value){
   const v=String(value??'').trim();
   if(v==='아메리카/하와이'||v==='아메리카·하와이')return '아메리카';
   return v;
 }
 function normalizeEvents(raw){
-  return Object.values(raw||{}).filter(Boolean).map((x,i)=>({
-    id:Number(x.id??i+1),
-    date:String(x.date??''),
-    region:normalizeRegion(x.region),
-    importance:Number(x.importance??0),
-    country:String(x.country??''),
-    category:String(x.category??''),
-    title:String(x.title??''),
-    description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),verification:String(x.verification??''),locality:String(x.locality??'')
-  }));
+ const ids=new Set();
+ const number=v=>v===null||v===undefined||typeof v==='boolean'||String(v).trim()===''?null:Number(v);
+ return Object.values(raw||{}).filter(Boolean).map(x=>{
+  const id=number(x.id);if(!Number.isSafeInteger(id)||id<=0)throw new Error('Invalid event identifier');
+  if(ids.has(id))throw new Error('Duplicate event identifier');ids.add(id);
+  const lat=number(x.latitude),lon=number(x.longitude),valid=Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=-90&&lat<=90&&lon>=-180&&lon<=180;
+  const eligible=x.day_comparison_eligible==null?x.eligible_for_normalized_day_index:x.day_comparison_eligible;
+  return {...x,id,
+   date:String(x.date??''),region:normalizeRegion(x.region),importance:Number(x.importance??0),country:String(x.country??''),category:String(x.category??''),title:String(x.title??''),
+   description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),verification:String(x.verification??''),locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:valid?lat:null,longitude:valid?lon:null,location_precision:String(x.location_precision??''),
+   date_basis:String(x.date_basis??''),range_semantics:String(x.range_semantics??''),normalized_gregorian_range:x.normalized_gregorian_range||null,date_precision:String(x.date_precision??''),source_date_precision:String(x.source_date_precision??''),source_calendar:String(x.source_calendar??x.calendar??''),normalized_gregorian_date:x.normalized_gregorian_date||null,
+   eligible_for_normalized_day_index:eligible==null?null:eligible===true||eligible===1,inclusion_status:String(x.inclusion_status??''),sources:Array.isArray(x.sources)?x.sources:[],normalization_note:String(x.normalization_note??'')
+  };
+ });
 }
 function updateVersionLabels(meta={}){
   const page=document.getElementById('pageVersionLabel');
@@ -102,6 +106,7 @@ function applyDisplaySettings(shouldRender=false){
  root.setProperty('--event-bg-alpha',String(1-displaySettings.cardTransparency/100));
  root.setProperty('--detail-bg-alpha',String(1-displaySettings.detailTransparency/100));
  syncDisplaySettingsControls();
+ if(shouldRender&&typeof refreshDynamicDayLayout==='function')refreshDynamicDayLayout();
  if(shouldRender&&typeof requestRender==='function')requestRender();
 }
 const DISPLAY_CONTROL_MAP={
@@ -249,18 +254,65 @@ const utc=(y,m=0,d=1)=>Date.UTC(y,m,d);
 const ymd=t=>{let d=new Date(t);return [d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()]};
 const pad=n=>String(n).padStart(2,'0');
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let bins=[], maps=[], zoom=2, animation=0, dragging=false, dragMoved=false, lastY=0, recent=[], suppressClickUntil=0, wheelAccum=0;
+const DISPLAY_PLACE_ALIASES=new Map([
+ ['잉글랜드 왕국','잉글랜드'],['프랑스 왕국','프랑스'],['스페인 왕국','스페인'],['스페인 군주국','스페인'],['포르투갈 왕국','포르투갈'],
+ ['무굴 제국','무굴'],['오스만 제국','오스만'],['사파비 왕조','사파비'],['사파비 이란','사파비'],['신성로마제국','신성로마'],['신성 로마 제국','신성로마'],
+ ['러시아 차르국','러시아'],['모스크바 대공국/러시아 차르국','러시아'],['네덜란드 공화국','네덜란드'],['스웨덴 왕국','스웨덴'],['덴마크 왕국','덴마크'],
+ ['폴란드 왕국 / 폴란드-리투아니아 연방','폴란드-리투아니아'],['아유타야 왕국','아유타야'],['조호르 술탄국','조호르'],
+ ['비자야나가라 제국','비자야나가라'],['빌카밤바 신잉카국','빌카밤바'],['무로마치 막부','무로마치'],['오다 정권','오다']
+]);
+const PLACE_STATUS_WORDS=/(?:왕국|제국|군주국|공화국|연방|왕조|차르국|대공국|정권|막부|술탄국|자치령|보호령|식민지|총독령|부왕령|점령지|점령군정|군정|점령군|점령세력|식민\s*세력|공동체|정착지|정부|통치령|령)$/;
+function stripPlaceStatus(value){
+ let part=String(value??'').trim();if(!part)return '';
+ const direct=DISPLAY_PLACE_ALIASES.get(part);if(direct)return direct;
+ part=part.replace(/\([^)]*(?:정부|왕조|정권|점령|식민|군정)[^)]*\)/g,'').trim();
+ part=part.replace(/^(?:에스파냐|스페인|포르투갈|잉글랜드|영국|프랑스|네덜란드)령\s*/,'');
+ part=part.replace(/^(.{1,22}?)의\s+(?:탈주\s+노예\s+)?(?:공동체|식민\s*세력|식민지|정착지|점령지|점령군정|자치령).*$/,'$1');
+ part=part.replace(/^(?:오스만|스페인|에스파냐|포르투갈|잉글랜드|영국|프랑스|네덜란드)\s+(.+?)(?:\s+(?:지방|지역|총독령|부왕령|식민지|식민\s*세력|점령지|점령군정))$/,'$1');
+ part=part.replace(/\s+(?:총대주교좌|대교구|교구)$/,'');
+ while(PLACE_STATUS_WORDS.test(part))part=part.replace(PLACE_STATUS_WORDS,'').trim();
+ part=part.replace(/\s+(?:식민|점령|자치|군정|통치)\s*(?:세력|정부|당국)$/,'').trim();
+ return part;
+}
+function compactPurePlace(value,{locality=false}={}){
+ const original=String(value??'').trim();if(!original)return '';
+ const direct=DISPLAY_PLACE_ALIASES.get(original);if(direct)return direct;
+ let text=original.replace(/[“”"'「」『』]/g,'').trim();
+ if(locality){
+   text=text.split(/\s*[;|]\s*/)[0];
+   const possessive=text.match(/^(.{1,24}?)의\s+/);
+   if(possessive)text=possessive[1];
+ }
+ const parts=text.split(/\s*[·/]\s*/).map(stripPlaceStatus).filter(Boolean);
+ const cleaned=[...new Set(parts)].filter(p=>!/(?:식민\s*세력|점령군|점령세력|군정당국|통치당국)$/.test(p));
+ if(locality&&cleaned.length>1)return cleaned[0];
+ return cleaned.join('·')||stripPlaceStatus(text)||original;
+}
+function displayTimelinePlace(x){
+ const locality=compactPurePlace(x?.map_region,{locality:true})||compactPurePlace(x?.locality,{locality:true});
+ if(locality)return locality;
+ return compactPurePlace(x?.country)||'미상';
+}
+
+let bins=[], maps=[], specialRows=[], specialRowsBefore=[], zoom=2, animation=0, dragging=false, dragMoved=false, lastY=0, recent=[], suppressClickUntil=0, wheelAccum=0;
 let zoomFocusEventId=null; // 사건 위에서 확대할 때 해당 사건을 다음 단계에서도 유지
 let zoomTransition=false, queuedZoom=null, activeZoomFx=null; const ZOOM_DURATION=800;
 let byId=new Map();
-function parseDate(x){let m=/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/.exec(x.date||'');if(!m)return null;let y=+m[1],mo=+(m[2]||1),d=+(m[3]||1);if(m[3]&&!(mo>=1&&mo<=12&&d>=1&&d<=31))return null;return {y,mo,d,t:utc(y,mo-1,d),precision:m[3]?'일':m[2]?'월':'연도'};}
-function configureTimelineStart(events){
+function parseDate(x){
+ const m=/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/.exec(x.timeline_date||x.date||'');if(!m)return null;
+ const y=+m[1],mo=+(m[2]||1),d=+(m[3]||1),t=utc(y,mo-1,d),parts=ymd(t);
+ if(parts[0]!==y||parts[1]!==mo||parts[2]!==d)return null;
+ const labels={day:'일',month:'월',year:'연도',day_range:'일 범위',month_range:'월 범위',year_range:'연도 범위',circa:'추정',decade:'연대 범위'};
+ return {y,mo,d,t,precision:labels[eventPrecision(x)]||'미상'};
+}
+function configureTimelineStart(events,leaders=[]){
  let earliest=Infinity;
- for(const x of events){const m=/^(\d{4})/.exec(String(x?.date??''));if(!m)continue;const y=Number(m[1]);if(Number.isInteger(y))earliest=Math.min(earliest,y);}
+ for(const x of events){const m=/^(\d{4})/.exec(String(x?.timeline_date||x?.date||''));if(!m)continue;const y=Number(m[1]);if(Number.isInteger(y))earliest=Math.min(earliest,y);}
+ for(const x of Object.values(leaders||{})){const m=/^(\d{4})/.exec(String(x?.possible_from||x?.start||''));if(m)earliest=Math.min(earliest,Number(m[1]));}
  start=utc(Number.isFinite(earliest)?earliest:DEFAULT_START_YEAR,0,1);
 }
 function rebuildTimelineBins(){
- bins=[];maps=[];
+ bins=[];maps=[];specialRows=[];specialRowsBefore=[];
  for(let z=0;z<LEVELS.length;z++){
   let level=LEVELS[z], arr=[], p=start, index=0;
   while(p<end){let [y,m]=ymd(p),n;
@@ -278,36 +330,132 @@ function rebuildTimelineBins(){
    else n=p+DAY;
    arr.push({t:p,end:Math.min(n,end),idx:index++,top:0,height:level.h});p=n;
   }
-  bins.push(arr);maps.push(new Map());
+  bins.push(arr);maps.push(new Map());specialRows.push([]);specialRowsBefore.push(new Map());
  }
  for(let z=0;z<LEVELS.length;z++){let h=LEVELS[z].h;bins[z].forEach((b,i)=>b.top=i*h);}
 }
 function indexFor(t,z){let arr=bins[z],lo=0,hi=arr.length-1;while(lo<=hi){let mid=(lo+hi)>>1, b=arr[mid];if(t<b.t)hi=mid-1;else if(t>=b.end)lo=mid+1;else return mid;}return Math.max(0,Math.min(arr.length-1,lo));}
+function specialTimelineBucket(x,z){
+ if(z<3)return null;
+ const precision=eventPrecision(x),m=/^(\d{4})(?:-(\d{2}))?/.exec(String(x.timeline_date||x.date||''));if(!m)return null;
+ const year=Number(m[1]),month=Number(m[2]||0);
+ if(precision==='year')return {key:`year:${year}`,kind:'year',year,month:0,time:utc(year,0,1),label:`${year}년 주요사건`,note:'날짜 미정'};
+ if(precision==='month'&&month>=1&&month<=12)return {key:`month:${year}-${pad(month)}`,kind:'month',year,month,time:utc(year,month-1,1),label:`${year}년 ${month}월 주요사건`,note:'일자 미정'};
+ return null;
+}
 function rebuildEventIndexes(){
  byId=new Map(DATA.map(x=>[x.id,x]));
- maps=LEVELS.map(()=>new Map());
- for(let x of DATA){let dt=parseDate(x);if(!dt)continue;for(let z=0;z<LEVELS.length;z++){let i=indexFor(dt.t,z),m=maps[z];if(!m.has(i))m.set(i,[]);m.get(i).push({...x,precision:dt.precision});}}
+ maps=LEVELS.map(()=>new Map());specialRows=LEVELS.map(()=>[]);specialRowsBefore=LEVELS.map(()=>new Map());
+ const specialBuckets=LEVELS.map(()=>new Map());
+ for(const x of DATA){
+  const dt=parseDate(x);if(!dt)continue;const span=eventDateSpan(x);if(!span)continue;x.precision=dt.precision;
+  for(let z=0;z<LEVELS.length;z++){
+   if(!eventFitsLevel(x,z))continue;
+   const special=specialTimelineBucket(x,z);
+   if(special){
+    const bucket=specialBuckets[z];if(!bucket.has(special.key))bucket.set(special.key,{...special,events:[]});
+    bucket.get(special.key).events.push(x);continue;
+   }
+   const m=maps[z];
+   if(z>=4){
+    // Fine zoom: one representative card only for genuine ranges/circa records.
+    const t=eventDisplayTime(x,z),i=indexFor(t,z);if(!m.has(i))m.set(i,[]);m.get(i).push(x);
+    continue;
+   }
+   const last=indexFor(span.to,z);
+   for(let i=indexFor(span.from,z);i<=last;i++){if(!m.has(i))m.set(i,[]);m.get(i).push(x);}
+  }
+ }
+ for(let z=3;z<LEVELS.length;z++)specialRows[z]=[...specialBuckets[z].values()].sort((a,b)=>a.time-b.time||(a.kind==='year'?-1:1));
+ updateDayBinHeights();
+ rebuildTimelineLayouts();
 }
-function totalHeight(z){return bins[z].length*LEVELS[z].h;}
-function topAt(t,z){let i=indexFor(t,z),b=bins[z][i];return b.top+(Math.min(Math.max(t,b.t),b.end)-b.t)/(b.end-b.t)*b.height;}
-function timeAt(pos,z){let arr=bins[z], i=Math.min(arr.length-1,Math.max(0,Math.floor(pos/LEVELS[z].h))),b=arr[i];return b.t+(Math.max(0,Math.min(b.height,pos-b.top))/b.height)*(b.end-b.t);}
+function dayZoomIndex(){return LEVELS.findIndex(v=>v.kind==='day');}
+function eventCardOuterHeight(){const font=11*displaySettings.eventFont/100;return font*1.3+14;}
+function eventStackHeight(events,minimum=96){
+ const unit=eventCardOuterHeight(),cellPadding=14;let maxCards=0;
+ for(const region of REGIONS)maxCards=Math.max(maxCards,events.filter(x=>x.region===region).length);
+ return Math.max(minimum,Math.ceil(cellPadding+maxCards*unit));
+}
+function updateDayBinHeights(){
+ const z=dayZoomIndex(),arr=bins[z];if(!arr?.length)return;
+ const base=LEVELS[z].h;
+ for(const b of arr)b.height=eventStackHeight(maps[z]?.get(b.idx)||[],base);
+}
+function rebuildTimelineLayout(z){
+ const arr=bins[z];if(!arr?.length)return;
+ const before=new Map();specialRowsBefore[z]=before;
+ for(const row of specialRows[z]||[]){
+  const index=indexFor(row.time,z);row.anchorIndex=index;
+  if(!before.has(index))before.set(index,[]);before.get(index).push(row);
+ }
+ let top=0;
+ for(const b of arr){
+  for(const row of before.get(b.idx)||[]){row.height=eventStackHeight(row.events,96);row.top=top;top+=row.height;}
+  b.top=top;top+=b.height;
+ }
+}
+function rebuildTimelineLayouts(){for(let z=0;z<LEVELS.length;z++)rebuildTimelineLayout(z);}
+function refreshDynamicDayLayout(){
+ const anchor=timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom);
+ updateDayBinHeights();rebuildTimelineLayouts();
+ if(Number.isFinite(anchor))viewport.scrollTop=Math.max(0,topAt(anchor,zoom)-viewport.clientHeight/2);
+ if(space)space.style.height=totalHeight(zoom)+'px';
+}
+
+function totalHeight(z){const arr=bins[z];return (arr?.length?(arr.at(-1).top+arr.at(-1).height):0)+2*timelinePadding(z);}
+
+function timelinePadding(z){return Math.max(0,(viewport.clientHeight-LEVELS[z].h)/2);}
+function topAt(t,z){let i=indexFor(t,z),b=bins[z][i];return timelinePadding(z)+b.top+(Math.min(Math.max(t,b.t),b.end)-b.t)/(b.end-b.t)*b.height;}
+function indexForPosition(pos,z){
+ pos-=timelinePadding(z);const arr=bins[z];let lo=0,hi=arr.length-1;
+ while(lo<=hi){const mid=(lo+hi)>>1,b=arr[mid];if(pos<b.top)hi=mid-1;else if(pos>=b.top+b.height)lo=mid+1;else return mid;}
+ return Math.max(0,Math.min(arr.length-1,lo));
+}
+function timeAt(pos,z){pos-=timelinePadding(z);const arr=bins[z],i=indexForPosition(pos+timelinePadding(z),z),b=arr[i];return b.t+(Math.max(0,Math.min(b.height,pos-b.top))/b.height)*(b.end-b.t);}
 function label(b,z){let [y,m,d]=ymd(b.t),kind=LEVELS[z].kind;if(kind==='decade')return `${y}–${y+9}`;if(kind==='five')return `${y}–${y+4}`;if(kind==='year')return String(y);if(kind==='month')return `${y}.${pad(m)}`;if(kind==='fortnight'||kind==='week'){let [ey,em,ed]=ymd(Math.max(b.t,b.end-DAY));return ey===y&&em===m?`${y}.${pad(m)}.${pad(d)}–${pad(ed)}`:`${y}.${pad(m)}.${pad(d)}–${ey}.${pad(em)}.${pad(ed)}`;}return `${y}.${pad(m)}.${pad(d)}`;}
 function dateCellLabel(b,z){const [y,m,d]=ymd(b.t),kind=LEVELS[z].kind;if(kind==='decade'){return `<span class="date-year">${y}</span><span class="date-rest">–${y+9}</span>`;}if(kind==='five'){return `<span class="date-year">${y}</span><span class="date-rest">–${y+4}</span>`;}if(kind==='year')return String(y);if(kind==='month')return `<span class="date-year">${y}</span><span class="date-rest">${pad(m)}</span>`;if(kind==='fortnight'||kind==='week'){const [ey,em,ed]=ymd(Math.max(b.t,b.end-DAY));const rest=(ey===y&&em===m)?`${pad(m)}.${pad(d)}–${pad(ed)}`:`${pad(m)}.${pad(d)}–${pad(em)}.${pad(ed)}`;return `<span class="date-year">${y}</span><span class="date-rest">${rest}</span>`;}return `<span class="date-year">${y}</span><span class="date-rest">${pad(m)}.${pad(d)}</span>`;}
 function selectTimelineCards(sorted,limit,focusedId){
- const focused=sorted.find(x=>x.id===focusedId);
- return (focused?[focused,...sorted.filter(x=>x.id!==focusedId)]:sorted).slice(0,limit);
+ const shown=sorted.slice(0,limit),focused=sorted.find(x=>x.id===focusedId);
+ if(focused&&!shown.some(x=>x.id===focused.id)){shown[Math.max(0,limit-1)]=focused;const rank=new Map(sorted.map((x,i)=>[x.id,i]));shown.sort((a,b)=>(rank.get(a.id)??Infinity)-(rank.get(b.id)??Infinity));}
+ return shown;
 }
-function render(){if(activeAppTab==='web')return;let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=viewport.scrollTop;let lo=Math.max(0,Math.floor(top/level.h)-4),hi=Math.min(bins[z].length-1,Math.ceil((top+height)/level.h)+4);let content='';
- for(let i=lo;i<=hi;i++){let b=bins[z][i], events=maps[z].get(i)||[],groups=REGIONS.map(r=>events.filter(x=>x.region===r));let cardList=groups.map(g=>{let sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||a.date.localeCompare(b.date)||a.id-b.id);let limit=level.limit;let shown=selectTimelineCards(sorted,limit,zoomFocusEventId);
-  let cards=shown.map(x=>{let fuzzy=(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일');let labelDate=x.date;return `<div role="button" tabindex="0" class="event ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(fuzzy?' · 정확한 날짜 미상':''))}"><span class="event-text"><strong>${escapeHTML(x.country||'미상')}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;}).join('');return cards+(g.length>limit?`<div class="more">외 ${g.length-limit}건 · 확대하여 보기</div>`:'')||'<div class="blank">·</div>';});
- content+=`<section class="timeline-row" style="top:${b.top}px;height:${b.height}px" data-index="${i}"><div class="date date-left">${dateCellLabel(b,z)}</div>${cardList.map(x=>`<div>${x}</div>`).join('')}<div class="date date-right">${dateCellLabel(b,z)}</div></section>`;
+function timelineCardHTML(x,z,{summary=false}={}){
+ const fuzzy=!summary&&(x.eligible_for_normalized_day_index===false||/범위|추정/.test(x.precision)||(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일'));
+ const labelDate=x.date_label||x.date;
+ return `<div role="button" tabindex="0" class="event ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}"><span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
+}
+function timelineRegionCards(events,z,level,{summary=false}={}){
+ const groups=REGIONS.map(r=>events.filter(x=>x.region===r));
+ return groups.map(g=>{
+  const sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||String(a.date||'').localeCompare(String(b.date||''))||a.id-b.id);
+  const limit=summary||level.kind==='day'?Infinity:level.limit;
+  const shown=Number.isFinite(limit)?selectTimelineCards(sorted,limit,zoomFocusEventId):sorted;
+  const cards=shown.map(x=>timelineCardHTML(x,z,{summary})).join('');
+  return cards+(Number.isFinite(limit)&&g.length>limit?`<div class="more">외 ${g.length-limit}건 · 확대하여 보기</div>`:'')||'<div class="blank">·</div>';
+ });
+}
+function specialDateCellLabel(row){
+ if(row.kind==='year')return `<span class="date-year">${row.year}년</span><span class="date-rest">주요사건</span><small>${row.note}</small>`;
+ return `<span class="date-year">${row.year}</span><span class="date-rest">${pad(row.month)}월 주요사건</span><small>${row.note}</small>`;
+}
+function specialTimelineRowHTML(row,z,level){
+ const cards=timelineRegionCards(row.events,z,level,{summary:true});
+ return `<section class="timeline-row timeline-summary-row" style="top:${row.top+timelinePadding(z)}px;height:${row.height}px" data-index="${row.anchorIndex}" data-anchor-time="${row.time}"><div class="date date-left">${specialDateCellLabel(row)}</div>${cards.map(x=>`<div>${x}</div>`).join('')}<div class="date date-right">${specialDateCellLabel(row)}</div></section>`;
+}
+function render(){if(activeAppTab==='web')return;let z=zoom,level=LEVELS[z],height=viewport.clientHeight,top=viewport.scrollTop;let lo=Math.max(0,indexForPosition(top,z)-4),hi=Math.min(bins[z].length-1,indexForPosition(top+height,z)+4);let content='';space.style.height=totalHeight(z)+'px';
+ for(let i=lo;i<=hi;i++){
+  let b=bins[z][i];
+  for(const row of specialRowsBefore[z]?.get(i)||[])content+=specialTimelineRowHTML(row,z,level);
+  const cardList=timelineRegionCards(maps[z].get(i)||[],z,level);
+  content+=`<section class="timeline-row" style="top:${b.top+timelinePadding(z)}px;height:${b.height}px" data-index="${i}"><div class="date date-left">${dateCellLabel(b,z)}</div>${cardList.map(x=>`<div>${x}</div>`).join('')}<div class="date date-right">${dateCellLabel(b,z)}</div></section>`;
  }
  const activeCard=document.activeElement?.closest?.('.event[data-id]');
  const activeCardId=activeCard&&rows.contains(activeCard)?activeCard.dataset.id:null;
  rows.innerHTML=content;
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
- $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위`;
+ $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위${level.kind==='day'?' · 해당 날짜 카드 전체 표시':''}`;
  refreshLeaderHeaders(center);
 }
 let renderQueued=false;function requestRender(){if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;render()});}
@@ -334,9 +482,11 @@ function reanchorFocusedEvent(id,anchorY){
  if(Math.abs(delta)>0.5){viewport.scrollTop+=delta;render();}
  return true;
 }
-function hoveredEventId(e){
- const el=e.target?.closest?.('.event[data-id]');
- return el?Number(el.dataset.id):null;
+function hoveredEventAnchor(e){
+ const el=e.target?.closest?.('.event[data-id]');if(!el)return null;
+ const row=el.closest('.timeline-row'),idx=Number(row?.dataset.index),b=bins[zoom]?.[idx],explicit=Number(row?.dataset.anchorTime);
+ const vr=viewport.getBoundingClientRect(),er=el.getBoundingClientRect();
+ return {id:Number(el.dataset.id),anchorY:er.top+er.height/2-vr.top,time:Number.isFinite(explicit)?explicit:(b?(b.t+b.end)/2:null)};
 }
 function stopZoomTransition(){
  const fx=activeZoomFx;
@@ -348,7 +498,7 @@ function stopZoomTransition(){
  render();
  if(fx.eventAnchored)reanchorFocusedEvent(fx.anchorEventId,fx.anchorY);
 }
-function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
+function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null,anchorTime=null){
  next=Math.max(0,Math.min(LEVELS.length-1,next));
  anchorY=Math.max(0,Math.min(viewport.clientHeight,anchorY));
  // 확대/축소 애니메이션은 시각 효과일 뿐 입력 잠금이 아니다.
@@ -356,7 +506,7 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
  if(zoomTransition)stopZoomTransition();
  if(next===zoom)return;
  // 직접 여러 단계를 요청한 경우에만 인접 단계씩 이어 간다. 사용자 입력은 언제든 이 큐를 끊을 수 있다.
- if(Math.abs(next-zoom)>1){queuedZoom={next,anchorY,anchorEventId};next=zoom+Math.sign(next-zoom);}
+ if(Math.abs(next-zoom)>1){queuedZoom={next,anchorY,anchorEventId,anchorTime};next=zoom+Math.sign(next-zoom);}
  cancelAnimationFrame(animation);
  const previous=zoom;
  playZoomCue(next>previous?'in':'out');
@@ -364,7 +514,7 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
  const eventAnchored=Boolean(anchorDate);
  if(eventAnchored)zoomFocusEventId=Number(anchorEventId);
  else zoomFocusEventId=null;
- const oldTime=eventAnchored?anchorDate.t:timeAt(viewport.scrollTop+anchorY,zoom);
+ const oldTime=eventAnchored?(anchorTime??anchorDate.t):timeAt(viewport.scrollTop+anchorY,zoom);
  const overlay=snapshotViewport(), anchorX=viewport.clientWidth/2;
  zoomTransition=true; zoom=next;
  space.style.height=totalHeight(zoom)+'px';
@@ -389,7 +539,7 @@ function setZoom(next,anchorY=viewport.clientHeight/2,anchorEventId=null){
   incoming.cancel();snapshotAnimation.cancel();overlay.remove();
   render();
   if(eventAnchored)reanchorFocusedEvent(anchorEventId,anchorY);
-  if(queuedZoom){const q=queuedZoom;queuedZoom=null;setZoom(q.next,q.anchorY,q.anchorEventId);}
+  if(queuedZoom){const q=queuedZoom;queuedZoom=null;setZoom(q.next,q.anchorY,q.anchorEventId,q.anchorTime);}
  };
  snapshotAnimation.finished.then(finish).catch(()=>{
   // cancel()은 이전 애니메이션의 finished Promise를 reject한다.
@@ -416,8 +566,8 @@ viewport.addEventListener('wheel',e=>{
   // 장치별 delta 크기를 '여러 단계'로 바꾸지 않고, 한 번에 한 단계만 요청한다.
   // 소비한 입력의 잔여값은 다음 휠 조작에 넘기지 않는다.
   wheelAccum=0;
-  const anchorEventId=hoveredEventId(e);
-  setZoom(base-direction,anchorY,anchorEventId);
+  const anchor=hoveredEventAnchor(e);
+  setZoom(base-direction,anchor?.anchorY??anchorY,anchor?.id??null,anchor?.time??null);
  }
 },{passive:false});
 viewport.addEventListener('scroll',requestRender,{passive:true});
@@ -469,7 +619,7 @@ function eventDateDisplay(raw){
  return {precision:'—',display:value||'날짜 미상',raw:value};
 }
 function renderEventMeta(x){
- const date=eventDateDisplay(x.date),fields=[['날짜',date.display,date.precision],['대륙',x.region],['국가',x.country],['지역',x.locality],['카테고리',x.category]];
+ const date=eventDateDisplay(x.date_label||x.date),basis=eventDateBasis(x),fields=[['날짜',date.display,date.precision],['날짜 기준',basis],['환산 범위',x.normalized_gregorian_range?`${x.normalized_gregorian_range.start} ~ ${x.normalized_gregorian_range.end}`:''],['대륙',x.region],['국가',x.country],['지역',x.locality],['카테고리',x.category]];
  webEventMeta.replaceChildren();
  for(const [label,value,precision] of fields){
   if(!value)continue;
@@ -493,10 +643,13 @@ function openWebForEvent(id,{historyMode='push'}={}){
  webQuery.textContent=x.title;
  renderEventMeta(x);
  const body=$('#eventDetailBody');body.replaceChildren();
- for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date],['검증 상태',d.verification]]){
+ for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date]]){
   if(!value)continue;
   const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=label+' ';p.append(strong,document.createTextNode(value));body.append(p);
  }
+ const warnings=[...new Set([x.caution,x.calendar_notes].filter(v=>String(v??'').trim()))];
+ if(warnings.length){const section=document.createElement('details'),summary=document.createElement('summary');summary.textContent='자료 해석 시 주의사항';section.className='source-cautions';section.append(summary);for(const text of warnings){const p=document.createElement('p');p.textContent=text;section.append(p);}body.append(section);}
+ for(const url of x.sources||[]){if(!/^https?:\/\//i.test(url))continue;const p=document.createElement('p'),a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='출처 · '+url;p.append(a);body.append(p);}
  const link=$('#externalSearch');link.hidden=false;
  link.href='https://www.google.com/search?q='+encodeURIComponent([x.date,d.subject,x.title].filter(Boolean).join(' '));
  setAppTab('web');
@@ -523,13 +676,53 @@ function parseSearchDateQuery(raw){
  const t=utc(y,mo-1,d),v=ymd(t); if(v[0]!==y||v[1]!==mo||v[2]!==d)return null;
  return {precision:'day',normalized:`${String(y).padStart(4,'0')}-${pad(mo)}-${pad(d)}`};
 }
+function dateNavigationTarget(raw){
+ const q=parseSearchDateQuery(raw);if(!q)return null;const a=q.normalized.split('-').map(Number),t=utc(a[0],(a[1]||1)-1,a[2]||1);
+ return t<start||t>=end?null:{t,zoom:q.precision==='day'?6:q.precision==='month'?3:2,date:q.normalized};
+}
+function eventDateBasis(x){
+ if(x.timeline_index_basis)return x.eligible_for_normalized_day_index===true?'원자료의 그레고리력 일자 · 독립 재검증 전':x.normalized_gregorian_range?'원자료의 환산 범위 · 독립 재검증 전':'원문 정밀도 유지 · 일별 동시성 미확정';
+ if(x.date_basis==='verified_gregorian_interval'&&x.normalized_gregorian_range)return x.range_semantics==='event_duration'?'검증된 그레고리력 기간':'검증된 그레고리력 범위 · 발생일 미상';
+ return x.eligible_for_normalized_day_index===true?'검증된 그레고리력':x.eligible_for_normalized_day_index===false?'원출처 날짜 · 역법/정밀도 확인 중':'기존 수록 날짜';
+}
+function eventPrecision(x){
+ if(x.date_precision)return x.date_precision;
+ const v=String(x.date||'');return /^\d{4}-\d{2}-\d{2}$/.test(v)?'day':/^\d{4}-\d{2}$/.test(v)?'month':/[/~–]/.test(v)?'year_range':'year';
+}
+function eventDayComparable(x){
+ return /^\d{4}-\d{2}-\d{2}$/.test(x.normalized_gregorian_date||x.date||'')&&eventPrecision(x)==='day'&&x.eligible_for_normalized_day_index!==false;
+}
+function eventFitsLevel(x,z){
+ // Zooming in must not make a known historical record disappear. Fine levels use one representative slot for imprecise/range dates.
+ if(z<=3)return true;
+ return Boolean(eventDateSpan(x));
+}
+function eventDateSpan(x){
+ const parts=String(x.timeline_date||x.date||'').match(/\d{4}(?:-\d{2}){0,2}/g);if(!parts?.length)return null;
+ const bound=(s,last)=>{const a=s.split('-').map(Number);return last?(a.length===1?utc(a[0]+1,0,1)-1:a.length===2?utc(a[0],a[1],1)-1:utc(a[0],a[1]-1,a[2])):utc(a[0],(a[1]||1)-1,a[2]||1);};
+ return {from:bound(parts[0],false),to:bound(parts.at(-1),true)};
+}
+function eventDisplayTime(x,z){
+ const dt=parseDate(x),span=eventDateSpan(x);if(!dt||!span)return dt?.t??null;
+ // Month/fortnight/week/day zooms show uncertain/range records once, at the midpoint of their possible interval.
+ if(z>=4||eventPrecision(x)!=='day')return Math.floor((span.from+span.to)/2);
+ return dt.t;
+}
+function eventMatchesDate(x,q){
+ if(q.precision==='day')return eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized;
+ const span=eventDateSpan(x),querySpan=eventDateSpan({date:q.normalized});if(!span||!querySpan)return false;
+ if(q.precision==='month'&&['year','year_range','circa','decade'].includes(eventPrecision(x)))return false;
+ return span.from<=querySpan.to&&span.to>=querySpan.from;
+}
 function eventDetails(x){
  const result={subject:x.subject||'',place:x.place||'',original_date:x.original_date||'',verification:x.verification||'',description:''};
- const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification'};
+ const INTERNAL_DETAIL_LABEL=/^(?:원역법|날짜 검증|검증 상태)(?:\s*[:：]|\s+|$)/;
+ const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};
  const body=[];
  for(const line of String(x.description||'').split('\n')){
   const trimmed=line.trim();const prefix=Object.keys(labels).find(p=>trimmed.startsWith(p));
   if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}
+  if(INTERNAL_DETAIL_LABEL.test(trimmed))continue;
   if(trimmed.startsWith('출처 파일:'))continue;
   body.push(line);
  }
@@ -560,14 +753,14 @@ function searchEvents(raw){
  const q=String(raw??'').trim();if(!q)return {all:[],shown:[],dateQuery:null};
  const dq=parseSearchDateQuery(q);let all;
  if(dq){
-  all=DATA.filter(x=>dq.precision==='day'?x.date===dq.normalized:dq.precision==='month'?x.date.startsWith(dq.normalized):x.date.startsWith(dq.normalized))
+  all=DATA.filter(x=>eventMatchesDate(x,dq))
     .slice()
     .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  }else{
   const query=normalizedSearchText(q);
   all=DATA.map(x=>({x,score:searchScore(x,query)}))
     .filter(item=>Number.isFinite(item.score))
-    .sort((a,b)=>a.score-b.score||(b.x.importance||0)-(a.x.importance||0)||String(a.x.date||'').localeCompare(String(b.x.date||''))||a.x.id-b.x.id)
+    .sort((a,b)=>String(a.x.date||'').localeCompare(String(b.x.date||''))||a.score-b.score||(b.x.importance||0)-(a.x.importance||0)||a.x.id-b.x.id)
     .map(item=>item.x);
  }
  return {all,shown:all.slice(0,10),dateQuery:dq};
@@ -575,7 +768,7 @@ function searchEvents(raw){
 function searchSuggestionHTML(x){
  const d=eventDetails(x);
  const sub=[x.country,d.subject].filter(Boolean).join(' · ');
- return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
+ return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}${x.date_basis==='verified_gregorian_interval'?' · 환산 범위':x.eligible_for_normalized_day_index===false?' · 원출처':''}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
 function hideSearchSuggestions(){searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
@@ -583,16 +776,17 @@ function renderSearch(){
  if(!q){hideSearchSuggestions();return;}
  const result=searchEvents(q);
  if(!result.shown.length){
-  searchResults.innerHTML='<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
+  const jump=dateNavigationTarget(q);
+  searchResults.innerHTML=jump?`<button type="button" class="search-suggestion search-date-jump" data-date="${escapeHTML(jump.date)}"><span class="ss-date">${escapeHTML(jump.date)}</span><span class="ss-main"><strong>해당 날짜로 이동</strong><small>수록 사건 없음 · 지도자 자료 확인</small></span></button>`:'<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
   searchResults.hidden=false;
   return;
  }
  searchResults.innerHTML=result.shown.map(searchSuggestionHTML).join('');
  searchResults.hidden=false;
 }
-function zoomForEvent(x){return /^\d{4}-\d{2}-\d{2}$/.test(x.date)?LEVELS.findIndex(v=>v.kind==='day'):/^\d{4}-\d{2}$/.test(x.date)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
+function zoomForEvent(x){const p=eventPrecision(x);return eventDayComparable(x)?LEVELS.findIndex(v=>v.kind==='day'):['day','month','month_range','day_range'].includes(p)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
 function navigateToEvent(id){
- const x=byId.get(Number(id));if(!x)return;const dt=parseDate(x);if(!dt)return;
+ const x=byId.get(Number(id));if(!x)return;const dt=parseDate(x);if(!dt||!REGIONS.includes(x.region)){hideSearchSuggestions();openWebForEvent(x.id);return;}
  const regionKey={'유럽/아프리카':'europe','중동':'middle','동아시아/오세아니아':'east','아메리카':'americas'}[x.region];
  if(regionKey)applyMobileRegion(regionKey);
  hideSearchSuggestions();
@@ -602,9 +796,14 @@ function navigateToEvent(id){
  $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;
  const rowCenter=topAt(dt.t,zoom)+LEVELS[zoom].h/2;viewport.scrollTop=Math.max(0,rowCenter-viewport.clientHeight/2);render();
 }
+function navigateToDateQuery(raw){
+ const target=dateNavigationTarget(raw);if(!target)return;hideSearchSuggestions();if(zoomTransition)stopZoomTransition();
+ cancelAnimationFrame(animation);queuedZoom=null;wheelAccum=0;zoomFocusEventId=null;zoom=target.zoom;space.style.height=totalHeight(zoom)+'px';
+ $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;viewport.scrollTop=Math.max(0,topAt(target.t,zoom)+LEVELS[zoom].h/2-viewport.clientHeight/2);render();
+}
 function goToBestSearchResult(){
  const first=searchEvents(searchInput.value).shown[0];
- if(first)navigateToEvent(first.id);
+ if(first)navigateToEvent(first.id);else navigateToDateQuery(searchInput.value);
 }
 searchInput.addEventListener('input',renderSearch);
 searchInput.addEventListener('focus',renderSearch);
@@ -614,28 +813,44 @@ searchInput.addEventListener('keydown',e=>{
 });
 searchGo.addEventListener('click',goToBestSearchResult);
 searchResults.addEventListener('click',e=>{
+ const dateJump=e.target.closest('.search-date-jump');if(dateJump){navigateToDateQuery(dateJump.dataset.date);return;}
  const result=e.target.closest('.search-suggestion');
  if(result)navigateToEvent(result.dataset.id);
 });
 document.addEventListener('pointerdown',e=>{if(!headerSearch.contains(e.target))hideSearchSuggestions();});
+
+function initUnclassifiedEvents(){
+ const events=DATA.filter(x=>!REGIONS.includes(x.region)||!parseDate(x));
+ const button=document.getElementById('unclassifiedOpen'),dialog=document.getElementById('unclassifiedDialog'),list=document.getElementById('unclassifiedList');
+ if(!button||!dialog||!list)return;
+ button.hidden=events.length===0;button.textContent=`미분류 ${events.length.toLocaleString()}건`;
+ button.addEventListener('click',()=>{
+  list.replaceChildren();
+  for(const x of events){const item=document.createElement('button');item.type='button';item.className='unclassified-item';item.textContent=`${x.date_label||x.date} · ${x.title}`;item.addEventListener('click',()=>{dialog.close();openWebForEvent(x.id);});list.append(item);}
+  dialog.showModal();
+ });
+ document.getElementById('unclassifiedClose').addEventListener('click',()=>dialog.close());
+}
 
 async function bootSameTimeWorld(){
  const statusEl=$('#status');
  try{
   if(statusEl)statusEl.textContent='자료를 확인하고 있습니다…';
   updateVersionLabels({});
-  const [rawEvents,meta]=await Promise.all([
+  const [rawEvents,meta,rawLeaders]=await Promise.all([
     fetchDataset('events'),
-    fetchDataset('meta').catch(()=>({}))
+    fetchDataset('meta').catch(()=>({})),
+    fetchDataset('leaders')
   ]);
   DATA=normalizeEvents(rawEvents);
   if(!DATA.length)throw new Error('사건 자료가 비어 있습니다.');
-  configureTimelineStart(DATA);
+  configureTimelineStart(DATA,rawLeaders);
   rebuildTimelineBins();
   rebuildEventIndexes();
   loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchDataset);
   updateVersionLabels(meta||{});
   initMobileRegionNav();
+  initUnclassifiedEvents();
   window.addEventListener('resize',requestRender);
   space.style.height=totalHeight(zoom)+'px';
   viewport.scrollTop=topAt(utc(1900,0,1),zoom)-viewport.clientHeight/3;

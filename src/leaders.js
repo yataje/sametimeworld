@@ -83,7 +83,7 @@ export async function loadPackagedLeaderGroups(fetchJSON){
   const name=String(x.name_ko||x.name||x.name_en||'').trim();
   if(!group||!name||!from||!to||from>to)continue;
   (groups[group]??=[]).push({id:x.id,grp:group,polity:PACKAGED_POLITY_ALIASES[polity]||polity,name,
-   role_type:x.role_type||'other_leader',office:x.office||x.office_en||'',active_from:from,active_to:to,
+   source_urls:String(x.source_urls||''),notes:String(x.notes||''),region:String(x.region||''),polity_label:String(x.polity||polity),country_label:String(x.country||country),role_type:x.role_type||'other_leader',office:x.office||x.office_en||'',active_from:from,active_to:to,
    start_precision:x.start_precision||'unknown',end_precision:x.end_precision||'unknown',
    is_acting:x.acting?1:0,verification_status:x.verification||x.verification_status||'',review_required:x.review_required?1:0});
  }
@@ -98,6 +98,7 @@ export function setLeaderData(groups){
 }
 export function leadersForDate(dateKey){
  const result={};
+ if(dateKey<'1830-01-01'){for(const region of ['europe','middle','east','americas'])result[`early:${region}`]=Object.values(LEADER_GROUP_DATA).flat().filter(r=>historicalRegion(r.region)===region&&r.active_from<=dateKey&&r.active_to>=dateKey);}
  for(const [region,cfgs] of Object.entries(LEADER_REGION_CONFIG))for(const cfg of cfgs)result[`${region}:${cfg.key}`]=localLeaderRows(cfg,dateKey);
  return result;
 }
@@ -210,6 +211,7 @@ function activeEra(cfg,dateKey){return cfg.eras.find(x=>dateKey>=x.from&&(!x.to|
 function activeEraTitles(cfg,dateKey){const e=activeEra(cfg,dateKey);return e?e.titles:[];}
 function activeEraDisplay(cfg,dateKey){const e=activeEra(cfg,dateKey);return e?(e.display||cfg.label):cfg.label;}
 export function leaderRegionHTML(region,dateKey,result=null,mode='loading'){
+ if(dateKey<'1830-01-01')return historicalLeaderHTML(region,dateKey,result,mode);
  const cfgs=LEADER_REGION_CONFIG[region]||[],byKey=new Map(cfgs.map(c=>[c.key,c]));
  const layout=LEADER_REGION_LAYOUT[region]||[];
  return layout.map(group=>{
@@ -224,6 +226,24 @@ export function leaderRegionHTML(region,dateKey,result=null,mode='loading'){
   }).filter(Boolean).join('');
   return `<div class="leader-subrow"><div class="leader-subregion">${escapeHTML(group.label)}</div><div class="leader-inline-list">${items||'<span class="leader-inline-item no-data"><span class="leader-names">—</span></span>'}</div></div>`;
  }).join('');
+}
+function historicalRegion(region){
+ if(region==='유럽/아프리카')return 'europe';
+ if(region==='중동'||region==='중동·중앙아시아·남아시아')return 'middle';
+ if(region==='동아시아/오세아니아')return 'east';
+ if(region==='아메리카'||region==='아메리카/하와이')return 'americas';
+ return '';
+}
+function historicalLeaderHTML(region,dateKey,result,mode){
+ const rows=result?.[`early:${region}`]||[],polities=new Map();
+ for(const r of rows){const key=r.polity_label||r.polity;(polities.get(key)||polities.set(key,[]).get(key)).push(r);}
+ const items=[...polities].sort((a,b)=>a[0].localeCompare(b[0],'ko')).map(([polity,records])=>{
+  const names=[...new Set(records.map(r=>r.name))].join(' · '),uncertain=records.some(r=>r.start_precision!=='day'||r.end_precision!=='day'||r.review_required);
+  const detail=records.map(r=>`${r.name}: ${r.office}${r.notes?' · '+r.notes:''}`).join(' · '),tip=`${dateKey} · ${detail}${uncertain?' · 재임 날짜 불확실(원본 정밀도 유지)':''}`;
+  return `<span class="leader-inline-item"><b>${escapeHTML(polity)}:</b><span class="leader-names" title="${escapeHTML(tip)}">${escapeHTML(names)}</span></span>`;
+ }).join('');
+ const empty=mode==='loading'?'…':mode==='error'?'불러오기 실패':'해당 날짜의 자료 없음';
+ return `<div class="leader-subrow"><div class="leader-subregion">당시 정체</div><div class="leader-inline-list">${items||`<span class="leader-inline-item no-data"><span class="leader-names">${empty}</span></span>`}</div></div>`;
 }
 function localRole(rec){
  if(rec.role_type==='head_of_government')return 'gov';
