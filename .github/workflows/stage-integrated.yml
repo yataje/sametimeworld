@@ -17,43 +17,63 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Correct strict browser locator and synchronize test capsule
+      - name: Import approved final overlay without changing workflows
+        env:
+          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-7584-8206-8086-9b5dfe73088d/raw?se=2026-10-02T21%3A21%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=a99c620d-a4b6-56d5-967b-17af50611522&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T19%3A55%3A22Z&ske=2026-10-03T19%3A55%3A22Z&sks=b&skv=2026-02-06&sig=TTzwoq6Qqf5T9xH2qmYnc0GC9XnmSSQ8jCB4Nz0isx4%3D'
         run: |
+          echo "::add-mask::$TRANSFER_URL"
+          mkdir -p _local/browser-checks
+          curl --fail --silent --show-error --location --max-time 120 "$TRANSFER_URL" -o "$RUNNER_TEMP/overlay.zip"
+          echo "668acfd806213e2ca2332c468cae44cf5c3e03d17e5260b825d85ba2e7a40437  $RUNNER_TEMP/overlay.zip" | sha256sum --check
           python3 - <<'PY'
-          import pathlib,json,base64,gzip,hashlib
-          p=pathlib.Path('tests/browser-smoke.py');s=p.read_text();s=s.replace("locator('xpath=ancestor::section')","locator('xpath=ancestor::section[1]')");p.write_text(s)
-          mp=pathlib.Path('source-pack/manifest.json');m=json.loads(mp.read_text());old=m['tests/browser-smoke.py']['file'];b=p.read_bytes();h=hashlib.sha256(b).hexdigest();name='source-pack/'+h[:24]+'.txt';pathlib.Path(name).write_text(base64.b64encode(gzip.compress(b,mtime=0)).decode()+'\n');m['tests/browser-smoke.py']={'file':name,'sha256':h,'size':len(b)};mp.write_text(json.dumps(m,indent=2)+'\n')
-          if old!=name:pathlib.Path(old).unlink(missing_ok=True)
+          import json,os,pathlib,zipfile
+          root=pathlib.Path.cwd()
+          def target(name):
+              p=root/name
+              if not p.resolve().is_relative_to(root) or any(v in ('.git','.github') for v in pathlib.PurePosixPath(name).parts):raise ValueError('Unsafe overlay path')
+              return p
+          with zipfile.ZipFile(os.environ['RUNNER_TEMP']+'/overlay.zip') as z:
+              for info in z.infolist():
+                  if info.filename=='_deployment_delete.json':continue
+                  p=target(info.filename);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(info))
+              for name in json.loads(z.read('_deployment_delete.json')):
+                  if not name.startswith(('public/t/','source-pack/')):raise ValueError('Unexpected removal')
+                  target(name).unlink(missing_ok=True)
+          assert json.loads(target('package.json').read_text())['version']=='0.6.0'
+          print('Approved final overlay applied; workflows preserved.')
           PY
       - name: Unit tests and production build
         run: |
-          npm test
-          python3 -m unittest discover -s tests -p 'test_*.py'
-          npm run build
+          npm test > _local/browser-checks/node-tests.log 2>&1
+          python3 -m unittest discover -s tests -p 'test_*.py' > _local/browser-checks/python-tests.log 2>&1
+          npm run build > _local/browser-checks/build.log 2>&1
+          tail -9 _local/browser-checks/node-tests.log
+          cat _local/browser-checks/python-tests.log
+          tail -1 _local/browser-checks/build.log
       - name: Install browser test runner
         run: |
           python3 -m pip install playwright --quiet
           python3 -m playwright install --with-deps chromium > "$RUNNER_TEMP/browser-install.log" 2>&1
       - name: Real desktop and mobile browser regression checks
         run: |
-          mkdir -p _local/browser-checks
           python3 tests/browser-smoke.py --integrated --output _local/browser-checks --expected-events 38920 --expected-leaders 6338 --expected-hash 70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467 > _local/browser-checks/console.log 2>&1
           python3 - <<'PY'
-          import json
+          import json,pathlib
           d=json.load(open('_local/browser-checks/report.json'))
           assert d.get('success') is True,d
           assert len(d['checks'])>=11,d
+          for name in ('desktop.png','mobile.png'):assert pathlib.Path('_local/browser-checks',name).stat().st_size>10000
           print(json.dumps(d,ensure_ascii=False))
           PY
-      - name: Commit only after all checks pass
+      - name: Commit verified application files only
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m 'test: complete validated desktop and mobile integrated smoke checks'
-            git push origin HEAD:deploy/integrated-20261003
-          fi
+          test -z "$(git diff --cached --name-only -- .github/workflows)"
+          git commit -m 'feat: integrated 38,920-event release with safe maps and honest date precision' > _local/browser-checks/commit.log 2>&1
+          git push origin HEAD:deploy/integrated-20261003 >> _local/browser-checks/commit.log 2>&1
+          git rev-parse HEAD > _local/browser-checks/verified-commit.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
