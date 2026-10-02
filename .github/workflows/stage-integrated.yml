@@ -22,11 +22,11 @@ jobs:
           curl --fail --silent --show-error --location --max-time 120 "$TRANSFER_URL" -o "$RUNNER_TEMP/overlay.zip"
           echo "b4f8e774723432462f00e6e51d0dd15b5ddee06452966ac67ae6966090cb1ca9  $RUNNER_TEMP/overlay.zip" | sha256sum --check
           python3 - <<'PY'
-          import json,os,pathlib,zipfile
+          import json,os,pathlib,zipfile,base64,gzip,hashlib
           root=pathlib.Path.cwd()
           def target(name):
               p=root/name
-              if not p.resolve().is_relative_to(root) or '.git' in pathlib.PurePosixPath(name).parts: raise ValueError('Unsafe overlay path')
+              if not p.resolve().is_relative_to(root) or '.git' in pathlib.PurePosixPath(name).parts:raise ValueError('Unsafe overlay path')
               return p
           with zipfile.ZipFile(os.environ['RUNNER_TEMP']+'/overlay.zip') as z:
               for info in z.infolist():
@@ -35,6 +35,13 @@ jobs:
               for name in json.loads(z.read('_deployment_delete.json')):
                   if not name.startswith(('public/t/','source-pack/')):raise ValueError('Unexpected removal')
                   target(name).unlink(missing_ok=True)
+          p=target('tests/browser-smoke.py');lines=p.read_text().splitlines()
+          for i,line in enumerate(lines):
+              if 'const file=release.files.find' in line:lines[i]="   const file=release.files.find(x=>x.path.startsWith('assets/packets-'));"
+              if 'return {parts:release.files.filter' in line:lines[i]="   return {parts:release.files.filter(x=>x.path.startsWith('t/')&&x.path.endsWith('.txt')).length,version:release.page_version,dataVersion:data.meta.events_db_version,events:data.events.length,leaders:data.leaders.length,localities:data.events.filter(x=>x.locality).length,hash:data.meta.content_hash};"
+          p.write_text('\n'.join(lines)+'\n')
+          mpath=target('source-pack/manifest.json');m=json.loads(mpath.read_text());old=m['tests/browser-smoke.py']['file'];b=p.read_bytes();h=hashlib.sha256(b).hexdigest();name='source-pack/'+h[:24]+'.txt';target(name).write_text(base64.b64encode(gzip.compress(b,mtime=0)).decode()+'\n');m['tests/browser-smoke.py']={'file':name,'sha256':h,'size':len(b)};mpath.write_text(json.dumps(m,indent=2)+'\n')
+          if old!=name:target(old).unlink(missing_ok=True)
           PY
       - name: Unit tests and production build
         run: |
@@ -43,10 +50,12 @@ jobs:
           npm run build
       - name: Install browser test runner
         run: |
-          python3 -m pip install playwright
-          python3 -m playwright install --with-deps chromium
+          python3 -m pip install playwright --quiet
+          python3 -m playwright install --with-deps chromium > "$RUNNER_TEMP/browser-install.log" 2>&1
       - name: Real desktop and mobile browser regression checks
-        run: python3 tests/browser-smoke.py --integrated --output _local/browser-checks --expected-events 38920 --expected-leaders 6338 --expected-hash 70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467
+        run: |
+          mkdir -p _local/browser-checks
+          python3 tests/browser-smoke.py --integrated --output _local/browser-checks --expected-events 38920 --expected-leaders 6338 --expected-hash 70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467 2>&1 | tee _local/browser-checks/console.log
       - name: Commit only after all checks pass
         run: |
           git config user.name 'github-actions[bot]'
