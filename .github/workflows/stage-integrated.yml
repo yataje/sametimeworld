@@ -1,0 +1,42 @@
+name: Stage integrated export
+on:
+  push:
+    branches: ['deploy/integrated-20261003']
+    paths: ['.github/workflows/stage-integrated.yml']
+permissions:
+  contents: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import approved public export and verify hash
+        env:
+          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-8f4c-8206-80e9-fcb4a2a7988c/raw?se=2026-10-02T21%3A01%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=395efd9e-711e-5879-9bad-ad75a38caa9b&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T19%3A57%3A23Z&ske=2026-10-03T19%3A57%3A23Z&sks=b&skv=2026-02-06&sig=Qd6bbeLAo1A6xFe9%2BiAQ8dtvUaQXSOC6cHfmJVVV6zc%3D'
+        run: |
+          echo "::add-mask::$TRANSFER_URL"
+          mkdir -p data/integrated
+          curl --fail --silent --show-error --location --max-time 120 "$TRANSFER_URL" -o data/integrated/events.web.json.gz
+          echo '5de5d16d5ef5d7fc572f8ae6386fc09f1dbd47883a4a6556aaa5194d15bc74a3  data/integrated/events.web.json.gz' | sha256sum --check
+          python - <<'PY'
+          import gzip,json
+          with gzip.open('data/integrated/events.web.json.gz','rt') as f: d=json.load(f)
+          assert len(d['events'])==38920
+          assert len({e['id'] for e in d['events']})==38920
+          assert d['meta']['source_master_sha256']=='76fa63c6cc6b81ebb3ae9ec4622fdb04d5000a20543dbbd00d8915de78ec646d'
+          print('Verified 38,920 events from approved integrated master.')
+          PY
+      - name: Save source on isolated deployment branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/integrated/events.web.json.gz
+          git commit -m 'data: import 38,920 integrated events without replacing leaders'
+          git push origin HEAD:deploy/integrated-20261003
+          git archive --format=zip --output="$RUNNER_TEMP/source-snapshot.zip" HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: integrated-source-snapshot
+          path: ${{ runner.temp }}/source-snapshot.zip
+          retention-days: 1
