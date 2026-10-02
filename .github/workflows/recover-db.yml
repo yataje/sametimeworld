@@ -1,69 +1,43 @@
-name: Recover and enrich event database
+name: Inspect published dataset without mutation
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - ".github/workflows/recover-db.yml"
-      - "scripts/recover-and-enrich.mjs"
-      - "scripts/rebuild-sqlite.py"
-      - "scripts/patch-display-country.mjs"
-      - "src/point-resolver.js"
-      - "src/event-map.js"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: "recover-db"
   cancel-in-progress: true
 
 jobs:
-  recover:
+  inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-
-      - name: Recover 10k dataset and add representative coordinates
-        run: node scripts/recover-and-enrich.mjs
-
-      - name: Rebuild SQLite database
-        run: python3 scripts/rebuild-sqlite.py .recovery/recovered-data.json .recovery/sametimeworld.db
-
-      - name: Verify tests and production build
+      - name: Verify published packet against integrated release
         run: |
-          npm test
-          npm run build
-
-      - name: Upload recovered database
-        uses: actions/upload-artifact@v4
+          mkdir -p _local/public-inspection
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {readDescriptor,readPacket,unseal} from './scripts/seal.mjs';
+          const root=process.cwd(),descriptor=readDescriptor(root);
+          const data=unseal(readPacket(root,descriptor),descriptor);
+          const expected=JSON.parse(fs.readFileSync('docs/deployment/integrated-release.json','utf8'));
+          assert.equal(data.events.length,expected.events);
+          assert.equal(data.leaders.length,expected.leaders);
+          assert.equal(data.meta.content_hash,expected.data_hash);
+          assert.equal(new Set(data.events.map(e=>e.id)).size,expected.events);
+          const report={success:true,events:data.events.length,leaders:data.leaders.length,data_version:data.meta.events_db_version,data_hash:data.meta.content_hash,note:'Read-only public inspection. The relational master cannot be reconstructed from a reduced web export. Use the approved master export/publish pipeline for updates.'};
+          fs.writeFileSync('_local/public-inspection/report.json',JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify(report));
+          JS
+      - uses: actions/upload-artifact@v4
         with:
-          name: sametimeworld-recovered-db
-          path: |
-            .recovery/sametimeworld.db
-            .recovery/world_leaders.db
-            .recovery/recovery-report.json
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Commit enriched public packet
-        run: |
-          git config user.name "SameTimeWorld Recovery"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A public/t src/packet-config.js
-          if git diff --cached --quiet; then
-            echo "No packet changes to commit."
-          else
-            git commit -m "data: recover 10101 events with map coordinates"
-            git reset --hard HEAD
-            git pull --rebase origin main
-            git push
-          fi
+          name: sametimeworld-public-inspection
+          path: _local/public-inspection/report.json
+          retention-days: 7
