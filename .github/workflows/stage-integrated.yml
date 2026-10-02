@@ -1,4 +1,4 @@
-name: Stage integrated export
+name: Verify integrated deployment
 on:
   push:
     branches: ['deploy/integrated-20261003']
@@ -6,37 +6,61 @@ on:
 permissions:
   contents: write
 jobs:
-  stage:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Import approved public export and verify hash
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Import verified deployment overlay
         env:
-          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-8f4c-8206-80e9-fcb4a2a7988c/raw?se=2026-10-02T21%3A01%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=395efd9e-711e-5879-9bad-ad75a38caa9b&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T19%3A57%3A23Z&ske=2026-10-03T19%3A57%3A23Z&sks=b&skv=2026-02-06&sig=Qd6bbeLAo1A6xFe9%2BiAQ8dtvUaQXSOC6cHfmJVVV6zc%3D'
+          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-00a8-8206-b8e7-1c33a81305f0/raw?se=2026-10-02T21%3A13%3A14Z&sp=r&sv=2026-02-06&sr=b&scid=8288fcfd-43df-51d3-816a-b979cf51e95e&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T19%3A57%3A13Z&ske=2026-10-03T19%3A57%3A13Z&sks=b&skv=2026-02-06&sig=CS5PUNU6gWJyBAID5KK0VOBayzCIGTePr0ejCdeUsqI%3D'
         run: |
           echo "::add-mask::$TRANSFER_URL"
-          mkdir -p data/integrated
-          curl --fail --silent --show-error --location --max-time 120 "$TRANSFER_URL" -o data/integrated/events.web.json.gz
-          echo '5de5d16d5ef5d7fc572f8ae6386fc09f1dbd47883a4a6556aaa5194d15bc74a3  data/integrated/events.web.json.gz' | sha256sum --check
-          python - <<'PY'
-          import gzip,json
-          with gzip.open('data/integrated/events.web.json.gz','rt') as f: d=json.load(f)
-          assert len(d['events'])==38920
-          assert len({e['id'] for e in d['events']})==38920
-          assert d['meta']['source_master_sha256']=='76fa63c6cc6b81ebb3ae9ec4622fdb04d5000a20543dbbd00d8915de78ec646d'
-          print('Verified 38,920 events from approved integrated master.')
+          curl --fail --silent --show-error --location --max-time 120 "$TRANSFER_URL" -o "$RUNNER_TEMP/overlay.zip"
+          echo "b4f8e774723432462f00e6e51d0dd15b5ddee06452966ac67ae6966090cb1ca9  $RUNNER_TEMP/overlay.zip" | sha256sum --check
+          python3 - <<'PY'
+          import json,os,pathlib,zipfile
+          root=pathlib.Path.cwd()
+          def target(name):
+              p=root/name
+              if not p.resolve().is_relative_to(root) or '.git' in pathlib.PurePosixPath(name).parts: raise ValueError('Unsafe overlay path')
+              return p
+          with zipfile.ZipFile(os.environ['RUNNER_TEMP']+'/overlay.zip') as z:
+              for info in z.infolist():
+                  if info.filename=='_deployment_delete.json':continue
+                  p=target(info.filename);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(info))
+              for name in json.loads(z.read('_deployment_delete.json')):
+                  if not name.startswith(('public/t/','source-pack/')):raise ValueError('Unexpected removal')
+                  target(name).unlink(missing_ok=True)
           PY
-      - name: Save source on isolated deployment branch
+      - name: Unit tests and production build
+        run: |
+          npm test
+          python3 -m unittest discover -s tests -p 'test_*.py'
+          npm run build
+      - name: Install browser test runner
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Real desktop and mobile browser regression checks
+        run: python3 tests/browser-smoke.py --integrated --output _local/browser-checks --expected-events 38920 --expected-leaders 6338 --expected-hash 70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467
+      - name: Commit only after all checks pass
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/integrated/events.web.json.gz
-          git commit -m 'data: import 38,920 integrated events without replacing leaders'
+          git add -A
+          git commit -m 'feat: deploy integrated events with truthful dates, sources and safe map points'
           git push origin HEAD:deploy/integrated-20261003
-          git archive --format=zip --output="$RUNNER_TEMP/source-snapshot.zip" HEAD
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: integrated-source-snapshot
-          path: ${{ runner.temp }}/source-snapshot.zip
-          retention-days: 1
+          name: integrated-browser-verification
+          path: |
+            _local/browser-checks/
+            docs/deployment/integrated-release.json
+            dist/release.json
+          if-no-files-found: ignore
+          retention-days: 7
