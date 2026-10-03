@@ -23,7 +23,7 @@ with sync_playwright() as p:
   assert page.locator('#seriesDetailNav').is_visible();title=page.locator('#webQuery').inner_text()
   page.locator('#detailDisplaySettings').click();page.keyboard.press('Escape');page.wait_for_timeout(100);assert page.locator('#webPanel').is_visible();assert not page.locator('#displaySettingsOverlay').evaluate("e=>e.classList.contains('open')")
   page.locator('#seriesOpen').click();page.wait_for_function("document.querySelector('#seriesDialog').open");page.keyboard.press('Escape');assert page.locator('#webPanel').is_visible()
-  page.locator('#seriesDetailNav button').filter(has_text='다음 사건').click();page.wait_for_timeout(100);assert page.locator('#webQuery').inner_text()!=title
+  page.locator('#detailSeriesChoices button').filter(has_text='산업과 기술').click();page.locator('#detailSeriesActions [data-action=next]').click();page.wait_for_timeout(100);assert page.locator('#webQuery').inner_text()!=title
   page.keyboard.press('Escape');page.wait_for_function("!document.body.classList.contains('event-detail-active')");assert abs(page.locator('#viewport').evaluate('(e)=>e.scrollTop')-before)<3
   assert page.locator('#seriesBar').is_visible();page.locator('.series-context').click();page.wait_for_timeout(150);assert '세계 함께 보기' in page.locator('.series-context').inner_text()
   page.reload(wait_until='networkidle');page.locator('#seriesBar').wait_for(timeout=90000);assert '산업과 기술' in page.locator('#seriesBar').inner_text()

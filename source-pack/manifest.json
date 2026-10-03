@@ -5,14 +5,14 @@
     "size": 26451
   },
   "src/main.js": {
-    "file": "source-pack/039e981ccfd37c800b89ad28.txt",
-    "sha256": "039e981ccfd37c800b89ad2802ed0590ae26689ca35154d1311784612eec6980",
-    "size": 59169
+    "file": "source-pack/192a1afe286751900a4f486b.txt",
+    "sha256": "192a1afe286751900a4f486b1037f8bc0201305f9c0e8ca35f42a09adf5e2bb2",
+    "size": 59334
   },
   "src/style.css": {
-    "file": "source-pack/e55500d5e0cbf51056b884b3.txt",
-    "sha256": "e55500d5e0cbf51056b884b3eb213900bf366eae84b9eb471eee0724846f78d8",
-    "size": 42986
+    "file": "source-pack/34ec6b30b3ddb6f92fcd7f0c.txt",
+    "sha256": "34ec6b30b3ddb6f92fcd7f0c1d28189e02cc68ae6c607a93e37b573bec567409",
+    "size": 50060
   },
   "tests/browser-smoke.py": {
     "file": "source-pack/7d14bb2f3dd8fbcd3ef2f799.txt",
