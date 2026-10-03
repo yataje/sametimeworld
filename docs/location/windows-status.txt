@@ -1,0 +1,55 @@
+test_actual_exe_migrates_and_preserves_full_backup (__main__.LocationInstallerTests.test_actual_exe_migrates_and_preserves_full_backup) ... FAIL
+test_changed_master_aborts_without_touching_existing_files (__main__.LocationInstallerTests.test_changed_master_aborts_without_touching_existing_files) ... ok
+test_reapplying_migration_is_idempotent_and_keeps_both_backups (__main__.LocationInstallerTests.test_reapplying_migration_is_idempotent_and_keeps_both_backups) ... FAIL
+test_requires_existing_master_not_fake_replacement (__main__.LocationInstallerTests.test_requires_existing_master_not_fake_replacement) ... ok
+
+======================================================================
+FAIL: test_actual_exe_migrates_and_preserves_full_backup (__main__.LocationInstallerTests.test_actual_exe_migrates_and_preserves_full_backup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\a\sametimeworld\sametimeworld\installer\test_location_installer.py", line 29, in test_actual_exe_migrates_and_preserves_full_backup
+    before=self.inventory();self.assertEqual(self.runexe('/verify'),0);self.assertEqual(self.runexe('/install',self.target),0)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_reapplying_migration_is_idempotent_and_keeps_both_backups (__main__.LocationInstallerTests.test_reapplying_migration_is_idempotent_and_keeps_both_backups)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\a\sametimeworld\sametimeworld\installer\test_location_installer.py", line 40, in test_reapplying_migration_is_idempotent_and_keeps_both_backups
+    self.assertEqual(self.runexe('/install',self.target),0);self.assertEqual(self.runexe('/install',self.target),0);c=sqlite3.connect(self.target/'sametimeworld.db');self.assertEqual(c.execute('select count(*) from event_location_v2').fetchone()[0],1);c.close();self.assertEqual(len([p for p in (self.root/'SameTimeWorld_Backups').iterdir() if p.is_dir()]),2)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.964s
+
+FAILED (failures=2)
+Expected or actual failure: System.IO.InvalidDataException: ???? ?? ??? ????.
+
+   at Payload.Open(String exe)
+
+   at Program.Main(String[] args)
+
+
+Expected or actual failure: System.IO.InvalidDataException: ???? ?? ??? ????.
+
+   at Payload.Open(String exe)
+
+   at Program.Main(String[] args)
+
+
+Expected or actual failure: System.IO.InvalidDataException: ???? ?? ??? ????.
+
+   at Payload.Open(String exe)
+
+   at Program.Main(String[] args)
+
+
+Expected or actual failure: System.IO.InvalidDataException: ???? ?? ??? ????.
+
+   at Payload.Open(String exe)
+
+   at Program.Main(String[] args)
+
+
