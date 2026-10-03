@@ -1,0 +1,44 @@
+name: Location reference and verification
+on:
+  push:
+    branches: ['fix/location-hierarchy-20261003']
+    paths: ['.github/workflows/location-check.yml']
+permissions:
+  contents: read
+jobs:
+  reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download attributed GeoNames geographic reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reference
+          curl -fsSL --retry 2 --max-time 480 https://download.geonames.org/export/dump/allCountries.zip -o allCountries.zip
+          curl -fsSL --retry 2 --max-time 40 https://download.geonames.org/export/dump/readme.txt -o reference/README-GeoNames.txt
+          curl -fsSL --retry 2 --max-time 40 https://download.geonames.org/export/dump/countryInfo.txt -o reference/countryInfo.txt
+          python3 - <<'PY'
+          import zipfile,hashlib,gzip,json,re,collections,datetime
+          digest=hashlib.file_digest(open('allCountries.zip','rb'),'sha256').hexdigest()
+          counts=collections.Counter();total=0
+          with zipfile.ZipFile('allCountries.zip') as z,gzip.open('reference/geonames-selected.jsonl.gz','wt',encoding='utf8',compresslevel=6) as out:
+              with z.open('allCountries.txt') as rows:
+                  for raw in rows:
+                      p=raw.decode('utf8').rstrip('\n').split('\t')
+                      if len(p)!=19:raise ValueError('Unexpected geographic reference format')
+                      f,c=p[6],p[7]
+                      wanted=(f=='A' and c in {'ADM1','ADM2','ADM3','ADM4','PCLI','PCLD','PCLF','PCLS'}) or (f=='P' and (c.startswith('PPLA') or c=='PPLC' or (int(p[14] or 0)>=500)))
+                      korean=bool(re.search('[가-힣]',p[3]))
+                      if not wanted and not(korean and f in {'A','P','H','L','T','S'}):continue
+                      names=list(dict.fromkeys([p[1],p[2]]+p[3].split(',')));names=[s for s in names if s]
+                      row={'id':int(p[0]),'n':names,'y':float(p[4]),'x':float(p[5]),'f':f,'k':c,'c':p[8],'a':p[10:14],'p':int(p[14] or 0),'modified':p[18]}
+                      out.write(json.dumps(row,ensure_ascii=False,separators=(',',':'))+'\n');counts[c]+=1;total+=1
+          report={'source':'https://download.geonames.org/export/dump/allCountries.zip','license':'CC BY 4.0','downloaded_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_sha256':digest,'selected_rows':total,'feature_counts':dict(counts),'notice':'Geographic reference only; modern administrative extents are not historical boundaries or independently verified event sites.'}
+          open('reference/reference-manifest.json','w').write(json.dumps(report,indent=2));print(json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: location-reference
+          path: reference/
+          retention-days: 7
