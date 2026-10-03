@@ -561,3 +561,5 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
  .series-card-pages{flex-wrap:wrap}.series-card-pages button{font-size:10px;padding:7px}
 }
 @media(max-height:500px){#webPanel.active{padding-top:6px;padding-bottom:6px}#webPanel .detail-meta{flex-wrap:nowrap;overflow-x:auto;max-height:none;padding:5px 8px}#webPanel .detail-meta-item{flex:none;white-space:nowrap}#webPanel .series-detail-nav{padding:5px 8px;gap:3px}#webPanel .event-detail-actions{padding:6px 8px}.detail-series-choices{padding-bottom:2px}#webPanel .detail-series-action{padding:5px 8px}}
+/* Keep all five actions reachable without horizontal scrolling beside mobile event cards. */
+@media(max-width:720px){#webPanel.series-list-open .detail-series-actions{flex-wrap:wrap;overflow:visible;gap:3px}#webPanel.series-list-open .detail-series-action{font-size:10px;padding:7px 4px}}

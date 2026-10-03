@@ -34,6 +34,10 @@ with sync_playwright() as p:
    page.locator('[data-choice-id="concept-4539"]').click();assert page.locator('#webQuery').inner_text()==title;assert not page.locator('#seriesEventPanel').is_visible();assert page.evaluate('window.__speech.said.length')==0
    assert page.locator('[data-action=previous]').is_disabled();assert page.locator('[data-action=next]').is_enabled();checks+=['choice-does-not-navigate-or-speak','first-boundary']
    page.locator('[data-action=list]').click();page.locator('#seriesEventPanel').wait_for();a=page.locator('.event-detail').bounding_box();b=page.locator('#seriesEventPanel').bounding_box();assert b['x']>=a['x']+a['width']-1,(a,b);assert abs(b['y']-a['y'])<1
+   
+   for control in page.locator('#detailSeriesActions button').all():
+    box=control.bounding_box();assert box['x']>=a['x'] and box['x']+box['width']<=a['x']+a['width']+1,(a,box)
+   checks+=['all-five-actions-visible-in-split-view']
    assert page.locator('.series-event-card').count()==2;assert page.locator('.series-event-card[aria-current=true]').get_attribute('data-event-id')=='8479'
    cards=page.locator('.series-event-card');target=cards.nth(1).get_attribute('data-event-id');cards.nth(1).click();page.wait_for_function('(id)=>location.hash==="#event-"+id',arg=target);assert page.locator('#webQuery').inner_text()!=title
    assert page.locator('[data-choice-id="concept-4539"]').get_attribute('aria-pressed')=='true';assert page.locator('#eventDetailScroll').evaluate('e=>e.scrollTop')==0;assert page.locator('[data-action=next]').is_disabled()
