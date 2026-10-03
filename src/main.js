@@ -9,8 +9,8 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.0';
-const DB_VERSION_FALLBACK='v22';
+const PAGE_VERSION='v0.8.1';
+const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
   if(v==='아메리카/하와이'||v==='아메리카·하와이')return '아메리카';
@@ -20,15 +20,14 @@ function normalizeEvents(raw){
  const ids=new Set();
  const number=v=>v===null||v===undefined||typeof v==='boolean'||String(v).trim()===''?null:Number(v);
  return Object.values(raw||{}).filter(Boolean).map(x=>{
-  const id=number(x.id);if(!Number.isSafeInteger(id)||id<=0)throw new Error('Invalid event identifier');
+  const id=number(x.id??x.event_id);if(!Number.isSafeInteger(id)||id<=0)throw new Error('Invalid event identifier');
   if(ids.has(id))throw new Error('Duplicate event identifier');ids.add(id);
   const lat=number(x.latitude),lon=number(x.longitude),valid=Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=-90&&lat<=90&&lon>=-180&&lon<=180;
-  const eligible=x.day_comparison_eligible==null?x.eligible_for_normalized_day_index:x.day_comparison_eligible;
   return {...x,id,
-   date:String(x.date??''),region:normalizeRegion(x.region),importance:Number(x.importance??0),country:String(x.country??''),category:String(x.category??''),title:String(x.title??''),
-   description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),verification:String(x.verification??''),locality:String(x.locality??''),map_region:String(x.map_region??''),latitude:valid?lat:null,longitude:valid?lon:null,location_precision:String(x.location_precision??''),
-   date_basis:String(x.date_basis??''),range_semantics:String(x.range_semantics??''),normalized_gregorian_range:x.normalized_gregorian_range||null,date_precision:String(x.date_precision??''),source_date_precision:String(x.source_date_precision??''),source_calendar:String(x.source_calendar??x.calendar??''),normalized_gregorian_date:x.normalized_gregorian_date||null,
-   eligible_for_normalized_day_index:eligible==null?null:eligible===true||eligible===1,inclusion_status:String(x.inclusion_status??''),sources:Array.isArray(x.sources)?x.sources:[],normalization_note:String(x.normalization_note??'')
+   date:String(x.date??''),timeline_date:String(x.timeline_date??x.date??''),date_precision:String(x.date_precision??''),
+   region:normalizeRegion(x.region??x.continent),country:String(x.country??''),locality:String(x.locality??''),category:String(x.category??''),title:String(x.title??''),
+   description:String(x.description??''),subject:String(x.subject??''),original_date:String(x.original_date??''),importance:Number(x.importance??0),
+   latitude:valid?lat:null,longitude:valid?lon:null,location_precision:String(x.location_precision??''),sources:Array.isArray(x.sources)?x.sources:[]
   };
  });
 }
@@ -624,7 +623,7 @@ function eventDateDisplay(raw){
  return {precision:'—',display:value||'날짜 미상',raw:value};
 }
 function renderEventMeta(x){
- const date=eventDateDisplay(x.date_label||x.date),basis=eventDateBasis(x),fields=[['날짜',date.display,date.precision],['날짜 기준',basis],['환산 범위',x.normalized_gregorian_range?`${x.normalized_gregorian_range.start} ~ ${x.normalized_gregorian_range.end}`:''],['대륙',x.region],['국가',x.country],['지역',x.locality],['카테고리',x.category]];
+ const date=eventDateDisplay(x.date_label||x.date),fields=[['날짜',date.display,date.precision],['대륙',x.region],['국가',x.country],['지역',x.locality],['카테고리',x.category]];
  webEventMeta.replaceChildren();
  for(const [label,value,precision] of fields){
   if(!value)continue;
@@ -652,12 +651,10 @@ function openWebForEvent(id,{historyMode='push',fromTts=false}={}){
  webQuery.textContent=x.title;
  renderEventMeta(x);
  const body=$('#eventDetailBody');body.replaceChildren();
- for(const [label,value] of [['대상',d.subject],['장소',d.place],['설명',d.description],['원문 날짜',d.original_date]]){
+ for(const [label,value] of [['대상',d.subject],['설명',d.description],['원문 날짜',d.original_date]]){
   if(!value)continue;
   const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=label+' ';p.append(strong,document.createTextNode(value));body.append(p);
  }
- const warnings=[...new Set([x.caution,x.calendar_notes].filter(v=>String(v??'').trim()))];
- if(warnings.length){const section=document.createElement('details'),summary=document.createElement('summary');summary.textContent='자료 해석 시 주의사항';section.className='source-cautions';section.append(summary);for(const text of warnings){const p=document.createElement('p');p.textContent=text;section.append(p);}body.append(section);}
  for(const url of x.sources||[]){if(!/^https?:\/\//i.test(url))continue;const p=document.createElement('p'),a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='출처 · '+url;p.append(a);body.append(p);}
  const link=$('#externalSearch');link.hidden=false;
  link.href='https://www.google.com/search?q='+encodeURIComponent([x.date,d.subject,x.title].filter(Boolean).join(' '));
@@ -699,17 +696,12 @@ function dateNavigationTarget(raw){
  const q=parseSearchDateQuery(raw);if(!q)return null;const a=q.normalized.split('-').map(Number),t=utc(a[0],(a[1]||1)-1,a[2]||1);
  return t<start||t>=end?null:{t,zoom:q.precision==='day'?6:q.precision==='month'?3:2,date:q.normalized};
 }
-function eventDateBasis(x){
- if(x.timeline_index_basis)return x.eligible_for_normalized_day_index===true?'원자료의 그레고리력 일자 · 독립 재검증 전':x.normalized_gregorian_range?'원자료의 환산 범위 · 독립 재검증 전':'원문 정밀도 유지 · 일별 동시성 미확정';
- if(x.date_basis==='verified_gregorian_interval'&&x.normalized_gregorian_range)return x.range_semantics==='event_duration'?'검증된 그레고리력 기간':'검증된 그레고리력 범위 · 발생일 미상';
- return x.eligible_for_normalized_day_index===true?'검증된 그레고리력':x.eligible_for_normalized_day_index===false?'원출처 날짜 · 역법/정밀도 확인 중':'기존 수록 날짜';
-}
 function eventPrecision(x){
  if(x.date_precision)return x.date_precision;
  const v=String(x.date||'');return /^\d{4}-\d{2}-\d{2}$/.test(v)?'day':/^\d{4}-\d{2}$/.test(v)?'month':/[/~–]/.test(v)?'year_range':'year';
 }
 function eventDayComparable(x){
- return /^\d{4}-\d{2}-\d{2}$/.test(x.normalized_gregorian_date||x.date||'')&&eventPrecision(x)==='day'&&x.eligible_for_normalized_day_index!==false;
+ return /^\d{4}-\d{2}-\d{2}$/.test(x.date||'')&&eventPrecision(x)==='day';
 }
 function eventFitsLevel(x,z){
  // Zooming in must not make a known historical record disappear. Fine levels use one representative slot for imprecise/range dates.
@@ -728,24 +720,13 @@ function eventDisplayTime(x,z){
  return dt.t;
 }
 function eventMatchesDate(x,q){
- if(q.precision==='day')return eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized;
+ if(q.precision==='day')return eventDayComparable(x)&&x.date===q.normalized;
  const span=eventDateSpan(x),querySpan=eventDateSpan({date:q.normalized});if(!span||!querySpan)return false;
  if(q.precision==='month'&&['year','year_range','circa','decade'].includes(eventPrecision(x)))return false;
  return span.from<=querySpan.to&&span.to>=querySpan.from;
 }
 function eventDetails(x){
- const result={subject:x.subject||'',place:x.place||'',original_date:x.original_date||'',verification:x.verification||'',description:''};
- const INTERNAL_DETAIL_LABEL=/^(?:원역법|날짜 검증|검증 상태)(?:\s*[:：]|\s+|$)/;
- const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};
- const body=[];
- for(const line of String(x.description||'').split('\n')){
-  const trimmed=line.trim();const prefix=Object.keys(labels).find(p=>trimmed.startsWith(p));
-  if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}
-  if(INTERNAL_DETAIL_LABEL.test(trimmed))continue;
-  if(trimmed.startsWith('출처 파일:'))continue;
-  body.push(line);
- }
- result.description=body.join('\n').trim();return result;
+ return {subject:x.subject||'',place:x.locality||'',original_date:x.original_date||'',description:String(x.description||'').trim()};
 }
 function normalizedSearchText(value){return String(value??'').trim().toLocaleLowerCase('ko-KR');}
 function searchFieldScore(value,query,exact,start,contains){
@@ -787,7 +768,7 @@ function searchEvents(raw,pool=DATA){
 function searchSuggestionHTML(x){
  const d=eventDetails(x);
  const sub=[x.country,d.subject].filter(Boolean).join(' · ');
- return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}${x.date_basis==='verified_gregorian_interval'?' · 환산 범위':x.eligible_for_normalized_day_index===false?' · 원출처':''}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
+ return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
 function hideSearchSuggestions(){searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
