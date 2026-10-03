@@ -1,13 +1,13 @@
 {
   "name": "sametimeworld",
   "private": true,
-  "version": "0.8.0",
+  "version": "0.8.1",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/restore-source.mjs && node scripts/patch-display-country.mjs && node scripts/build.mjs",
+    "build": "node scripts/build.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node scripts/restore-source.mjs && node scripts/patch-display-country.mjs && npm run test:node",
+    "test": "npm run test:node",
     "build:vite": "vite build",
     "restore:source": "node scripts/restore-source.mjs",
     "patch:display-country": "node scripts/patch-display-country.mjs",
