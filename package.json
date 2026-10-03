@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/restore-source.mjs && node scripts/patch-display-country.mjs && node scripts/build.mjs",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "npm run test:node",
+    "test": "node scripts/restore-source.mjs && node scripts/patch-display-country.mjs && npm run test:node",
     "build:vite": "vite build",
     "restore:source": "node scripts/restore-source.mjs",
     "patch:display-country": "node scripts/patch-display-country.mjs",
