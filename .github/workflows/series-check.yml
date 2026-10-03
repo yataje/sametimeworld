@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Import approved public code and concept catalogue
+      - name: Import approved code and catalogue
         env:
-          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-b08c-8206-8a7e-4776e5d4100b/raw?se=2026-10-03T00%3A34%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=26cfcdbb-448d-5351-ab42-65ed18ab48c8&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T23%3A18%3A54Z&ske=2026-10-03T23%3A18%3A54Z&sks=b&skv=2026-02-06&sig=L1X%2BXzrfMuep8Jy5sqpUSxRVB9YzQFkbfDo1YPKM2oE%3D'
+          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-9e1c-8206-beb1-23b0b02b7638/raw?se=2026-10-03T00%3A39%3A29Z&sp=r&sv=2026-02-06&sr=b&scid=8880518c-4960-5228-bb99-875ac3603464&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T19%3A57%3A27Z&ske=2026-10-03T19%3A57%3A27Z&sks=b&skv=2026-02-06&sig=kRNHKskpAdkpAz5c3JLsOJJr9Vi1jXVx1sOQKfUus8A%3D'
         shell: bash
         run: |
           set -euo pipefail
           echo "::add-mask::$TRANSFER_URL"
           curl -fsSL --max-time 120 "$TRANSFER_URL" -o "$RUNNER_TEMP/overlay.zip"
-          echo "4a48c2a30a01d6f458928ab131a5a7b04194d23c4f5d04c2b490dc434f0923f4  $RUNNER_TEMP/overlay.zip" | sha256sum -c -
+          echo "682680af7f7b209bed8df48f5e5f60a33b41ce88ab03e64405152d4eabc68ac1  $RUNNER_TEMP/overlay.zip" | sha256sum -c -
           python3 - <<'PY'
           import json,os,pathlib,zipfile
           root=pathlib.Path.cwd()
