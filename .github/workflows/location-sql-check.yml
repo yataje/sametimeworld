@@ -1,0 +1,13 @@
+name: Location migration safety
+on:
+  push:
+    branches: ['fix/location-resolution-20261003']
+    paths: ['.github/workflows/location-sql-check.yml','scripts/apply-location-update.py','tests/test_location_migration.py']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m unittest discover -s tests -p test_location_migration.py -v
