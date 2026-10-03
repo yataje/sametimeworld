@@ -1,0 +1,6215 @@
+{
+  "events": 38920,
+  "leaders": 6338,
+  "geoKeys": [
+    "source",
+    "license",
+    "generated",
+    "cities",
+    "admin1"
+  ],
+  "cities": 7342,
+  "admin1": 4596,
+  "citySamples": [
+    {
+      "n": [
+        "콜로니아델사크라멘토",
+        "Colonia del Sacramento"
+      ],
+      "c": "URY",
+      "a": "Colonia",
+      "x": -57.840003,
+      "y": -34.479999,
+      "k": "Admin-1 capital"
+    },
+    {
+      "n": [
+        "트리니다드",
+        "Trinidad"
+      ],
+      "c": "URY",
+      "a": "Flores",
+      "x": -56.900997,
+      "y": -33.543999,
+      "k": "Admin-1 capital"
+    },
+    {
+      "n": [
+        "프라이벤토스",
+        "Fray Bentos"
+      ],
+      "c": "URY",
+      "a": "Río Negro",
+      "x": -58.303998,
+      "y": -33.138999,
+      "k": "Admin-1 capital"
+    }
+  ],
+  "adminSamples": [
+    {
+      "n": [
+        "엔트레리오스",
+        "Entre Ríos",
+        "Provincia de Entre Rios"
+      ],
+      "c": "ARG",
+      "x": -59.2824,
+      "y": -32.0275,
+      "k": "Province"
+    },
+    {
+      "n": [
+        "파이산두",
+        "Paysandú",
+        "Departamento de Paysandu"
+      ],
+      "c": "URY",
+      "x": -57.224,
+      "y": -32.0933,
+      "k": "Department"
+    },
+    {
+      "n": [
+        "동칼리만탄",
+        "Kalimantan Timur",
+        "East Kalimantan",
+        "Provinsi Kalimantan Timur"
+      ],
+      "c": "IDN",
+      "x": 116.354,
+      "y": 1.28915,
+      "k": "Province"
+    }
+  ],
+  "countries": [
+    {
+      "code": "FJI",
+      "name": "Fiji",
+      "continent": "Oceania",
+      "focus": [
+        176,
+        12,
+        183,
+        21
+      ],
+      "focusNote": "날짜변경선 인접",
+      "labelPoint": [
+        177.9759,
+        17.9376
+      ]
+    },
+    {
+      "code": "TZA",
+      "name": "Tanzania",
+      "continent": "Africa",
+      "focus": [
+        29.34,
+        0.95,
+        40.3166,
+        11.7209
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        34.1421,
+        6.2078
+      ]
+    },
+    {
+      "code": "ESH",
+      "name": "W. Sahara",
+      "continent": "Africa",
+      "focus": [
+        -17.0634,
+        -27.6564,
+        -8.6651,
+        -20.9998
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -12.572,
+        -24.2306
+      ]
+    },
+    {
+      "code": "CAN",
+      "name": "Canada",
+      "continent": "North America",
+      "focus": [
+        -140.9978,
+        -83.2332,
+        -52.6481,
+        -41.6751
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -110.2438,
+        -56.7019
+      ]
+    },
+    {
+      "code": "USA",
+      "name": "United States of America",
+      "continent": "North America",
+      "focus": [
+        -124.6872,
+        -49.389,
+        -66.9647,
+        -25.08
+      ],
+      "focusNote": "본토 중심",
+      "labelPoint": [
+        -99.3148,
+        -37.2367
+      ]
+    },
+    {
+      "code": "KAZ",
+      "name": "Kazakhstan",
+      "continent": "Asia",
+      "focus": [
+        46.4664,
+        -55.3853,
+        87.36,
+        -40.6623
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        66.3116,
+        -48.069
+      ]
+    },
+    {
+      "code": "UZB",
+      "name": "Uzbekistan",
+      "continent": "Asia",
+      "focus": [
+        55.9289,
+        -45.5868,
+        73.0554,
+        -37.145
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        63.4429,
+        -41.3533
+      ]
+    },
+    {
+      "code": "PNG",
+      "name": "Papua New Guinea",
+      "continent": "Oceania",
+      "focus": [
+        141.0002,
+        2.5,
+        156.02,
+        10.6525
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        144.2261,
+        6.6678
+      ]
+    },
+    {
+      "code": "IDN",
+      "name": "Indonesia",
+      "continent": "Asia",
+      "focus": [
+        95.293,
+        -5.4798,
+        141.0339,
+        10.36
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        113.2695,
+        0.1785
+      ]
+    },
+    {
+      "code": "ARG",
+      "name": "Argentina",
+      "continent": "South America",
+      "focus": [
+        -73.4154,
+        21.8323,
+        -53.6283,
+        55.25
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -64.0806,
+        37.2392
+      ]
+    },
+    {
+      "code": "CHL",
+      "name": "Chile",
+      "continent": "South America",
+      "focus": [
+        -75.6444,
+        17.58,
+        -66.9599,
+        55.6118
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -71.5095,
+        35.757
+      ]
+    },
+    {
+      "code": "COD",
+      "name": "Dem. Rep. Congo",
+      "continent": "Africa",
+      "focus": [
+        12.1823,
+        -5.2561,
+        31.1741,
+        13.2572
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        22.3906,
+        4.0993
+      ]
+    },
+    {
+      "code": "SOM",
+      "name": "Somalia",
+      "continent": "Africa",
+      "focus": [
+        40.9811,
+        -12.0246,
+        51.1339,
+        1.6833
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        46.7942,
+        -5.1704
+      ]
+    },
+    {
+      "code": "KEN",
+      "name": "Kenya",
+      "continent": "Africa",
+      "focus": [
+        33.8936,
+        -5.506,
+        41.8551,
+        4.6768
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        37.513,
+        -0.3124
+      ]
+    },
+    {
+      "code": "SDN",
+      "name": "Sudan",
+      "continent": "Africa",
+      "focus": [
+        21.9368,
+        -22,
+        38.4101,
+        -8.2292
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        29.6156,
+        -15.2776
+      ]
+    },
+    {
+      "code": "TCD",
+      "name": "Chad",
+      "continent": "Africa",
+      "focus": [
+        13.5404,
+        -23.4097,
+        23.8869,
+        -7.4219
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        18.3067,
+        -15.2776
+      ]
+    },
+    {
+      "code": "HTI",
+      "name": "Haiti",
+      "continent": "North America",
+      "focus": [
+        -74.458,
+        -19.9157,
+        -71.6249,
+        -18.031
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -72.1474,
+        -18.9435
+      ]
+    },
+    {
+      "code": "DOM",
+      "name": "Dominican Rep.",
+      "continent": "North America",
+      "focus": [
+        -71.9451,
+        -19.8849,
+        -68.3179,
+        -17.5986
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -70.1302,
+        -18.7012
+      ]
+    },
+    {
+      "code": "RUS",
+      "name": "Russia",
+      "continent": "Europe",
+      "focus": [
+        19,
+        -82,
+        180,
+        -41
+      ],
+      "focusNote": "유라시아 중심",
+      "labelPoint": [
+        88.5973,
+        -59.4059
+      ]
+    },
+    {
+      "code": "BHS",
+      "name": "Bahamas",
+      "continent": "North America",
+      "focus": [
+        -78.98,
+        -27.04,
+        -77,
+        -23.71
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -77.9229,
+        -24.4578
+      ]
+    },
+    {
+      "code": "FLK",
+      "name": "Falkland Is.",
+      "continent": "South America",
+      "focus": [
+        -61.2,
+        51.1,
+        -57.75,
+        52.3
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -59.3893,
+        51.7
+      ]
+    },
+    {
+      "code": "NOR",
+      "name": "Norway",
+      "continent": "Europe",
+      "focus": [
+        4.9921,
+        -80.6571,
+        31.2934,
+        -58.0789
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        12.2208,
+        -64.6365
+      ]
+    },
+    {
+      "code": "GRL",
+      "name": "Greenland",
+      "continent": "North America",
+      "focus": [
+        -73.297,
+        -83.6451,
+        -12.2086,
+        -60.0368
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -39.2831,
+        -71.8673
+      ]
+    },
+    {
+      "code": "ATF",
+      "name": "Fr. S. Antarctic Lands",
+      "continent": "Seven seas (open ocean)",
+      "focus": [
+        68.72,
+        48.625,
+        70.56,
+        49.775
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        69.6465,
+        49.1538
+      ]
+    },
+    {
+      "code": "TLS",
+      "name": "Timor-Leste",
+      "continent": "Asia",
+      "focus": [
+        124.9687,
+        8.2733,
+        127.3359,
+        9.3932
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        125.8627,
+        8.7805
+      ]
+    },
+    {
+      "code": "ZAF",
+      "name": "South Africa",
+      "continent": "Africa",
+      "focus": [
+        16.345,
+        22.0913,
+        32.8301,
+        34.8192
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        26.1476,
+        28.4085
+      ]
+    },
+    {
+      "code": "LSO",
+      "name": "Lesotho",
+      "continent": "Africa",
+      "focus": [
+        26.9993,
+        28.6475,
+        29.3252,
+        30.6451
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        28.2436,
+        29.5006
+      ]
+    },
+    {
+      "code": "MEX",
+      "name": "Mexico",
+      "continent": "North America",
+      "focus": [
+        -117.1278,
+        -32.7208,
+        -86.812,
+        -14.5388
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -102.2502,
+        -23.5994
+      ]
+    },
+    {
+      "code": "URY",
+      "name": "Uruguay",
+      "continent": "South America",
+      "focus": [
+        -58.4271,
+        30.1097,
+        -53.2096,
+        34.9526
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -55.8189,
+        32.3875
+      ]
+    },
+    {
+      "code": "BRA",
+      "name": "Brazil",
+      "continent": "South America",
+      "focus": [
+        -73.9872,
+        -5.2445,
+        -34.73,
+        33.7684
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -49.7116,
+        14.0737
+      ]
+    },
+    {
+      "code": "BOL",
+      "name": "Bolivia",
+      "continent": "South America",
+      "focus": [
+        -69.5904,
+        9.762,
+        -57.4984,
+        22.8729
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -63.6389,
+        16.4001
+      ]
+    },
+    {
+      "code": "PER",
+      "name": "Peru",
+      "continent": "South America",
+      "focus": [
+        -81.4109,
+        0.0572,
+        -68.6651,
+        18.348
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -75.8747,
+        9.2475
+      ]
+    },
+    {
+      "code": "COL",
+      "name": "Colombia",
+      "continent": "South America",
+      "focus": [
+        -78.9909,
+        -12.4373,
+        -66.8763,
+        4.2982
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -72.4865,
+        -3.9686
+      ]
+    },
+    {
+      "code": "PAN",
+      "name": "Panama",
+      "continent": "North America",
+      "focus": [
+        -82.9658,
+        -9.6116,
+        -77.2426,
+        -7.2205
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -81.4831,
+        -8.4056
+      ]
+    },
+    {
+      "code": "CRI",
+      "name": "Costa Rica",
+      "continent": "North America",
+      "focus": [
+        -85.9417,
+        -11.2171,
+        -82.5462,
+        -8.225
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -83.6838,
+        -9.7058
+      ]
+    },
+    {
+      "code": "NIC",
+      "name": "Nicaragua",
+      "continent": "North America",
+      "focus": [
+        -87.6685,
+        -15.0163,
+        -83.1472,
+        -10.7268
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -85.5744,
+        -12.8896
+      ]
+    },
+    {
+      "code": "HND",
+      "name": "Honduras",
+      "continent": "North America",
+      "focus": [
+        -89.3533,
+        -16.0054,
+        -83.1472,
+        -12.9847
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -87.2279,
+        -14.4878
+      ]
+    },
+    {
+      "code": "SLV",
+      "name": "El Salvador",
+      "continent": "North America",
+      "focus": [
+        -90.0956,
+        -14.4241,
+        -87.7235,
+        -13.149
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -88.9201,
+        -13.8153
+      ]
+    },
+    {
+      "code": "GTM",
+      "name": "Guatemala",
+      "continent": "North America",
+      "focus": [
+        -92.2292,
+        -17.8193,
+        -88.225,
+        -13.7353
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -90.3342,
+        -15.7916
+      ]
+    },
+    {
+      "code": "BLZ",
+      "name": "Belize",
+      "continent": "North America",
+      "focus": [
+        -89.2291,
+        -18.5,
+        -88.1068,
+        -15.8869
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -88.6991,
+        -17.3106
+      ]
+    },
+    {
+      "code": "VEN",
+      "name": "Venezuela",
+      "continent": "South America",
+      "focus": [
+        -73.305,
+        -12.1623,
+        -59.7583,
+        -0.7245
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -65.4259,
+        -6.4817
+      ]
+    },
+    {
+      "code": "GUY",
+      "name": "Guyana",
+      "continent": "South America",
+      "focus": [
+        -61.4103,
+        -8.367,
+        -56.5394,
+        -1.2681
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -58.8454,
+        -4.9133
+      ]
+    },
+    {
+      "code": "SUR",
+      "name": "Suriname",
+      "continent": "South America",
+      "focus": [
+        -58.0447,
+        -6.0253,
+        -53.958,
+        -1.8177
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -56.0316,
+        -3.8405
+      ]
+    },
+    {
+      "code": "FRA",
+      "name": "France",
+      "continent": "Europe",
+      "focus": [
+        -4.5923,
+        -51.1485,
+        8.0993,
+        -42.3434
+      ],
+      "focusNote": "본토 중심",
+      "labelPoint": [
+        2.0992,
+        -46.8951
+      ]
+    },
+    {
+      "code": "ECU",
+      "name": "Ecuador",
+      "continent": "South America",
+      "focus": [
+        -80.9678,
+        -1.3809,
+        -75.2337,
+        4.9591
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -78.2787,
+        1.7633
+      ]
+    },
+    {
+      "code": "PRI",
+      "name": "Puerto Rico",
+      "continent": "North America",
+      "focus": [
+        -67.2424,
+        -18.5206,
+        -65.591,
+        -17.9466
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -66.445,
+        -18.3012
+      ]
+    },
+    {
+      "code": "JAM",
+      "name": "Jamaica",
+      "continent": "North America",
+      "focus": [
+        -78.3377,
+        -18.5242,
+        -76.1997,
+        -17.7011
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -77.1515,
+        -18.0238
+      ]
+    },
+    {
+      "code": "CUB",
+      "name": "Cuba",
+      "continent": "North America",
+      "focus": [
+        -84.9749,
+        -23.1886,
+        -74.178,
+        -19.8555
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -77.7048,
+        -21.3899
+      ]
+    },
+    {
+      "code": "ZWE",
+      "name": "Zimbabwe",
+      "continent": "Africa",
+      "focus": [
+        25.2642,
+        15.5078,
+        32.8499,
+        22.2716
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        29.3217,
+        19.0037
+      ]
+    },
+    {
+      "code": "BWA",
+      "name": "Botswana",
+      "continent": "Africa",
+      "focus": [
+        19.8955,
+        17.6618,
+        29.4322,
+        26.8285
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        24.3101,
+        22.4595
+      ]
+    },
+    {
+      "code": "NAM",
+      "name": "Namibia",
+      "continent": "Africa",
+      "focus": [
+        11.7342,
+        16.9413,
+        25.0844,
+        29.0455
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        17.1463,
+        23.2548
+      ]
+    },
+    {
+      "code": "SEN",
+      "name": "Senegal",
+      "continent": "Africa",
+      "focus": [
+        -17.625,
+        -16.5983,
+        -11.4679,
+        -12.3321
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -14.7292,
+        -14.4952
+      ]
+    },
+    {
+      "code": "MLI",
+      "name": "Mali",
+      "continent": "Africa",
+      "focus": [
+        -12.1708,
+        -24.9746,
+        4.2702,
+        -10.0964
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -0.7009,
+        -17.9548
+      ]
+    },
+    {
+      "code": "MRT",
+      "name": "Mauritania",
+      "continent": "Africa",
+      "focus": [
+        -17.0634,
+        -27.3957,
+        -4.9233,
+        -14.6168
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -11.493,
+        -21.1634
+      ]
+    },
+    {
+      "code": "BEN",
+      "name": "Benin",
+      "continent": "Africa",
+      "focus": [
+        0.7723,
+        -12.2356,
+        3.7971,
+        -6.1422
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        2.2853,
+        -9.2361
+      ]
+    },
+    {
+      "code": "NER",
+      "name": "Niger",
+      "continent": "Africa",
+      "focus": [
+        0.2956,
+        -23.4717,
+        15.9032,
+        -11.6602
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        9.7741,
+        -17.3901
+      ]
+    },
+    {
+      "code": "NGA",
+      "name": "Nigeria",
+      "continent": "Africa",
+      "focus": [
+        2.6917,
+        -13.8659,
+        14.5772,
+        -4.2406
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        7.8319,
+        -8.9277
+      ]
+    },
+    {
+      "code": "CMR",
+      "name": "Cameroon",
+      "continent": "Africa",
+      "focus": [
+        8.4888,
+        -12.8594,
+        16.0129,
+        -1.7277
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        13.4916,
+        -7.2262
+      ]
+    },
+    {
+      "code": "TGO",
+      "name": "Togo",
+      "continent": "Africa",
+      "focus": [
+        -0.0498,
+        -11.0187,
+        1.8652,
+        -5.9288
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        1.1193,
+        -8.4948
+      ]
+    },
+    {
+      "code": "GHA",
+      "name": "Ghana",
+      "continent": "Africa",
+      "focus": [
+        -3.2444,
+        -11.0983,
+        1.0601,
+        -4.7105
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -1.0874,
+        -7.8157
+      ]
+    },
+    {
+      "code": "CIV",
+      "name": "Côte d'Ivoire",
+      "continent": "Africa",
+      "focus": [
+        -8.6029,
+        -10.5241,
+        -2.5622,
+        -4.3383
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -5.6826,
+        -7.5406
+      ]
+    },
+    {
+      "code": "GIN",
+      "name": "Guinea",
+      "continent": "Africa",
+      "focus": [
+        -15.1303,
+        -12.5862,
+        -7.8321,
+        -7.309
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -9.6575,
+        -9.9509
+      ]
+    },
+    {
+      "code": "GNB",
+      "name": "Guinea-Bissau",
+      "continent": "Africa",
+      "focus": [
+        -16.6775,
+        -12.6282,
+        -13.7005,
+        -11.0404
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -15.0369,
+        -11.885
+      ]
+    },
+    {
+      "code": "LBR",
+      "name": "Liberia",
+      "continent": "Africa",
+      "focus": [
+        -11.4388,
+        -8.5411,
+        -7.5397,
+        -4.3558
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -9.7102,
+        -6.3303
+      ]
+    },
+    {
+      "code": "SLE",
+      "name": "Sierra Leone",
+      "continent": "Africa",
+      "focus": [
+        -13.2466,
+        -10.047,
+        -10.2301,
+        -6.7859
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -11.8444,
+        -8.5609
+      ]
+    },
+    {
+      "code": "BFA",
+      "name": "Burkina Faso",
+      "continent": "Africa",
+      "focus": [
+        -5.4706,
+        -15.1162,
+        2.1771,
+        -9.6108
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -1.2756,
+        -12.2414
+      ]
+    },
+    {
+      "code": "CAF",
+      "name": "Central African Rep.",
+      "continent": "Africa",
+      "focus": [
+        14.4594,
+        -11.1424,
+        27.3742,
+        -2.2676
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        20.4787,
+        -6.763
+      ]
+    },
+    {
+      "code": "COG",
+      "name": "Congo",
+      "continent": "Africa",
+      "focus": [
+        11.0938,
+        -3.7282,
+        18.4531,
+        5.038
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        15.944,
+        0.6482
+      ]
+    },
+    {
+      "code": "GAB",
+      "name": "Gabon",
+      "continent": "Africa",
+      "focus": [
+        8.798,
+        -2.3268,
+        14.4255,
+        3.9788
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        11.5926,
+        0.9452
+      ]
+    },
+    {
+      "code": "GNQ",
+      "name": "Eq. Guinea",
+      "continent": "Africa",
+      "focus": [
+        9.3056,
+        -2.2839,
+        11.2851,
+        -1.0101
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        10.3771,
+        -1.711
+      ]
+    },
+    {
+      "code": "ZMB",
+      "name": "Zambia",
+      "continent": "Africa",
+      "focus": [
+        21.8878,
+        8.2383,
+        33.4857,
+        17.9612
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        25.3697,
+        13.08
+      ]
+    },
+    {
+      "code": "MWI",
+      "name": "Malawi",
+      "continent": "Africa",
+      "focus": [
+        32.6882,
+        9.2306,
+        35.7719,
+        16.8013
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        33.6684,
+        13.1746
+      ]
+    },
+    {
+      "code": "MOZ",
+      "name": "Mozambique",
+      "continent": "Africa",
+      "focus": [
+        30.1795,
+        10.3171,
+        40.7755,
+        26.7422
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        34.6968,
+        18.3194
+      ]
+    },
+    {
+      "code": "SWZ",
+      "name": "eSwatini",
+      "continent": "Africa",
+      "focus": [
+        30.6766,
+        25.6602,
+        32.0717,
+        27.2859
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        31.3601,
+        26.5659
+      ]
+    },
+    {
+      "code": "AGO",
+      "name": "Angola",
+      "continent": "Africa",
+      "focus": [
+        11.6401,
+        4.438,
+        24.0799,
+        17.9306
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        18.8098,
+        11.8805
+      ]
+    },
+    {
+      "code": "BDI",
+      "name": "Burundi",
+      "continent": "Africa",
+      "focus": [
+        29.0249,
+        2.3485,
+        30.7522,
+        4.5
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        29.9571,
+        3.4639
+      ]
+    },
+    {
+      "code": "ISR",
+      "name": "Israel",
+      "continent": "Asia",
+      "focus": [
+        34.2654,
+        -33.2774,
+        35.8364,
+        -29.5013
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        34.6911,
+        -31.4213
+      ]
+    },
+    {
+      "code": "LBN",
+      "name": "Lebanon",
+      "continent": "Asia",
+      "focus": [
+        35.1261,
+        -34.6449,
+        36.6118,
+        -33.089
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        35.7947,
+        -33.8652
+      ]
+    },
+    {
+      "code": "MDG",
+      "name": "Madagascar",
+      "continent": "Africa",
+      "focus": [
+        43.2542,
+        12.0406,
+        50.4765,
+        25.6014
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        46.6695,
+        18.6467
+      ]
+    },
+    {
+      "code": "PSE",
+      "name": "Palestine",
+      "continent": "Asia",
+      "focus": [
+        34.9274,
+        -32.5325,
+        35.5457,
+        -31.3534
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        35.3015,
+        -32.1303
+      ]
+    },
+    {
+      "code": "GMB",
+      "name": "Gambia",
+      "continent": "Africa",
+      "focus": [
+        -16.8415,
+        -13.8765,
+        -13.845,
+        -13.1303
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -16.0419,
+        -13.4016
+      ]
+    },
+    {
+      "code": "TUN",
+      "name": "Tunisia",
+      "continent": "Africa",
+      "focus": [
+        7.5245,
+        -37.35,
+        11.4888,
+        -30.3076
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        8.914,
+        -33.9416
+      ]
+    },
+    {
+      "code": "DZA",
+      "name": "Algeria",
+      "continent": "Africa",
+      "focus": [
+        -8.6844,
+        -37.1184,
+        11.9995,
+        -19.0574
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        0.5263,
+        -27.9162
+      ]
+    },
+    {
+      "code": "JOR",
+      "name": "Jordan",
+      "continent": "Asia",
+      "focus": [
+        34.9226,
+        -33.3787,
+        39.1955,
+        -29.1975
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        36.3123,
+        -31.2946
+      ]
+    },
+    {
+      "code": "ARE",
+      "name": "United Arab Emirates",
+      "continent": "Asia",
+      "focus": [
+        51.5795,
+        -26.0555,
+        56.3968,
+        -22.4969
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        54.9879,
+        -24.2818
+      ]
+    },
+    {
+      "code": "QAT",
+      "name": "Qatar",
+      "continent": "Asia",
+      "focus": [
+        50.7439,
+        -26.1146,
+        51.6067,
+        -24.5563
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        51.1794,
+        -25.349
+      ]
+    },
+    {
+      "code": "KWT",
+      "name": "Kuwait",
+      "continent": "Asia",
+      "focus": [
+        46.5687,
+        -30.0591,
+        48.4161,
+        -28.5261
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        47.3931,
+        -29.2027
+      ]
+    },
+    {
+      "code": "IRQ",
+      "name": "Iraq",
+      "continent": "Asia",
+      "focus": [
+        38.7923,
+        -37.3853,
+        48.568,
+        -29.099
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        42.4149,
+        -33.198
+      ]
+    },
+    {
+      "code": "OMN",
+      "name": "Oman",
+      "continent": "Asia",
+      "focus": [
+        52,
+        -26.3959,
+        59.8081,
+        -16.6511
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        56.9774,
+        -20.7977
+      ]
+    },
+    {
+      "code": "VUT",
+      "name": "Vanuatu",
+      "continent": "Oceania",
+      "focus": [
+        166.6291,
+        14.6265,
+        167.8449,
+        16.5978
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        166.8988,
+        15.1633
+      ]
+    },
+    {
+      "code": "KHM",
+      "name": "Cambodia",
+      "continent": "Asia",
+      "focus": [
+        102.3481,
+        -14.5706,
+        107.6145,
+        -10.4865
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        104.9987,
+        -12.8657
+      ]
+    },
+    {
+      "code": "THA",
+      "name": "Thailand",
+      "continent": "Asia",
+      "focus": [
+        97.3759,
+        -20.4178,
+        105.589,
+        -5.6914
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        101.6632,
+        -13.037
+      ]
+    },
+    {
+      "code": "LAO",
+      "name": "Laos",
+      "continent": "Asia",
+      "focus": [
+        100.116,
+        -22.4648,
+        107.5645,
+        -13.8811
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        102.0822,
+        -18.175
+      ]
+    },
+    {
+      "code": "MMR",
+      "name": "Myanmar",
+      "continent": "Asia",
+      "focus": [
+        92.3032,
+        -28.3359,
+        101.18,
+        -9.933
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        95.873,
+        -18.9968
+      ]
+    },
+    {
+      "code": "VNM",
+      "name": "Vietnam",
+      "continent": "Asia",
+      "focus": [
+        102.1704,
+        -23.3521,
+        109.3353,
+        -8.5998
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        107.7769,
+        -15.9941
+      ]
+    },
+    {
+      "code": "PRK",
+      "name": "North Korea",
+      "continent": "Asia",
+      "focus": [
+        124.2656,
+        -42.9854,
+        130.78,
+        -37.6691
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        126.8035,
+        -40.3376
+      ]
+    },
+    {
+      "code": "KOR",
+      "name": "South Korea",
+      "continent": "Asia",
+      "focus": [
+        126.1174,
+        -38.6122,
+        129.4683,
+        -34.39
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        127.9014,
+        -36.205
+      ]
+    },
+    {
+      "code": "MNG",
+      "name": "Mongolia",
+      "continent": "Asia",
+      "focus": [
+        87.7513,
+        -52.0474,
+        119.7728,
+        -41.5974
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        105.334,
+        -46.8468
+      ]
+    },
+    {
+      "code": "IND",
+      "name": "India",
+      "continent": "Asia",
+      "focus": [
+        68.1766,
+        -35.494,
+        97.4026,
+        -7.9655
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        79.1791,
+        -21.8722
+      ]
+    },
+    {
+      "code": "BGD",
+      "name": "Bangladesh",
+      "continent": "Asia",
+      "focus": [
+        88.0844,
+        -26.4465,
+        92.6727,
+        -20.6709
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        89.8762,
+        -23.5639
+      ]
+    },
+    {
+      "code": "BTN",
+      "name": "Bhutan",
+      "continent": "Asia",
+      "focus": [
+        88.8142,
+        -28.2964,
+        92.1037,
+        -26.7194
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        90.4964,
+        -27.6122
+      ]
+    },
+    {
+      "code": "NPL",
+      "name": "Nepal",
+      "continent": "Asia",
+      "focus": [
+        80.0884,
+        -30.4227,
+        88.1748,
+        -26.3979
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        83.4442,
+        -28.3098
+      ]
+    },
+    {
+      "code": "PAK",
+      "name": "Pakistan",
+      "continent": "Asia",
+      "focus": [
+        60.8742,
+        -37.133,
+        77.8375,
+        -23.692
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        70.0926,
+        -30.3577
+      ]
+    },
+    {
+      "code": "AFG",
+      "name": "Afghanistan",
+      "continent": "Asia",
+      "focus": [
+        60.5284,
+        -38.4863,
+        75.158,
+        -29.3186
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        65.3147,
+        -33.8327
+      ]
+    },
+    {
+      "code": "TJK",
+      "name": "Tajikistan",
+      "continent": "Asia",
+      "focus": [
+        67.4422,
+        -40.9602,
+        74.98,
+        -36.7382
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        71.0398,
+        -38.754
+      ]
+    },
+    {
+      "code": "KGZ",
+      "name": "Kyrgyzstan",
+      "continent": "Asia",
+      "focus": [
+        69.4649,
+        -43.2983,
+        80.26,
+        -39.2795
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        75.192,
+        -41.2891
+      ]
+    },
+    {
+      "code": "TKM",
+      "name": "Turkmenistan",
+      "continent": "Asia",
+      "focus": [
+        52.5025,
+        -42.7516,
+        66.5462,
+        -35.2707
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        58.672,
+        -39.1213
+      ]
+    },
+    {
+      "code": "IRN",
+      "name": "Iran",
+      "continent": "Asia",
+      "focus": [
+        44.1092,
+        -39.713,
+        63.3166,
+        -25.0782
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        54.1182,
+        -32.326
+      ]
+    },
+    {
+      "code": "SYR",
+      "name": "Syria",
+      "continent": "Asia",
+      "focus": [
+        35.7008,
+        -37.2299,
+        42.3496,
+        -32.3129
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        38.574,
+        -35.0275
+      ]
+    },
+    {
+      "code": "ARM",
+      "name": "Armenia",
+      "continent": "Asia",
+      "focus": [
+        43.5827,
+        -41.2481,
+        46.5057,
+        -38.7412
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        45.0637,
+        -39.9525
+      ]
+    },
+    {
+      "code": "SWE",
+      "name": "Sweden",
+      "continent": "Europe",
+      "focus": [
+        11.0274,
+        -69.1062,
+        23.9034,
+        -55.3617
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        14.7862,
+        -62.2749
+      ]
+    },
+    {
+      "code": "BLR",
+      "name": "Belarus",
+      "continent": "Europe",
+      "focus": [
+        23.1995,
+        -56.1691,
+        32.6936,
+        -51.3195
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        27.7864,
+        -53.706
+      ]
+    },
+    {
+      "code": "UKR",
+      "name": "Ukraine",
+      "continent": "Europe",
+      "focus": [
+        22.0856,
+        -52.3351,
+        40.0808,
+        -45.2933
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        30.9808,
+        -48.8046
+      ]
+    },
+    {
+      "code": "POL",
+      "name": "Poland",
+      "continent": "Europe",
+      "focus": [
+        14.0745,
+        -54.8515,
+        24.03,
+        -49.0274
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        19.0763,
+        -51.8844
+      ]
+    },
+    {
+      "code": "AUT",
+      "name": "Austria",
+      "continent": "Europe",
+      "focus": [
+        9.48,
+        -49.0391,
+        16.9797,
+        -46.4318
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        14.9531,
+        -47.9192
+      ]
+    },
+    {
+      "code": "HUN",
+      "name": "Hungary",
+      "continent": "Europe",
+      "focus": [
+        16.2023,
+        -48.6239,
+        22.7105,
+        -45.7595
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        19.1032,
+        -47.2452
+      ]
+    },
+    {
+      "code": "MDA",
+      "name": "Moldova",
+      "continent": "Europe",
+      "focus": [
+        26.6193,
+        -48.4671,
+        30.0247,
+        -45.4883
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        28.649,
+        -47.1376
+      ]
+    },
+    {
+      "code": "ROU",
+      "name": "Romania",
+      "continent": "Europe",
+      "focus": [
+        20.2202,
+        -48.2209,
+        29.6265,
+        -43.6884
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        24.2117,
+        -46.036
+      ]
+    },
+    {
+      "code": "LTU",
+      "name": "Lithuania",
+      "continent": "Europe",
+      "focus": [
+        21.0558,
+        -56.3725,
+        26.5883,
+        -53.9057
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        24.1278,
+        -55.0912
+      ]
+    },
+    {
+      "code": "LVA",
+      "name": "Latvia",
+      "continent": "Europe",
+      "focus": [
+        21.0558,
+        -57.9702,
+        28.1767,
+        -55.6151
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        24.5044,
+        -56.8951
+      ]
+    },
+    {
+      "code": "EST",
+      "name": "Estonia",
+      "continent": "Europe",
+      "focus": [
+        23.3398,
+        -59.6111,
+        28.1317,
+        -57.4745
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        25.5617,
+        -58.4981
+      ]
+    },
+    {
+      "code": "DEU",
+      "name": "Germany",
+      "continent": "Europe",
+      "focus": [
+        5.9887,
+        -54.9831,
+        15.017,
+        -47.3025
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        10.4324,
+        -51.4312
+      ]
+    },
+    {
+      "code": "BGR",
+      "name": "Bulgaria",
+      "continent": "Europe",
+      "focus": [
+        22.3805,
+        -44.2349,
+        28.5581,
+        -41.2345
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        25.1385,
+        -42.7394
+      ]
+    },
+    {
+      "code": "GRC",
+      "name": "Greece",
+      "continent": "Europe",
+      "focus": [
+        20.15,
+        -41.8269,
+        26.6042,
+        -34.92
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        21.8063,
+        -39.0805
+      ]
+    },
+    {
+      "code": "TUR",
+      "name": "Turkey",
+      "continent": "Asia",
+      "focus": [
+        26.0434,
+        -42.1415,
+        44.794,
+        -35.8215
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        35.4549,
+        -38.6335
+      ]
+    },
+    {
+      "code": "ALB",
+      "name": "Albania",
+      "continent": "Europe",
+      "focus": [
+        19.3045,
+        -42.6882,
+        21.02,
+        -39.625
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        19.9676,
+        -41.2479
+      ]
+    },
+    {
+      "code": "HRV",
+      "name": "Croatia",
+      "continent": "Europe",
+      "focus": [
+        13.657,
+        -46.5038,
+        19.3905,
+        -42.48
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        15.5836,
+        -44.5448
+      ]
+    },
+    {
+      "code": "CHE",
+      "name": "Switzerland",
+      "continent": "Europe",
+      "focus": [
+        6.0226,
+        -47.8308,
+        10.4427,
+        -45.7769
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        8.2865,
+        -46.8097
+      ]
+    },
+    {
+      "code": "LUX",
+      "name": "Luxembourg",
+      "continent": "Europe",
+      "focus": [
+        5.6741,
+        -50.1281,
+        6.2428,
+        -49.4427
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        5.9644,
+        -49.7159
+      ]
+    },
+    {
+      "code": "BEL",
+      "name": "Belgium",
+      "continent": "Europe",
+      "focus": [
+        2.5136,
+        -51.475,
+        6.1567,
+        -49.5295
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        4.7374,
+        -50.5797
+      ]
+    },
+    {
+      "code": "NLD",
+      "name": "Netherlands",
+      "continent": "Europe",
+      "focus": [
+        3.315,
+        -53.5104,
+        7.0921,
+        -50.8037
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        5.3981,
+        -52.0402
+      ]
+    },
+    {
+      "code": "PRT",
+      "name": "Portugal",
+      "continent": "Europe",
+      "focus": [
+        -9.5266,
+        -42.2805,
+        -6.3891,
+        -36.8383
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -8.3679,
+        -39.5108
+      ]
+    },
+    {
+      "code": "ESP",
+      "name": "Spain",
+      "continent": "Europe",
+      "focus": [
+        -9.3929,
+        -43.7483,
+        3.0395,
+        -35.9469
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -3.52,
+        -39.9179
+      ]
+    },
+    {
+      "code": "IRL",
+      "name": "Ireland",
+      "continent": "Europe",
+      "focus": [
+        -9.9771,
+        -55.1316,
+        -6.033,
+        -51.6693
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -7.8067,
+        -53.5104
+      ]
+    },
+    {
+      "code": "NCL",
+      "name": "New Caledonia",
+      "continent": "Oceania",
+      "focus": [
+        164.0296,
+        20.1056,
+        167.12,
+        22.4
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        165.6874,
+        21.4147
+      ]
+    },
+    {
+      "code": "SLB",
+      "name": "Solomon Is.",
+      "continent": "Oceania",
+      "focus": [
+        156.4914,
+        6.5993,
+        162.3986,
+        10.8264
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        159.0959,
+        7.8874
+      ]
+    },
+    {
+      "code": "NZL",
+      "name": "New Zealand",
+      "continent": "Oceania",
+      "focus": [
+        166.5091,
+        34.4507,
+        178.5171,
+        46.6412
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        171.1762,
+        43.7043
+      ]
+    },
+    {
+      "code": "AUS",
+      "name": "Australia",
+      "continent": "Oceania",
+      "focus": [
+        113.339,
+        10.6682,
+        153.5695,
+        43.6346
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        133.0586,
+        24.8415
+      ]
+    },
+    {
+      "code": "LKA",
+      "name": "Sri Lanka",
+      "continent": "Asia",
+      "focus": [
+        79.6952,
+        -9.8241,
+        81.788,
+        -5.9684
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        80.6838,
+        -7.8619
+      ]
+    },
+    {
+      "code": "CHN",
+      "name": "China",
+      "continent": "Asia",
+      "focus": [
+        73.6754,
+        -53.4588,
+        135.0263,
+        -18.1977
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        98.7696,
+        -36.7987
+      ]
+    },
+    {
+      "code": "TWN",
+      "name": "Taiwan",
+      "continent": "Asia",
+      "focus": [
+        120.1062,
+        -25.2955,
+        121.9512,
+        -21.9706
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        120.9888,
+        -23.9753
+      ]
+    },
+    {
+      "code": "ITA",
+      "name": "Italy",
+      "continent": "Europe",
+      "focus": [
+        6.75,
+        -47.1154,
+        18.4802,
+        -36.62
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        12.6312,
+        -42.5582
+      ]
+    },
+    {
+      "code": "DNK",
+      "name": "Denmark",
+      "continent": "Europe",
+      "focus": [
+        8.09,
+        -57.73,
+        12.69,
+        -54.8
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        9.4608,
+        -56.3243
+      ]
+    },
+    {
+      "code": "GBR",
+      "name": "United Kingdom",
+      "continent": "Europe",
+      "focus": [
+        -7.5722,
+        -58.635,
+        1.6815,
+        -49.96
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -1.7533,
+        -54.2247
+      ]
+    },
+    {
+      "code": "ISL",
+      "name": "Iceland",
+      "continent": "Europe",
+      "focus": [
+        -24.3262,
+        -66.5268,
+        -13.6097,
+        -63.4964
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -18.4579,
+        -64.988
+      ]
+    },
+    {
+      "code": "AZE",
+      "name": "Azerbaijan",
+      "continent": "Asia",
+      "focus": [
+        44.794,
+        -41.8607,
+        50.3928,
+        -38.2704
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        47.6352,
+        -40.038
+      ]
+    },
+    {
+      "code": "GEO",
+      "name": "Georgia",
+      "continent": "Asia",
+      "focus": [
+        39.955,
+        -43.5531,
+        46.6379,
+        -41.0644
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        43.602,
+        -42.2976
+      ]
+    },
+    {
+      "code": "PHL",
+      "name": "Philippines",
+      "continent": "Asia",
+      "focus": [
+        117.1743,
+        -18.5052,
+        126.5374,
+        -5.581
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        120.7611,
+        -15.6687
+      ]
+    },
+    {
+      "code": "MYS",
+      "name": "Malaysia",
+      "continent": "Asia",
+      "focus": [
+        100.0858,
+        -6.9281,
+        119.1819,
+        -0.7731
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        114.507,
+        -3.5314
+      ]
+    },
+    {
+      "code": "BRN",
+      "name": "Brunei",
+      "continent": "Asia",
+      "focus": [
+        114.204,
+        -5.4477,
+        115.4507,
+        -4.0076
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        114.8928,
+        -4.7129
+      ]
+    },
+    {
+      "code": "SVN",
+      "name": "Slovenia",
+      "continent": "Europe",
+      "focus": [
+        13.6981,
+        -46.8524,
+        16.5648,
+        -45.4523
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        14.7323,
+        -46.1274
+      ]
+    },
+    {
+      "code": "FIN",
+      "name": "Finland",
+      "continent": "Europe",
+      "focus": [
+        20.6456,
+        -70.1642,
+        31.5161,
+        -59.8464
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        27.3733,
+        -65.03
+      ]
+    },
+    {
+      "code": "SVK",
+      "name": "Slovakia",
+      "continent": "Europe",
+      "focus": [
+        16.88,
+        -49.5716,
+        22.5581,
+        -47.7584
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        19.6301,
+        -48.7119
+      ]
+    },
+    {
+      "code": "CZE",
+      "name": "Czechia",
+      "continent": "Europe",
+      "focus": [
+        12.2401,
+        -51.1173,
+        18.8531,
+        -48.5553
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        15.5382,
+        -49.7583
+      ]
+    },
+    {
+      "code": "ERI",
+      "name": "Eritrea",
+      "continent": "Africa",
+      "focus": [
+        36.3232,
+        -17.9983,
+        43.0812,
+        -12.4554
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        38.2958,
+        -15.1975
+      ]
+    },
+    {
+      "code": "JPN",
+      "name": "Japan",
+      "continent": "Asia",
+      "focus": [
+        129.4085,
+        -45.5515,
+        145.5431,
+        -31.0296
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        138.3489,
+        -36.0934
+      ]
+    },
+    {
+      "code": "PRY",
+      "name": "Paraguay",
+      "continent": "South America",
+      "focus": [
+        -62.6851,
+        19.3427,
+        -54.293,
+        27.5485
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -58.6374,
+        23.1138
+      ]
+    },
+    {
+      "code": "YEM",
+      "name": "Yemen",
+      "continent": "Asia",
+      "focus": [
+        42.6049,
+        -19,
+        53.1086,
+        -12.586
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        47.4731,
+        -15.8153
+      ]
+    },
+    {
+      "code": "SAU",
+      "name": "Saudi Arabia",
+      "continent": "Asia",
+      "focus": [
+        34.6323,
+        -32.161,
+        55.6667,
+        -16.3479
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        44.5527,
+        -24.2655
+      ]
+    },
+    {
+      "code": "ATA",
+      "name": "Antarctica",
+      "continent": "Antarctica",
+      "focus": [
+        -180,
+        63.2707,
+        180,
+        90
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        67.3741,
+        76.6541
+      ]
+    },
+    {
+      "code": "CYN",
+      "name": "N. Cyprus",
+      "continent": "Asia",
+      "focus": [
+        32.7318,
+        -35.6716,
+        34.5765,
+        -35.0003
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        33.4513,
+        -35.3095
+      ]
+    },
+    {
+      "code": "CYP",
+      "name": "Cyprus",
+      "continent": "Asia",
+      "focus": [
+        32.2567,
+        -35.1731,
+        34.0049,
+        -34.5719
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        33.033,
+        -34.8399
+      ]
+    },
+    {
+      "code": "MAR",
+      "name": "Morocco",
+      "continent": "Africa",
+      "focus": [
+        -17.0204,
+        -35.76,
+        -1.1246,
+        -21.4207
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -9.9833,
+        -28.4904
+      ]
+    },
+    {
+      "code": "EGY",
+      "name": "Egypt",
+      "continent": "Africa",
+      "focus": [
+        24.7001,
+        -31.5857,
+        36.8662,
+        -22
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        29.3695,
+        -26.8955
+      ]
+    },
+    {
+      "code": "LBY",
+      "name": "Libya",
+      "continent": "Africa",
+      "focus": [
+        9.3194,
+        -33.137,
+        25.1648,
+        -19.5805
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        17.2589,
+        -26.3033
+      ]
+    },
+    {
+      "code": "ETH",
+      "name": "Ethiopia",
+      "continent": "Africa",
+      "focus": [
+        32.9542,
+        -14.9594,
+        47.7894,
+        -3.4221
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        38.7264,
+        -9.362
+      ]
+    },
+    {
+      "code": "DJI",
+      "name": "Djibouti",
+      "continent": "Africa",
+      "focus": [
+        41.6618,
+        -12.6996,
+        43.3179,
+        -10.9269
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        42.4123,
+        -11.8553
+      ]
+    },
+    {
+      "code": "SOL",
+      "name": "Somaliland",
+      "continent": "Africa",
+      "focus": [
+        42.5588,
+        -11.462,
+        48.9482,
+        -7.9969
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        46.0347,
+        -9.757
+      ]
+    },
+    {
+      "code": "UGA",
+      "name": "Uganda",
+      "continent": "Africa",
+      "focus": [
+        29.5795,
+        -4.2499,
+        35.036,
+        1.4433
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        32.5465,
+        -1.3804
+      ]
+    },
+    {
+      "code": "RWA",
+      "name": "Rwanda",
+      "continent": "Africa",
+      "focus": [
+        29.0249,
+        1.1347,
+        30.8161,
+        2.9179
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        30.0308,
+        1.957
+      ]
+    },
+    {
+      "code": "BIH",
+      "name": "Bosnia and Herz.",
+      "continent": "Europe",
+      "focus": [
+        15.75,
+        -45.2338,
+        19.5998,
+        -42.65
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        18.1152,
+        -43.8531
+      ]
+    },
+    {
+      "code": "MKD",
+      "name": "Macedonia",
+      "continent": "Europe",
+      "focus": [
+        20.4632,
+        -42.3203,
+        22.9524,
+        -40.8427
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        21.7204,
+        -41.6811
+      ]
+    },
+    {
+      "code": "SRB",
+      "name": "Serbia",
+      "continent": "Europe",
+      "focus": [
+        18.8298,
+        -46.1717,
+        22.986,
+        -42.2452
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        21.0135,
+        -44.1367
+      ]
+    },
+    {
+      "code": "MNE",
+      "name": "Montenegro",
+      "continent": "Europe",
+      "focus": [
+        18.45,
+        -43.5238,
+        20.3398,
+        -41.8776
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        19.3962,
+        -42.7505
+      ]
+    },
+    {
+      "code": "XKX",
+      "name": "Kosovo",
+      "continent": "Europe",
+      "focus": [
+        20.0707,
+        -43.2721,
+        21.7751,
+        -41.8471
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        20.9137,
+        -42.5139
+      ]
+    },
+    {
+      "code": "TTO",
+      "name": "Trinidad and Tobago",
+      "continent": "North America",
+      "focus": [
+        -61.95,
+        -10.89,
+        -60.895,
+        -10
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        -61.2904,
+        -10.5625
+      ]
+    },
+    {
+      "code": "SSD",
+      "name": "S. Sudan",
+      "continent": "Africa",
+      "focus": [
+        23.887,
+        -12.248,
+        35.298,
+        -3.5092
+      ],
+      "focusNote": "",
+      "labelPoint": [
+        28.9701,
+        -8.0271
+      ]
+    }
+  ],
+  "aliases": {
+    "미국": [
+      "USA"
+    ],
+    "캐나다": [
+      "CAN"
+    ],
+    "멕시코": [
+      "MEX"
+    ],
+    "쿠바": [
+      "CUB"
+    ],
+    "브라질": [
+      "BRA"
+    ],
+    "칠레": [
+      "CHL"
+    ],
+    "페루": [
+      "PER"
+    ],
+    "볼리비아": [
+      "BOL"
+    ],
+    "아르헨티나": [
+      "ARG"
+    ],
+    "우루과이": [
+      "URY"
+    ],
+    "베네수엘라": [
+      "VEN"
+    ],
+    "콜롬비아": [
+      "COL"
+    ],
+    "파나마": [
+      "PAN"
+    ],
+    "아이티": [
+      "HTI"
+    ],
+    "자메이카": [
+      "JAM"
+    ],
+    "그린란드": [
+      "GRL"
+    ],
+    "영국": [
+      "GBR"
+    ],
+    "프랑스": [
+      "FRA"
+    ],
+    "독일": [
+      "DEU"
+    ],
+    "스페인": [
+      "ESP"
+    ],
+    "포르투갈": [
+      "PRT"
+    ],
+    "이탈리아": [
+      "ITA"
+    ],
+    "스위스": [
+      "CHE"
+    ],
+    "네덜란드": [
+      "NLD"
+    ],
+    "벨기에": [
+      "BEL"
+    ],
+    "룩셈부르크": [
+      "LUX"
+    ],
+    "덴마크": [
+      "DNK"
+    ],
+    "노르웨이": [
+      "NOR"
+    ],
+    "스웨덴": [
+      "SWE"
+    ],
+    "핀란드": [
+      "FIN"
+    ],
+    "아이슬란드": [
+      "ISL"
+    ],
+    "아일랜드": [
+      "IRL"
+    ],
+    "러시아": [
+      "RUS"
+    ],
+    "폴란드": [
+      "POL"
+    ],
+    "오스트리아": [
+      "AUT"
+    ],
+    "헝가리": [
+      "HUN"
+    ],
+    "체코": [
+      "CZE"
+    ],
+    "슬로바키아": [
+      "SVK"
+    ],
+    "루마니아": [
+      "ROU"
+    ],
+    "불가리아": [
+      "BGR"
+    ],
+    "그리스": [
+      "GRC"
+    ],
+    "세르비아": [
+      "SRB"
+    ],
+    "알바니아": [
+      "ALB"
+    ],
+    "몬테네그로": [
+      "MNE"
+    ],
+    "크로아티아": [
+      "HRV"
+    ],
+    "보스니아": [
+      "BIH"
+    ],
+    "우크라이나": [
+      "UKR"
+    ],
+    "리투아니아": [
+      "LTU"
+    ],
+    "라트비아": [
+      "LVA"
+    ],
+    "에스토니아": [
+      "EST"
+    ],
+    "조지아": [
+      "GEO"
+    ],
+    "중국": [
+      "CHN"
+    ],
+    "일본": [
+      "JPN"
+    ],
+    "몽골": [
+      "MNG"
+    ],
+    "인도": [
+      "IND"
+    ],
+    "파키스탄": [
+      "PAK"
+    ],
+    "방글라데시": [
+      "BGD"
+    ],
+    "부탄": [
+      "BTN"
+    ],
+    "네팔": [
+      "NPL"
+    ],
+    "스리랑카": [
+      "LKA"
+    ],
+    "베트남": [
+      "VNM"
+    ],
+    "캄보디아": [
+      "KHM"
+    ],
+    "태국": [
+      "THA"
+    ],
+    "미얀마": [
+      "MMR"
+    ],
+    "라오스": [
+      "LAO"
+    ],
+    "말레이시아": [
+      "MYS"
+    ],
+    "인도네시아": [
+      "IDN"
+    ],
+    "필리핀": [
+      "PHL"
+    ],
+    "대만": [
+      "TWN"
+    ],
+    "이란": [
+      "IRN"
+    ],
+    "이라크": [
+      "IRQ"
+    ],
+    "튀르키예": [
+      "TUR"
+    ],
+    "시리아": [
+      "SYR"
+    ],
+    "레바논": [
+      "LBN"
+    ],
+    "요르단": [
+      "JOR"
+    ],
+    "이스라엘": [
+      "ISR"
+    ],
+    "팔레스타인": [
+      "PSE"
+    ],
+    "사우디아라비아": [
+      "SAU"
+    ],
+    "예멘": [
+      "YEM"
+    ],
+    "쿠웨이트": [
+      "KWT"
+    ],
+    "오만": [
+      "OMN"
+    ],
+    "아프가니스탄": [
+      "AFG"
+    ],
+    "이집트": [
+      "EGY"
+    ],
+    "리비아": [
+      "LBY"
+    ],
+    "알제리": [
+      "DZA"
+    ],
+    "모로코": [
+      "MAR"
+    ],
+    "튀니지": [
+      "TUN"
+    ],
+    "수단": [
+      "SDN"
+    ],
+    "에티오피아": [
+      "ETH"
+    ],
+    "에리트레아": [
+      "ERI"
+    ],
+    "소말리아": [
+      "SOM"
+    ],
+    "케냐": [
+      "KEN"
+    ],
+    "탄자니아": [
+      "TZA"
+    ],
+    "나이지리아": [
+      "NGA"
+    ],
+    "니제르": [
+      "NER"
+    ],
+    "가나": [
+      "GHA"
+    ],
+    "베냉": [
+      "BEN"
+    ],
+    "토고": [
+      "TGO"
+    ],
+    "카메룬": [
+      "CMR"
+    ],
+    "가봉": [
+      "GAB"
+    ],
+    "잠비아": [
+      "ZMB"
+    ],
+    "나미비아": [
+      "NAM"
+    ],
+    "레소토": [
+      "LSO"
+    ],
+    "남아프리카공화국": [
+      "ZAF"
+    ],
+    "마다가스카르": [
+      "MDG"
+    ],
+    "콩고": [
+      "COD"
+    ],
+    "오스트레일리아": [
+      "AUS"
+    ],
+    "뉴질랜드": [
+      "NZL"
+    ],
+    "파푸아뉴기니": [
+      "PNG"
+    ],
+    "솔로몬제도": [
+      "SLB"
+    ],
+    "뉴칼레도니아": [
+      "NCL"
+    ],
+    "피지": [
+      "FJI"
+    ],
+    "바누아투": [
+      "VUT"
+    ],
+    "한국": [
+      "KOR",
+      "PRK"
+    ],
+    "대한민국": [
+      "KOR"
+    ],
+    "북한": [
+      "PRK"
+    ],
+    "조선": [
+      "KOR",
+      "PRK"
+    ],
+    "대한제국": [
+      "KOR",
+      "PRK"
+    ],
+    "청": [
+      "CHN"
+    ],
+    "청나라": [
+      "CHN"
+    ],
+    "청제국": [
+      "CHN"
+    ],
+    "호주": [
+      "AUS"
+    ],
+    "버마": [
+      "MMR"
+    ],
+    "시암": [
+      "THA"
+    ],
+    "터키": [
+      "TUR"
+    ],
+    "페르시아": [
+      "IRN"
+    ],
+    "남아프리카": [
+      "ZAF"
+    ],
+    "남아프리카연방": [
+      "ZAF"
+    ],
+    "남서아프리카": [
+      "NAM"
+    ],
+    "바수토랜드": [
+      "LSO"
+    ],
+    "다호메": [
+      "BEN"
+    ],
+    "북로디지아": [
+      "ZMB"
+    ],
+    "프로이센": [
+      "DEU"
+    ],
+    "작센": [
+      "DEU"
+    ],
+    "바이에른": [
+      "DEU"
+    ],
+    "북독일 연방": [
+      "DEU"
+    ],
+    "독일 연방": [
+      "DEU"
+    ],
+    "중국(청)": [
+      "CHN"
+    ],
+    "한국(조선·대한제국 전환기)": [
+      "KOR",
+      "PRK"
+    ],
+    "러시아 제국(현 조지아)": [
+      "GEO"
+    ],
+    "오스트리아 제국(현 체코)": [
+      "CZE"
+    ],
+    "오스트리아 제국(현 크로아티아)": [
+      "HRV"
+    ],
+    "오스만 제국(레바논)": [
+      "LBN"
+    ],
+    "오스만 제국(현 레바논)": [
+      "LBN"
+    ],
+    "오스만 제국(현 이스라엘)": [
+      "ISR"
+    ],
+    "오스만 제국(시리아)": [
+      "SYR"
+    ],
+    "오스만 제국(요르단)": [
+      "JOR"
+    ],
+    "오스만 제국(팔레스타인)": [
+      "PSE"
+    ],
+    "오스만 제국(현 그리스)": [
+      "GRC"
+    ]
+  },
+  "countryCounts": [
+    [
+      "조선",
+      10492
+    ],
+    [
+      "VOC 희망봉·현지 주민",
+      2239
+    ],
+    [
+      "누에바에스파냐",
+      1356
+    ],
+    [
+      "에도 막부·일본",
+      1191
+    ],
+    [
+      "도쿠가와 막부",
+      797
+    ],
+    [
+      "네덜란드 동인도회사(VOC)·케이프 지역 사회",
+      744
+    ],
+    [
+      "한국(일제강점기)",
+      657
+    ],
+    [
+      "미국",
+      635
+    ],
+    [
+      "청",
+      585
+    ],
+    [
+      "프랑스",
+      453
+    ],
+    [
+      "에도 막부",
+      453
+    ],
+    [
+      "고와·보네와 남술라웨시 정체",
+      446
+    ],
+    [
+      "오스만 제국",
+      378
+    ],
+    [
+      "영국",
+      374
+    ],
+    [
+      "잉글랜드 왕국",
+      350
+    ],
+    [
+      "중국",
+      344
+    ],
+    [
+      "잉글랜드",
+      322
+    ],
+    [
+      "포르투갈령 브라질·네덜란드 서인도회사",
+      320
+    ],
+    [
+      "독일",
+      288
+    ],
+    [
+      "일본",
+      256
+    ],
+    [
+      "뉴네덜란드",
+      249
+    ],
+    [
+      "프랑스 왕국",
+      237
+    ],
+    [
+      "명",
+      203
+    ],
+    [
+      "팀북투 파샤정·니제르 내륙 사회",
+      179
+    ],
+    [
+      "교황령",
+      171
+    ],
+    [
+      "대한제국",
+      167
+    ],
+    [
+      "도쿠가와 막부·일본",
+      166
+    ],
+    [
+      "VOC 희망봉·코이코이 지역 사회",
+      146
+    ],
+    [
+      "누벨프랑스",
+      143
+    ],
+    [
+      "무굴·마라타·데칸 정체",
+      128
+    ],
+    [
+      "고와·탈로·주변 정체",
+      126
+    ],
+    [
+      "뉴욕 식민정부",
+      120
+    ],
+    [
+      "고와·보네·남술라웨시와 인접 정체",
+      119
+    ],
+    [
+      "고와·보네 및 인근 정체",
+      119
+    ],
+    [
+      "러시아",
+      111
+    ],
+    [
+      "잉글랜드 공화국·호국경 정부",
+      102
+    ],
+    [
+      "버마",
+      100
+    ],
+    [
+      "마라타·무굴·비자푸르",
+      100
+    ],
+    [
+      "고와·탈로·보네 및 VOC",
+      97
+    ],
+    [
+      "뉴질랜드",
+      94
+    ],
+    [
+      "오스만 제국 이집트",
+      91
+    ],
+    [
+      "무굴 제국 및 인접 정체",
+      90
+    ],
+    [
+      "캐나다",
+      87
+    ],
+    [
+      "매사추세츠",
+      85
+    ],
+    [
+      "신성로마제국",
+      83
+    ],
+    [
+      "잉글랜드 공화국",
+      83
+    ],
+    [
+      "누벨프랑스·원주민사회",
+      83
+    ],
+    [
+      "스웨덴",
+      81
+    ],
+    [
+      "페루 부왕령",
+      81
+    ],
+    [
+      "그레이트브리튼 왕국",
+      81
+    ],
+    [
+      "러시아 차르국",
+      80
+    ],
+    [
+      "무굴 제국",
+      77
+    ],
+    [
+      "마라타·무굴·데칸 정체",
+      76
+    ],
+    [
+      "베네치아 공화국",
+      75
+    ],
+    [
+      "일본 도요토미 정권",
+      72
+    ],
+    [
+      "복구 퉁구 왕조",
+      72
+    ],
+    [
+      "사파비 왕조",
+      71
+    ],
+    [
+      "이란",
+      70
+    ],
+    [
+      "스코틀랜드 왕국",
+      68
+    ],
+    [
+      "마라타·비자푸르·무굴 및 인접 정체",
+      67
+    ],
+    [
+      "에티오피아 제국",
+      65
+    ],
+    [
+      "네덜란드 공화국",
+      65
+    ],
+    [
+      "이탈리아",
+      61
+    ],
+    [
+      "무굴 및 교섭 정체",
+      61
+    ],
+    [
+      "스페인령 필리핀",
+      60
+    ],
+    [
+      "잉글랜드·스코틀랜드·아일랜드 호국경 정부",
+      60
+    ],
+    [
+      "포르투갈령 브라질",
+      56
+    ],
+    [
+      "스페인령 페루",
+      55
+    ],
+    [
+      "스웨덴 왕국",
+      54
+    ],
+    [
+      "포르투갈 왕국",
+      53
+    ],
+    [
+      "무굴 제국·데칸 정체",
+      53
+    ],
+    [
+      "사드 왕조",
+      52
+    ],
+    [
+      "네덜란드 동인도회사",
+      48
+    ],
+    [
+      "스페인",
+      47
+    ],
+    [
+      "에스파냐령 필리핀",
+      47
+    ],
+    [
+      "폴란드-리투아니아",
+      47
+    ],
+    [
+      "네덜란드",
+      46
+    ],
+    [
+      "에스파냐 군주국",
+      46
+    ],
+    [
+      "오스트레일리아",
+      43
+    ],
+    [
+      "토스카나 대공국",
+      43
+    ],
+    [
+      "합스부르크령 네덜란드",
+      42
+    ],
+    [
+      "스코틀랜드",
+      41
+    ],
+    [
+      "무굴·마라타",
+      41
+    ],
+    [
+      "소련",
+      40
+    ],
+    [
+      "버지니아",
+      40
+    ],
+    [
+      "요카빌·투쿠만 식민정부",
+      40
+    ],
+    [
+      "스위스",
+      38
+    ],
+    [
+      "메릴랜드",
+      38
+    ],
+    [
+      "무굴 제국·마라타 및 인접 정체",
+      38
+    ],
+    [
+      "누벨프랑스·북미 식민지와 원주민 사회",
+      38
+    ],
+    [
+      "인도",
+      37
+    ],
+    [
+      "송가이 제국",
+      37
+    ],
+    [
+      "무굴",
+      37
+    ],
+    [
+      "오스트리아",
+      36
+    ],
+    [
+      "누벨프랑스·원주민 사회",
+      36
+    ],
+    [
+      "누벨프랑스·관련 원주민 사회",
+      36
+    ],
+    [
+      "매사추세츠 임시정부",
+      36
+    ],
+    [
+      "칠레",
+      35
+    ],
+    [
+      "포르투갈",
+      33
+    ],
+    [
+      "콩고 왕국",
+      33
+    ]
+  ],
+  "mapStatusCounts": [
+    [
+      "unresolved",
+      30962
+    ],
+    [
+      "inherited_context_checked_not_reverified",
+      7354
+    ],
+    [
+      "reference_coordinate_checked",
+      604
+    ]
+  ],
+  "precisionCounts": [
+    [
+      "null",
+      30962
+    ],
+    [
+      "city",
+      5035
+    ],
+    [
+      "admin1",
+      1501
+    ],
+    [
+      "country",
+      1422
+    ]
+  ],
+  "examples": [
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": "reference_coordinate_checked",
+      "country": "오스트리아-헝가리",
+      "date": "1873-05-09",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1873-05-09",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "자료 기록 (1873-05-09): 빈 증시가 붕괴함\n출처: https://www.dhm.de/lemo/jahreschronik/1873",
+      "display_end_label": null,
+      "display_start_label": "1873-05-09",
+      "gregorian_status": "not_normalized",
+      "id": 159,
+      "importance": 3,
+      "latitude": 48.20849,
+      "locality": "오스트리아 빈",
+      "location_precision": "city",
+      "location_resolution_method": "exact_label_country_context",
+      "longitude": 16.37208,
+      "map_status": "reference_coordinate_checked",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1873-05-09 (양력)",
+      "place": "오스트리아 빈",
+      "public_id": "legacy:event:159",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": "빈",
+      "sort_day": 9,
+      "sort_month": 5,
+      "sort_year": 1873,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1873-05-09",
+      "timeline_date": "1873-05-09",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "빈 증권거래소 폭락",
+      "verification": "제공자료 표기: 출처 본문 확인; 이번 병합에서 역사 사실 전수 재검증은 하지 않음.",
+      "year_end": 1873,
+      "year_start": 1873
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": "reference_coordinate_checked",
+      "country": "오스트리아-헝가리",
+      "date": "1873",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1873",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "1873년 빈에서 콜레라가 유행했다.",
+      "display_end_label": null,
+      "display_start_label": "1873",
+      "gregorian_status": "not_normalized",
+      "id": 160,
+      "importance": 3,
+      "latitude": 48.20849,
+      "locality": "빈",
+      "location_precision": "city",
+      "location_resolution_method": "exact_label_country_context",
+      "longitude": 16.37208,
+      "map_status": "reference_coordinate_checked",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1873",
+      "place": "빈",
+      "public_id": "legacy:event:160",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": "빈",
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1873,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1873",
+      "timeline_date": "1873",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "빈에서 콜레라 유행",
+      "verification": "",
+      "year_end": 1873,
+      "year_start": 1873
+    },
+    {
+      "calendar": "Joseon Korean lunisolar calendar",
+      "calendar_notes": "수정실록4월14일 표제 안의 서술에서 전날13일 도해를 확인했다.14일 부산진 전투와 별개다.",
+      "category": "전쟁",
+      "caution": "수정실록4월14일 기사 본문은 도해를13일로 구별한다. 병력·선박의 과장 가능성이 있는 수치는 채택하지 않았다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1592-05-23",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1592-05-23",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "고니시 유키나가의 선봉군이 부산에 상륙하여 조선 침공을 시작하였다.",
+      "display_end_label": null,
+      "display_start_label": "1592-05-23",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 8479,
+      "importance": 5,
+      "latitude": null,
+      "locality": "부산포",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1592-05-23",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "선조25년4월13일",
+      "place": "부산포",
+      "public_id": "evt_9772c7873ad47da4fd8a6a720c3bb719",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 23,
+      "sort_month": 5,
+      "sort_year": 1592,
+      "source_calendar": "Joseon Korean lunisolar calendar",
+      "source_review_level": null,
+      "sources": [
+        "https://aa.usno.navy.mil/api/juliandate?date=1592-05-23&time=00:00:00&era=AD",
+        "https://aa.usno.navy.mil/data/JulianDate",
+        "https://aa.usno.navy.mil/faq/JD_formula",
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1592&mm=04&dd=13",
+        "https://sillok.history.go.kr/popup/viewer.do?id=knb_12504014_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1592-05-23",
+      "timeline_date": "1592-05-23",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "일본군의 부산 상륙과 임진왜란 발발",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1592,
+      "year_start": 1592
+    }
+  ],
+  "unresolved": [
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "전쟁",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "중국",
+      "date": "1840-06-28",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1840-06-28",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1840-06-28",
+      "gregorian_status": "not_normalized",
+      "id": 1,
+      "importance": 3,
+      "latitude": null,
+      "locality": "중국 연안",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1840-06-28",
+      "place": "중국 연안",
+      "public_id": "legacy:event:1",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 28,
+      "sort_month": 6,
+      "sort_year": 1840,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1840-06-28",
+      "timeline_date": "1840-06-28",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "제1차 아편전쟁 발발",
+      "verification": "2026-09-27 전체 검토: 원문 대조에 따른 편집·분류 정리. 역사 사실 전체 재검증은 아님.",
+      "year_end": 1840,
+      "year_start": 1840
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "한국(일제강점기)",
+      "date": "1911-09-09",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1911-09-09",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1911-09-09",
+      "gregorian_status": "not_normalized",
+      "id": 737,
+      "importance": 3,
+      "latitude": null,
+      "locality": "한국(일제강점기)",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1911-09-09",
+      "place": "한국(일제강점기)",
+      "public_id": "legacy:event:737",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 9,
+      "sort_month": 9,
+      "sort_year": 1911,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1911-09-09",
+      "timeline_date": "1911-09-09",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "동족회 결성",
+      "verification": "",
+      "year_end": 1911,
+      "year_start": 1911
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "한국(일제강점기)",
+      "date": "1928-07-11",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1928-07-11",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1928-07-11",
+      "gregorian_status": "not_normalized",
+      "id": 1444,
+      "importance": 3,
+      "latitude": null,
+      "locality": "한국(일제강점기)",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1928-07-11",
+      "place": "한국(일제강점기)",
+      "public_id": "legacy:event:1444",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 11,
+      "sort_month": 7,
+      "sort_year": 1928,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1928-07-11",
+      "timeline_date": "1928-07-11",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "경성지법 이천 권총사건의 이수홍 유택수 사형",
+      "verification": "",
+      "year_end": 1928,
+      "year_start": 1928
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "한국(일제강점기)",
+      "date": "1941-08",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1941-08",
+      "date_precision": "month",
+      "day_comparison_eligible": 0,
+      "description": "1941년 8월 함흥지방법원은 보천보 전투 이후 항일조직을 수사한 혜산사건의 권영벽·이제순·박달 등 6명에게 사형을 선고했다. 박달은 병으로 집행이 연기되어 해방 뒤 출감했다.\n출처: https://encykorea.aks.ac.kr/Article/E0063600",
+      "display_end_label": null,
+      "display_start_label": "1941-08",
+      "gregorian_status": "not_normalized",
+      "id": 2193,
+      "importance": 3,
+      "latitude": null,
+      "locality": "함경남도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1941-08",
+      "place": "함경남도",
+      "public_id": "legacy:event:2193",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 8,
+      "sort_year": 1941,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1941-08",
+      "timeline_date": "1941-08",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "혜산사건 관련자 6명 사형 선고",
+      "verification": "",
+      "year_end": 1941,
+      "year_start": 1941
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "문화",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "오스만 제국",
+      "date": "1884-02",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1884-02",
+      "date_precision": "month",
+      "day_comparison_eligible": 0,
+      "description": "새 규정이 발굴 유물의 국가 소유와 반출 금지를 정했다. 공포일 이견으로 연월만 기록한다.",
+      "display_end_label": null,
+      "display_start_label": "1884-02",
+      "gregorian_status": "not_normalized",
+      "id": 2784,
+      "importance": 4,
+      "latitude": null,
+      "locality": "",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1884-02",
+      "place": "",
+      "public_id": "legacy:event:2784",
+      "range_semantics": null,
+      "region": "중동",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 2,
+      "sort_year": 1884,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1884-02",
+      "timeline_date": "1884-02",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "고대유물의 국유화와 국외 반출 금지 규정",
+      "verification": "",
+      "year_end": 1884,
+      "year_start": 1884
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "한국(일제강점기)",
+      "date": "1920",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1920",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1920",
+      "gregorian_status": "not_normalized",
+      "id": 3366,
+      "importance": 3,
+      "latitude": null,
+      "locality": "조선 전역",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1920~1934",
+      "place": "조선 전역",
+      "public_id": "legacy:event:3366",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1920,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "한국사",
+      "timeline_anchor": "1920",
+      "timeline_date": "1920",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "산미 증식 계획 추진",
+      "verification": "사용자 제공 텍스트 이관; 이번 작업에서 역사 사실을 재검증하지 않음.\n날짜 필드는 원문 시작 시점의 확인 가능한 연·월·일만 사용. 계절·순·기간·이후·까지의 의미는 원문 날짜 참조. 연대 표기는 검색용 시작 연도이며 단일 연도 발생을 뜻하지 않음.",
+      "year_end": 1920,
+      "year_start": 1920
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "경제",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "남아프리카",
+      "date": "1888-10-30",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1888-10-30",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "출처: https://www.dhm.de/lemo/jahreschronik/1888",
+      "display_end_label": null,
+      "display_start_label": "1888-10-30",
+      "gregorian_status": "not_normalized",
+      "id": 4052,
+      "importance": 2,
+      "latitude": null,
+      "locality": "남부 아프리카 마타벨레랜드",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1888-10-30 (양력)",
+      "place": "남부 아프리카 마타벨레랜드",
+      "public_id": "legacy:event:4052",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 30,
+      "sort_month": 10,
+      "sort_year": 1888,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1888-10-30",
+      "timeline_date": "1888-10-30",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "로벵굴라가 러드 일행과 광업 이권 계약을 맺음",
+      "verification": "제공자료 표기: 출처 본문 확인; 이번 병합에서 역사 사실 전수 재검증은 하지 않음. 중요도는 사건 영향 범위를 고려한 편집 추정.",
+      "year_end": 1888,
+      "year_start": 1888
+    },
+    {
+      "calendar": "unspecified_in_legacy",
+      "calendar_notes": "",
+      "category": "역사",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "독일",
+      "date": "1923-01-11",
+      "date_basis": "legacy_label_not_independently_calendar_verified",
+      "date_label": "1923-01-11",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "출처: https://www.dhm.de/lemo/jahreschronik/1923",
+      "display_end_label": null,
+      "display_start_label": "1923-01-11",
+      "gregorian_status": "not_normalized",
+      "id": 4667,
+      "importance": 2,
+      "latitude": null,
+      "locality": "독일 루르",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1923-01-11 (양력)",
+      "place": "독일 루르",
+      "public_id": "legacy:event:4667",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 11,
+      "sort_month": 1,
+      "sort_year": 1923,
+      "source_calendar": "unspecified_in_legacy",
+      "source_review_level": null,
+      "sources": [],
+      "subject": "",
+      "timeline_anchor": "1923-01-11",
+      "timeline_date": "1923-01-11",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "프랑스·벨기에군 루르 점령",
+      "verification": "제공자료 표기: 출처 본문 확인; 이번 병합에서 역사 사실 전수 재검증은 하지 않음. 중요도는 사건 영향 범위를 고려한 편집 추정.",
+      "year_end": 1923,
+      "year_start": 1923
+    },
+    {
+      "calendar": "출처의 역사연도 표기; 세부 역법 미확정",
+      "calendar_notes": "",
+      "category": "경제·외교",
+      "caution": "3월은 명의 태음태양력 월이며 서력3월로 변환하지 않음.",
+      "coordinate_status": null,
+      "country": "명·몽골 투메드",
+      "date": "1551",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1551",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "명 조정이 알탄 칸 휘하 몽골 세력과 말·중국 물자를 교환하는 변경시장을 허용했다. 조공 지위를 인정하지 않으면서 교역으로 군사적 압박을 완화하려 한 타협이었다.",
+      "display_end_label": null,
+      "display_start_label": "1551",
+      "gregorian_status": "미정규화",
+      "id": 5200,
+      "importance": 4,
+      "latitude": null,
+      "locality": "선부·대동 변경 시장, 현재 중국 북부",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "嘉靖三十年三月(1551)",
+      "place": "선부·대동 변경 시장, 현재 중국 북부",
+      "public_id": "evt_df5b4d1e69405dc539a6863eb63f8d34",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1551,
+      "source_calendar": "출처의 역사연도 표기; 세부 역법 미확정",
+      "source_review_level": null,
+      "sources": [
+        "https://www.jstage.jst.go.jp/article/shigaku/120/3/120_KJ00007988334/_article/-char/ja"
+      ],
+      "subject": "",
+      "timeline_anchor": "1551",
+      "timeline_date": "1551",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "명과 알탄 칸 세력의 마시 개설",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1551,
+      "year_start": 1551
+    },
+    {
+      "calendar": "출처의 역사 날짜를 유지함. 출처에 역법 또는 환산 근거가 명시되지 않아 그레고리력으로 임의 환산하지 않음",
+      "calendar_notes": "원역법과 환산 근거를 확인하지 않아 미정규화 상태로 보존한다.",
+      "category": "도시·식민화",
+      "caution": "카타마르카 의회 기록이 채택한 전통적 창설일이다. 도시가 여러 차례 옮겨졌으므로 현재 입지와 완전히 동일하다고 단정하지 않는다.",
+      "coordinate_status": null,
+      "country": "에스파냐 투쿠만 지역 / 디아기타 공동체",
+      "date": "1558-06-24",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1558-06-24",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "후안 페레스 데 수리타가 킨미빌 계곡에 론드레스 데 라 누에바 잉글라테라를 설립했다. 기존 원주민·잉카 지역을 투쿠만의 식민도시망에 편입하려는 시도였다.",
+      "display_end_label": null,
+      "display_start_label": "1558-06-24",
+      "gregorian_status": "미정규화",
+      "id": 5626,
+      "importance": 3,
+      "latitude": null,
+      "locality": "킨미빌 계곡, 현재 아르헨티나 카타마르카주",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "24 de junio de 1558",
+      "place": "킨미빌 계곡, 현재 아르헨티나 카타마르카주",
+      "public_id": "evt_6e851a121770c9a3993f5e524c93e1ea",
+      "range_semantics": null,
+      "region": "아메리카",
+      "resolved_place": null,
+      "sort_day": 24,
+      "sort_month": 6,
+      "sort_year": 1558,
+      "source_calendar": "출처의 역사 날짜를 유지함. 출처에 역법 또는 환산 근거가 명시되지 않아 그레고리력으로 임의 환산하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://sitiosenado.catamarca.gob.ar/media/legislativo/sesion/2011-06-23_ORDINARIA_07.pdf"
+      ],
+      "subject": "",
+      "timeline_anchor": "1558-06-24",
+      "timeline_date": "1558-06-24",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "론드레스 데 라 누에바 잉글라테라 설립",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1558,
+      "year_start": 1558
+    },
+    {
+      "calendar": "출처의 역사 연도에 따른 서력 연도 표기. 원역법의 월일을 소급 그레고리력으로 환산하지 않음",
+      "calendar_notes": "",
+      "category": "종교·사회·경제",
+      "caution": "부동산 문서와 가문사를 분석한 Robert D. McChesney의 연구에 근거하며 재산 상속의 모든 절차가 같은 해에 완료되었다고 단정하지 않는다.",
+      "coordinate_status": null,
+      "country": "부하라 우즈베크 정권",
+      "date": "1563",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1563",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "부하라의 수피 지도자 호자 무함마드 이슬람이 세상을 떠났다. 아들 호자 사드는 아버지가 축적한 토지와 후원 관계를 바탕으로 주이바리 가문의 경제적 기반을 확장하였다.",
+      "display_end_label": null,
+      "display_start_label": "1563",
+      "gregorian_status": "미정규화",
+      "id": 6076,
+      "importance": 3,
+      "latitude": null,
+      "locality": "부하라",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1563",
+      "place": "부하라",
+      "public_id": "evt_83d7779271a481cc2a8a079fe5e59e24",
+      "range_semantics": null,
+      "region": "중동",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1563,
+      "source_calendar": "출처의 역사 연도에 따른 서력 연도 표기. 원역법의 월일을 소급 그레고리력으로 환산하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://www.iranicaonline.org/articles/juybaris-a-prominent-bukharan-family-dynasty-for-more-than-500-years/"
+      ],
+      "subject": "",
+      "timeline_anchor": "1563",
+      "timeline_date": "1563",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "주이바리 지도자 호자 무함마드 이슬람 사망",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1563,
+      "year_start": 1563
+    },
+    {
+      "calendar": "출처에 제시된 서력 날짜를 유지함. 원역법 또는 환산 방식이 명시되지 않아 소급 그레고리력으로 정규화하지 않음",
+      "calendar_notes": "",
+      "category": "건축·종교",
+      "caution": "완공과 개장 날짜는 후속 연도이며 여기서는 착수만 기록한다.",
+      "coordinate_status": null,
+      "country": "오스만 제국",
+      "date": "1568",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1568",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "셀림2세의 명령으로 시난이 설계한 대형 모스크 건설이 시작되었다.",
+      "display_end_label": null,
+      "display_start_label": "1568",
+      "gregorian_status": "미정규화",
+      "id": 6512,
+      "importance": 4,
+      "latitude": null,
+      "locality": "에디르네",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "976 /1568",
+      "place": "에디르네",
+      "public_id": "evt_494d226325bf44d820035db0049f17cb",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1568,
+      "source_calendar": "출처에 제시된 서력 날짜를 유지함. 원역법 또는 환산 방식이 명시되지 않아 소급 그레고리력으로 정규화하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://islamansiklopedisi.org.tr/selimiye-camii-ve-kulliyesi--edirne",
+        "https://turkishmuseums.kprod.kultur.gov.tr/blog/detail/the-unesco-sites-of-turkiye-selimiye-mosque-and-its-social-complex/10121/4"
+      ],
+      "subject": "",
+      "timeline_anchor": "1568",
+      "timeline_date": "1568",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "셀리미예 모스크 건설 착수",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1568,
+      "year_start": 1568
+    },
+    {
+      "calendar": "출처에 제시된 서력 날짜를 유지함. 원역법 또는 환산 방식이 명시되지 않아 소급 그레고리력으로 정규화하지 않음",
+      "calendar_notes": "",
+      "category": "건축·도시",
+      "caution": "기존 요새의 존재와 새 궁성 건설 개시를 구별한다.",
+      "coordinate_status": null,
+      "country": "덴마크 왕국",
+      "date": "1574",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1574",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "프레데리크2세가 외레순 해협을 내려다보는 르네상스 궁성과 방어시설을 짓기 시작했다.",
+      "display_end_label": null,
+      "display_start_label": "1574",
+      "gregorian_status": "미정규화",
+      "id": 6964,
+      "importance": 4,
+      "latitude": null,
+      "locality": "헬싱외르",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1574",
+      "place": "헬싱외르",
+      "public_id": "evt_c5045e0ee62b70f28842092502fb271f",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1574,
+      "source_calendar": "출처에 제시된 서력 날짜를 유지함. 원역법 또는 환산 방식이 명시되지 않아 소급 그레고리력으로 정규화하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://whc.unesco.org/en/list/696"
+      ],
+      "subject": "",
+      "timeline_anchor": "1574",
+      "timeline_date": "1574",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "크론보르 성 건설 시작",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1574,
+      "year_start": 1574
+    },
+    {
+      "calendar": "Julian, identified by documented weekday and Easter-week context",
+      "calendar_notes": "본진만 검산했다. 여진과 지진파 위상 구분의 불확실성을 본진에 합치지 않았다. 당시 약18시 표기는 현지 추정값이며 UTC로 만들지 않는다.",
+      "category": "재해",
+      "caution": "BGS 인쇄 67–72쪽 및 폴저 인쇄 8–9쪽. 본진이며 후속 진동은 별개이다. 당시 시각을 UTC로 쓰지 않는다.",
+      "coordinate_status": null,
+      "country": "잉글랜드·프랑스·네덜란드",
+      "date": "1580-04-16",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1580-04-16",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "영국 남동부와 프랑스 북부·저지대에서 강한 지진이 감지되어 피해가 발생했다.",
+      "display_end_label": null,
+      "display_start_label": "1580-04-16",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 7413,
+      "importance": 4,
+      "latitude": null,
+      "locality": "도버해협과 주변 지역",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1580-04-16",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "6 April 1580; Wednesday; about 18h",
+      "place": "도버해협과 주변 지역",
+      "public_id": "evt_c44b46910f519fe860b6038256595dd3",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 16,
+      "sort_month": 4,
+      "sort_year": 1580,
+      "source_calendar": "Julian, identified by documented weekday and Easter-week context",
+      "source_review_level": null,
+      "sources": [
+        "https://aa.usno.navy.mil/api/juliandate?date=1580-04-06&time=00:00:00&era=AD",
+        "https://aa.usno.navy.mil/data/JulianDate",
+        "https://aa.usno.navy.mil/faq/JD_formula",
+        "https://folgerpedia.folger.edu/images/0/0d/ECDbD_1580.pdf",
+        "https://www.earthquakes.bgs.ac.uk/historical/data/studies/MUSS008/MUSS008.pdf"
+      ],
+      "subject": "",
+      "timeline_anchor": "1580-04-16",
+      "timeline_date": "1580-04-16",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "도버해협 지진",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1580,
+      "year_start": 1580
+    },
+    {
+      "calendar": "출처의 역사 날짜를 유지함. 역법 환산 여부는 출처에 명시되지 않으며 그레고리력으로 임의 환산하지 않음",
+      "calendar_notes": "역법을 특정하고 환산을 검증할 근거가 확보되지 않아 정규화하지 않았다.",
+      "category": "군사·건축",
+      "caution": "건설 명령을 대상으로 하며 후대의 각 요새 재건일과 구별한다.",
+      "coordinate_status": null,
+      "country": "에스파냐령 칠레·마푸체 지역",
+      "date": "1585",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1585",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "총독이 미야포아의 트리니다드·에스피리투산토와 푸렌에 요새들을 세우도록 했다. 강과 통로를 점유하여 마푸체의 이동을 통제하려는 조치였다.",
+      "display_end_label": null,
+      "display_start_label": "1585",
+      "gregorian_status": "미정규화",
+      "id": 7850,
+      "importance": 4,
+      "latitude": null,
+      "locality": "미야포아·푸렌",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1585",
+      "place": "미야포아·푸렌",
+      "public_id": "evt_5b16423292e8b6584130432c51faa5d3",
+      "range_semantics": null,
+      "region": "아메리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1585,
+      "source_calendar": "출처의 역사 날짜를 유지함. 역법 환산 여부는 출처에 명시되지 않으며 그레고리력으로 임의 환산하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://www.memoriachilena.gob.cl/archivos2/pdfs/MC0038880.pdf"
+      ],
+      "subject": "",
+      "timeline_anchor": "1585",
+      "timeline_date": "1585",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "소토마요르가 남부 요새망 건설을 명하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1585,
+      "year_start": 1585
+    },
+    {
+      "calendar": "Joseon Korean lunisolar calendar",
+      "calendar_notes": "통신사의 한양 출발일이며 부산 출항 또는 일본 알현일이 아니다. 일진 丁未가 일치한다.",
+      "category": "외교",
+      "caution": "서울 출발일이며 부산 출항·히데요시 알현과 별개이다.",
+      "coordinate_status": null,
+      "country": "조선·일본",
+      "date": "1590-04-09",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1590-04-09",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "황윤길을 정사, 김성일을 부사, 허성을 서장관으로 하는 통신사 일행이 일본으로 떠났다. 일본 정세를 파악하고 국서를 전달하는 사행이었다.",
+      "display_end_label": null,
+      "display_start_label": "1590-04-09",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 8288,
+      "importance": 4,
+      "latitude": null,
+      "locality": "한양 출발",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1590-04-09",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "선조23년3월6일",
+      "place": "한양 출발",
+      "public_id": "evt_740a01415db6b0a23cbcd33bdb9b26e6",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 9,
+      "sort_month": 4,
+      "sort_year": 1590,
+      "source_calendar": "Joseon Korean lunisolar calendar",
+      "source_review_level": null,
+      "sources": [
+        "https://aa.usno.navy.mil/api/juliandate?date=1590-04-09&time=00:00:00&era=AD",
+        "https://aa.usno.navy.mil/data/JulianDate",
+        "https://aa.usno.navy.mil/faq/JD_formula",
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1590&mm=03&dd=06",
+        "https://sillok.history.go.kr/id/kna_12303006_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1590-04-09",
+      "timeline_date": "1590-04-09",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "황윤길·김성일·허성 통신사 출발",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1590,
+      "year_start": 1590
+    },
+    {
+      "calendar": "Joseon Korean lunisolar calendar",
+      "calendar_notes": "사건별 원날짜와 공식 환산 응답을 대조했다. 발생 시각이나 UTC 시각은 만들지 않았다.",
+      "category": "군사·노동",
+      "caution": "군사의 굶주림과 복무 부담이 논의의 배경으로 기록된다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1595-03-29",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1595-03-29",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "훈련도감이 결원을 보충하며 대오를 정비하고 군사의 입직 인원을 줄이자고 건의하여 승인을 받았다.",
+      "display_end_label": null,
+      "display_start_label": "1595-03-29",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 8754,
+      "importance": 3,
+      "latitude": null,
+      "locality": "한성",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1595-03-29",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "선조28년2월19일 임술",
+      "place": "한성",
+      "public_id": "evt_7fc09255e325738839f3b85fa47b9e5f",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 29,
+      "sort_month": 3,
+      "sort_year": 1595,
+      "source_calendar": "Joseon Korean lunisolar calendar",
+      "source_review_level": null,
+      "sources": [
+        "https://aa.usno.navy.mil/api/juliandate?date=1595-03-29&time=00:00:00&era=AD",
+        "https://aa.usno.navy.mil/data/JulianDate",
+        "https://aa.usno.navy.mil/faq/JD_formula",
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1595&mm=02&dd=19",
+        "https://sillok.history.go.kr/id/kna_12802019_003"
+      ],
+      "subject": "",
+      "timeline_anchor": "1595-03-29",
+      "timeline_date": "1595-03-29",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "훈련도감 대오와 입직 부담 조정",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1595,
+      "year_start": 1595
+    },
+    {
+      "calendar": "Gregorian editorial equivalent anchored by original weekday",
+      "calendar_notes": "7월7일 참사회 기록은 같은 달4일인 지난 일요일에 명령을 공표했다고 명시한다.",
+      "category": "종교·행정",
+      "caution": "MMA III doc169는 지난 일요일4일 공표를 인용한다.1599년7월4일은Gregorian일요일과맞는다.",
+      "coordinate_status": null,
+      "country": "상투메 주교구",
+      "date": "1599-07-04",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1599-07-04",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "주교의 시찰 결과에는 재정 부담과 파문 위협이 포함되어 성당 참사회와 충돌을 일으켰다.",
+      "display_end_label": null,
+      "display_start_label": "1599-07-04",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 9190,
+      "importance": 3,
+      "latitude": null,
+      "locality": "상투메",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1599-07-04",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1599-07-04 일요일",
+      "place": "상투메",
+      "public_id": "evt_74bf4bb1a87f16e636b80d81d43127a4",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 4,
+      "sort_month": 7,
+      "sort_year": 1599,
+      "source_calendar": "Gregorian editorial equivalent anchored by original weekday",
+      "source_review_level": null,
+      "sources": [
+        "https://aa.usno.navy.mil/api/juliandate?date=1599-07-04&time=00:00:00&era=AD",
+        "https://aa.usno.navy.mil/data/JulianDate",
+        "https://aa.usno.navy.mil/faq/JD_formula",
+        "https://www.scribd.com/document/733482421/MMA-completo-Vol-3"
+      ],
+      "subject": "",
+      "timeline_anchor": "1599-07-04",
+      "timeline_date": "1599-07-04",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "주교가 교회 시찰 명령과 제재를 공표하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1599,
+      "year_start": 1599
+    },
+    {
+      "calendar": "출처 날짜 보존; 원역법과 소급 그레고리력 환산은 별도 검증",
+      "calendar_notes": "",
+      "category": "전쟁·지역 정치",
+      "caution": "Haft2012 p35–36의Boyer·RodríguezJoulia대조. 쿠쿠를알제의단순부속이나스페인전쟁의수동적동맹으로만서술하지않는다.정확전투일미상.",
+      "coordinate_status": null,
+      "country": "쿠쿠 왕국·오스만 알제·베니아바스",
+      "date": "1603",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1603",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "스페인과 교섭하던 산지 왕국은 지역 경쟁 세력과 맞서 군사적 지위를 지켰다.",
+      "display_end_label": null,
+      "display_start_label": "1603",
+      "gregorian_status": "미정규화",
+      "id": 9612,
+      "importance": 4,
+      "latitude": null,
+      "locality": "카빌리아 산지",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1603",
+      "place": "카빌리아 산지",
+      "public_id": "evt_afffa81655b0d4e308569237ccba766f",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1603,
+      "source_calendar": "출처 날짜 보존; 원역법과 소급 그레고리력 환산은 별도 검증",
+      "source_review_level": null,
+      "sources": [
+        "https://cartographicperspectives.org/index.php/journal/article/download/cp71-haft/html?inline=1",
+        "https://www.persee.fr/doc/remmm_0035-1474_1970_num_8_1_1080"
+      ],
+      "subject": "",
+      "timeline_anchor": "1603",
+      "timeline_date": "1603",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "쿠쿠 군대가 알제 및 베니아바스 세력의 공격을 물리치다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1603,
+      "year_start": 1603
+    },
+    {
+      "calendar": "출처 날짜 보존; 원역법과 소급 그레고리력 환산은 별도 검증",
+      "calendar_notes": "출처의 정확일은 보존하지만 이 검수에서 달력 관행을 입증할 근거까지 확보하지 못했다. 숫자 표기·언어·지역만으로 Gregorian 날짜를 정하지 않는다. 사건 자체를 제외하는 보류는 아니다.",
+      "category": "전쟁·정치",
+      "caution": "Houdas p317 원AH1016 Shawwal6/1608-01-25. 교전지휘자의명칭에연대기전승차이가있어단일상대주장으로확장하지않는다.",
+      "coordinate_status": null,
+      "country": "사드 왕조",
+      "date": "1608-01-25",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1608-01-25",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "압달라 군대가 무기와 진영을 잃고 도주했으며 내전으로 지역 주민의 약탈 피해가 이어졌다.",
+      "display_end_label": null,
+      "display_start_label": "1608-01-25",
+      "gregorian_status": "미정규화",
+      "id": 10045,
+      "importance": 4,
+      "latitude": null,
+      "locality": "마라케시·타메스나 방면",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "AH1016 Shawwal6 /1608-01-25",
+      "place": "마라케시·타메스나 방면",
+      "public_id": "evt_cc6a24a4fd6741966753d47fa9d837be",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 25,
+      "sort_month": 1,
+      "sort_year": 1608,
+      "source_calendar": "출처 날짜 보존; 원역법과 소급 그레고리력 환산은 별도 검증",
+      "source_review_level": null,
+      "sources": [
+        "https://archive.org/details/nozhetelhadihist02ifra"
+      ],
+      "subject": "",
+      "timeline_anchor": "1608-01-25",
+      "timeline_date": "1608-01-25",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "압달라 이븐 알마문이 패전하고 마라케시에서 물러나다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1608,
+      "year_start": 1608
+    },
+    {
+      "calendar": "원출처의 역법 미확정",
+      "calendar_notes": "출처 날짜와 정밀도를 보존했다.역법은 독립 검수 전이며 정규화 날짜·UTC 시각·일별 색인에 사용하지 않는다.",
+      "category": "전쟁",
+      "caution": "출처의7월2일을 그대로 보존한다.12일 등 다른 날짜와 달력 관계를 독립 검토한다.",
+      "coordinate_status": null,
+      "country": "버지니아 아걸 원정대·생소뵈르 정착민",
+      "date": "1613-07-02",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1613-07-02",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "비아르 등 일부 포로가 버지니아로 끌려갔다.",
+      "display_end_label": null,
+      "display_start_label": "1613-07-02",
+      "gregorian_status": "미정규화",
+      "id": 10480,
+      "importance": 4,
+      "latitude": null,
+      "locality": "마운트데저트섬",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1613-07-02",
+      "place": "마운트데저트섬",
+      "public_id": "evt_4b82e411dbc3cc003ad2e54ca5c0d205",
+      "range_semantics": null,
+      "region": "아메리카",
+      "resolved_place": null,
+      "sort_day": 2,
+      "sort_month": 7,
+      "sort_year": 1613,
+      "source_calendar": "원출처의 역법 미확정",
+      "source_review_level": null,
+      "sources": [
+        "https://www.biographi.ca/en/bio/biard_pierre_1E.html"
+      ],
+      "subject": "",
+      "timeline_anchor": "1613-07-02",
+      "timeline_date": "1613-07-02",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "아걸이 생소뵈르의 배와 미완성 요새를 점령하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1613,
+      "year_start": 1613
+    },
+    {
+      "calendar": "출처의 서력 표기; 원력 및 소급 그레고리력 환산 독립 검증 전",
+      "calendar_notes": "",
+      "category": "외교·전쟁",
+      "caution": "7월28일 마닐라에서 작성한 인증사본 날짜와 원서한 날짜를 구별한다.",
+      "coordinate_status": null,
+      "country": "티도레·스페인령 필리핀",
+      "date": "1618-05-17",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1618-05-17",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "티도레 국왕이 현지 요새의 방어를 위해 필리핀 총독에게 신속하고 충분한 원조를 요구했다.",
+      "display_end_label": null,
+      "display_start_label": "1618-05-17",
+      "gregorian_status": "미정규화",
+      "id": 10883,
+      "importance": 3,
+      "latitude": null,
+      "locality": "티도레",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "Tidore,May17,1618",
+      "place": "티도레",
+      "public_id": "evt_50cc78818053d151b56d3a7cf83474bb",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 17,
+      "sort_month": 5,
+      "sort_year": 1618,
+      "source_calendar": "출처의 서력 표기; 원력 및 소급 그레고리력 환산 독립 검증 전",
+      "source_review_level": null,
+      "sources": [
+        "https://www.gutenberg.org/cache/epub/15564/pg15564-images.html"
+      ],
+      "subject": "",
+      "timeline_anchor": "1618-05-17",
+      "timeline_date": "1618-05-17",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "티도레 국왕의 원조 촉구 서한",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1618,
+      "year_start": 1618
+    },
+    {
+      "calendar": "출처의 원날짜·원역법 표기를 보존함. 역법과 연도법을 별도 검수하며 그레고리력으로 자동 환산하지 않음",
+      "calendar_notes": "",
+      "category": "해전",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "네덜란드 공화국·스페인",
+      "date": "1622-10-16",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1622-10-16",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "요험 스바르턴혼트가 이끄는 네덜란드 함대가 지브롤터 해협에서 승리했다.",
+      "display_end_label": null,
+      "display_start_label": "1622-10-16",
+      "gregorian_status": "미정규화",
+      "id": 11266,
+      "importance": 3,
+      "latitude": null,
+      "locality": "지브롤터 해협",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "16 oktober [1622]",
+      "place": "지브롤터 해협",
+      "public_id": "evt_149c940cfd10f0895301fc2fb68f7dee",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 16,
+      "sort_month": 10,
+      "sort_year": 1622,
+      "source_calendar": "출처의 원날짜·원역법 표기를 보존함. 역법과 연도법을 별도 검수하며 그레고리력으로 자동 환산하지 않음",
+      "source_review_level": null,
+      "sources": [
+        "https://dutchrevolt.library.universiteitleiden.nl/nederlands/jaar-en-dag/"
+      ],
+      "subject": "",
+      "timeline_anchor": "1622-10-16",
+      "timeline_date": "1622-10-16",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "스바르턴혼트의 함대가 스페인 함대를 격파하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1622,
+      "year_start": 1622
+    },
+    {
+      "calendar": "원기록 날짜 보존; 정규화 미검증",
+      "calendar_notes": "",
+      "category": "건축·기술·종교",
+      "caution": "1626시작이라는 고고학 논문 서술을 따른다. 기존1620교회 완공과 다르다. 일부 출처의1626완공·1627시작 이설을 교정목록에 남긴다.",
+      "coordinate_status": null,
+      "country": "에티오피아 제국·예수회·건축 장인",
+      "date": "1626",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1626",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "예수회는 석회 모르타르와 정교하게 다듬은 돌을 이용하여 새 거처와 이야수스 성당을 짓기 시작했다.",
+      "display_end_label": null,
+      "display_start_label": "1626",
+      "gregorian_status": "미정규화",
+      "id": 11672,
+      "importance": 4,
+      "latitude": null,
+      "locality": "고르고라 노바·타나호 북안",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1626",
+      "place": "고르고라 노바·타나호 북안",
+      "public_id": "evt_77a261bcdf95aeac3256ba96b0196daf",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1626,
+      "source_calendar": "원기록 날짜 보존; 정규화 미검증",
+      "source_review_level": null,
+      "sources": [
+        "https://journals.sub.uni-hamburg.de/aethiopica/article/viewFile/769/893"
+      ],
+      "subject": "",
+      "timeline_anchor": "1626",
+      "timeline_date": "1626",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "고르고라 노바에서 새 성당과 거처의 공사가 시작되다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1626,
+      "year_start": 1626
+    },
+    {
+      "calendar": "조선 태음태양력",
+      "calendar_notes": "국사편찬위원회 실록 원일자·간지를 KASI 음양력 대조와 확인했다. 현지 날짜를 기준으로 하며 UTC시각을 만들지 않았다. 당일 사건 또는 승인·명령의 날짜이며 후속 시행 전체의 날짜가 아니다.",
+      "category": "과학·기술·교류",
+      "caution": "기기를 받은 중국 내 날짜와 귀환·진헌일을 구별한다.원문의 성능 설명을 실험 검증 결과로 간주하지 않는다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1631-08-09",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1631-08-09",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "명에서 돌아온 정두원이 천리경·서양 화기·자명종 등을 조선 궁정에 바쳤다.",
+      "display_end_label": null,
+      "display_start_label": "1631-08-09",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 12050,
+      "importance": 4,
+      "latitude": null,
+      "locality": "한성",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1631-08-09",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "인조 9년 7월 12일",
+      "place": "한성",
+      "public_id": "evt_6239cb0628a590f734aad26cae34038d",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 9,
+      "sort_month": 8,
+      "sort_year": 1631,
+      "source_calendar": "조선 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1631&mm=07&dd=12",
+        "https://sillok.history.go.kr/id/kpa_10907012_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1631-08-09",
+      "timeline_date": "1631-08-09",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "정두원이 천리경과 자명종 등 서양 기기를 바치다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1631,
+      "year_start": 1631
+    },
+    {
+      "calendar": "조선 태음태양력",
+      "calendar_notes": "국사편찬위원회 실록 원일자·간지를 KASI 음양력 대조와 확인했다. 현지 날짜를 기준으로 하며 UTC시각을 만들지 않았다. 당일 사건 또는 승인·명령의 날짜이며 후속 시행 전체의 날짜가 아니다. 사무역 혐의를 조사하도록 한 명령일이다. 원래 거래일·국경 통과일과 다르다.",
+      "category": "무역·사법",
+      "caution": "사상 자체의 처벌 요구는 거절되었다.전체 일행을 처벌했다고 하지 않는다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1635-12-25",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1635-12-25",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "인조가 정해진 인원 밖 상인의 심양행을 도운 임경업과 박로를 추고하도록 했다.",
+      "display_end_label": null,
+      "display_start_label": "1635-12-25",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 12438,
+      "importance": 3,
+      "latitude": null,
+      "locality": "의주·심양·한성",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1635-12-25",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "인조 13년 11월 17일",
+      "place": "의주·심양·한성",
+      "public_id": "evt_9b83cf5a769c0f27a0e3a26585d7337c",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 25,
+      "sort_month": 12,
+      "sort_year": 1635,
+      "source_calendar": "조선 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1635&mm=11&dd=17",
+        "https://sillok.history.go.kr/id/kpa_11311017_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1635-12-25",
+      "timeline_date": "1635-12-25",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "사행을 따른 사무역 사건의 관원을 조사하도록 하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1635,
+      "year_start": 1635
+    },
+    {
+      "calendar": "원기록 날짜 보존; 정규화 미검증",
+      "calendar_notes": "",
+      "category": "행정·교역·항해",
+      "caution": "두 여행 기록의 경로·날짜가 충돌하여 도착월까지만 표시한다. 살로몽 구베르와 실제 선장 알롱스 구베르를 같은 역할로 쓰지 않는다.",
+      "coordinate_status": null,
+      "country": "네덜란드 동인도회사·모리셔스 주둔지",
+      "date": "1638-06",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1638-06",
+      "date_precision": "month",
+      "day_comparison_eligible": 0,
+      "description": "디에프에서 온 선박은 보급을 명분으로 상륙 허가를 받았고, 이후 북서부에서 흑단을 베었다. 네덜란드 지휘관은 이를 막을 병력과 명령이 부족하다고 보고했다.",
+      "display_end_label": null,
+      "display_start_label": "1638-06",
+      "gregorian_status": "미정규화",
+      "id": 12819,
+      "importance": 4,
+      "latitude": null,
+      "locality": "모리셔스 그랑포르·북서 해안",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "Gooyer:6June1638도착;Cauche:23JuneRodrigues이후Mauritius",
+      "place": "모리셔스 그랑포르·북서 해안",
+      "public_id": "evt_e6225de6e28d967fcd8775657de015d2",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 6,
+      "sort_year": 1638,
+      "source_calendar": "원기록 날짜 보존; 정규화 미검증",
+      "source_review_level": null,
+      "sources": [
+        "https://archive.org/details/collectiondesouv02gran"
+      ],
+      "subject": "",
+      "timeline_anchor": "1638-06",
+      "timeline_date": "1638-06",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "프랑스 생알렉시호가 모리셔스에 와서 흑단을 벌채하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1638,
+      "year_start": 1638
+    },
+    {
+      "calendar": "원기록 날짜 보존; 정규화 미검증",
+      "calendar_notes": "원력·인쇄서력·요일 또는 밤경계가충돌하여정확일변환을보류한다. 사료에없는인접일로수리하지않는다.",
+      "category": "정치·인물",
+      "caution": "두 문단은 같은 사망이므로 한 행만 기록한다. 밤의 서력 경계는 미검증이다.",
+      "coordinate_status": null,
+      "country": "팀북투 파샤정·니제르 내륙 사회",
+      "date": "1642-12",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1642-12",
+      "date_precision": "month",
+      "day_comparison_eligible": 0,
+      "description": "팀북투 파샤정 아래 아스키아 직위를 맡은 무함마드 벤칸이 사망했다.",
+      "display_end_label": null,
+      "display_start_label": "1642-12",
+      "gregorian_status": "미정규화",
+      "id": 13220,
+      "importance": 4,
+      "latitude": null,
+      "locality": "팀북투 파샤정",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "AH1052 Ramadan20 토요일밤;Houdas12December1642",
+      "place": "팀북투 파샤정",
+      "public_id": "evt_d0e58ad2049e417f59fb8949611aac13",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 12,
+      "sort_year": 1642,
+      "source_calendar": "원기록 날짜 보존; 정규화 미검증",
+      "source_review_level": null,
+      "sources": [
+        "https://archive.org/details/tarikhessoudanpa00sadauoft"
+      ],
+      "subject": "",
+      "timeline_anchor": "1642-12",
+      "timeline_date": "1642-12",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "아스키아 무함마드 벤칸이 사망하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1642,
+      "year_start": 1642
+    },
+    {
+      "calendar": "조선 태음태양력",
+      "calendar_notes": "국사편찬위원회 실록 원일자·간지를 KASI 음양력 대조와 확인했다. 현지 날짜를 기준으로 하며 UTC시각을 만들지 않았다. 당일 사건 또는 승인·명령의 날짜이며 후속 시행 전체의 날짜가 아니다.",
+      "category": "여성·사법",
+      "caution": "저주 혐의를 입증된 행위로 단정하지 않는다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1645-10-28",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1645-10-28",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "소현 세자빈의 궁녀 계향·계환이 저주 혐의로 국문을 받았으나 자백하지 않은 채 내옥에서 죽었다.",
+      "display_end_label": null,
+      "display_start_label": "1645-10-28",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 13616,
+      "importance": 4,
+      "latitude": null,
+      "locality": "한양 내옥",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1645-10-28",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "인조 23년 9월 10일",
+      "place": "한양 내옥",
+      "public_id": "evt_a33284490c8c2bb5fb9309500f290683",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 28,
+      "sort_month": 10,
+      "sort_year": 1645,
+      "source_calendar": "조선 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1645&mm=09&dd=10",
+        "https://sillok.history.go.kr/id/kpa_12309010_006"
+      ],
+      "subject": "",
+      "timeline_anchor": "1645-10-28",
+      "timeline_date": "1645-10-28",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "궁녀 계향과 계환이 수감 중 죽다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1645,
+      "year_start": 1645
+    },
+    {
+      "calendar": "원기록 날짜 보존; 정규화 미검증",
+      "calendar_notes": "사건의 날짜·요일·역법 또는 원정밀도가 서로 맞는다는 증거를 확보하지 못해 정규화를 보류했다. 같은 인물의 사망 시점이 본문과 부고에서 달라 연도로만 표시한다.",
+      "category": "정치·인물",
+      "caution": "같은 인물의 사망 시점이 본문과 부고에서 달라 연도로만 표시한다.",
+      "coordinate_status": null,
+      "country": "투아레그 마그샤렌",
+      "date": "1647",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1647",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "투아레그 마그샤렌의 통치자 압드알라흐만 아크네제르가 사망했다. 본문은 라스엘마의 야영지를 언급한다.",
+      "display_end_label": null,
+      "display_start_label": "1647",
+      "gregorian_status": "미정규화",
+      "id": 13984,
+      "importance": 4,
+      "latitude": null,
+      "locality": "라스엘마·마그샤렌",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "본문AH1056말;부고AH1057 Safar1전날밤·Houdas7March1647",
+      "place": "라스엘마·마그샤렌",
+      "public_id": "evt_af67084997b19c284c3d187fbb3b0796",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1647,
+      "source_calendar": "원기록 날짜 보존; 정규화 미검증",
+      "source_review_level": null,
+      "sources": [
+        "https://archive.org/details/tarikhessoudanpa00sadauoft"
+      ],
+      "subject": "",
+      "timeline_anchor": "1647",
+      "timeline_date": "1647",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "마그샤렌의 통치자 아크네제르가 사망하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1647,
+      "year_start": 1647
+    },
+    {
+      "calendar": "조선 태음태양력",
+      "calendar_notes": "실록의 원일자·간지·평윤월을 KASI의 조선 음양력 대조와 확인했다. 중국·청의 달력으로 대신 환산하지 않았고 UTC시각을 만들지 않았다. 곡물 이송 명령일이며 도착 완료일은 미상이다.",
+      "category": "구휼·수송",
+      "caution": "곡물 이송 명령일이며 도착 완료일은 미상이다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1650-02-17",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1650-02-17",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "효종이 영동의 쌀과 콩 2천 석을 옮겨 북도에서 굶주리는 주민을 구제하도록 명했다.",
+      "display_end_label": null,
+      "display_start_label": "1650-02-17",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 14379,
+      "importance": 3,
+      "latitude": null,
+      "locality": "강원도 영동·함경도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1650-02-17",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "효종 1년 1월 17일",
+      "place": "강원도 영동·함경도",
+      "public_id": "evt_fb1bbe91ac5f84ff747f05015be25194",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 17,
+      "sort_month": 2,
+      "sort_year": 1650,
+      "source_calendar": "조선 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1650&mm=01&dd=17",
+        "https://sillok.history.go.kr/id/kqa_10101017_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1650-02-17",
+      "timeline_date": "1650-02-17",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "영동의 곡물을 북도 기민에게 보내도록 하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1650,
+      "year_start": 1650
+    },
+    {
+      "calendar": "조선 태음태양력",
+      "calendar_notes": "실록의 원일자·간지·평윤월을 KASI의 조선 음양력 대조와 확인했다. 중국·청의 달력으로 대신 환산하지 않았고 UTC시각을 만들지 않았다. 이 기사에는 1653년 구력 유지·1654년 신력 반포 계획이 있지만 같은 해 원9월4일 기사에는 내년 시행 방침이 나온다. 계획과 후속 변경을 구별하고 원기사 날짜를 중국력으로 치환하지 않는다.",
+      "category": "과학·역법",
+      "caution": "이 기사에는 1653년 구력 유지·1654년 신력 반포 계획이 있지만 같은 해 원9월4일 기사에는 내년 시행 방침이 나온다. 계획과 후속 변경을 구별하고 원기사 날짜를 중국력으로 치환하지 않는다.",
+      "coordinate_status": null,
+      "country": "조선",
+      "date": "1652-04-18",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1652-04-18",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "관상감은 연경에서 김상범이 배운 시헌역법을 계산·전수하되 조선의 일출 시각과 관측 기구로 검증해야 한다고 보고했다. 효종은 계사년 책력은 종전대로 만들고 중국 역서와 대조한 뒤 갑오년부터 새 책력을 반포하자는 계획을 승인했다.",
+      "display_end_label": null,
+      "display_start_label": "1652-04-18",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 14758,
+      "importance": 5,
+      "latitude": null,
+      "locality": "한성 관상감",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1652-04-18",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "효종 3년 3월 11일",
+      "place": "한성 관상감",
+      "public_id": "evt_af469de5415d7b51b7f769259336fc11",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 18,
+      "sort_month": 4,
+      "sort_year": 1652,
+      "source_calendar": "조선 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://astro.kasi.re.kr/life/lunc?yyyy=1652&mm=03&dd=11",
+        "https://sillok.history.go.kr/id/kqa_10303011_001"
+      ],
+      "subject": "",
+      "timeline_anchor": "1652-04-18",
+      "timeline_date": "1652-04-18",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "시헌력의 검산과 교육을 실시하고 새 역서 반포를 계획하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1652,
+      "year_start": 1652
+    },
+    {
+      "calendar": "그레고리력(원문·역법 근거 검증)",
+      "calendar_notes": "원출처의 개별 날짜 및 명시적 역법·요일·연속 문맥을 검토했다. 달력 근거를 다른 출처로 일괄 확대하지 않고 UTC시각을 만들지 않는다. 보고 내용을 독립 확인된 추적 경로로 확대하지 않는다.",
+      "category": "군사·원주민·보고",
+      "caution": "보고 내용을 독립 확인된 추적 경로로 확대하지 않는다.",
+      "coordinate_status": null,
+      "country": "네덜란드 동인도회사(VOC)·케이프 지역 사회",
+      "date": "1653-10-27",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1653-10-27",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "판하르바르던은 추적 대상이 폴스만의 모래언덕과 습지로 이동했고 물 부족과 피로 때문에 계속 쫓기 어려웠다고 보고했다. 추적대는 헤리 일행을 붙잡지 못했다.",
+      "display_end_label": null,
+      "display_start_label": "1653-10-27",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 15115,
+      "importance": 3,
+      "latitude": null,
+      "locality": "희망봉 테이블만",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1653-10-27",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1653-10-27 일지: 27 dito, weer ende wint als vooren. Comt den corporael Jan van Harwarden wederom thuys, met rapport dat de gister met victualie uytgesonden 5 persoone",
+      "place": "희망봉 테이블만",
+      "public_id": "evt_ca9ab3aae69323059564861b6bacc886",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 27,
+      "sort_month": 10,
+      "sort_year": 1653,
+      "source_calendar": "그레고리력(원문·역법 근거 검증)",
+      "source_review_level": null,
+      "sources": [
+        "https://www.dbnl.org/tekst/rieb001dagh01_01/rieb001dagh01_01_0027.php"
+      ],
+      "subject": "",
+      "timeline_anchor": "1653-10-27",
+      "timeline_date": "1653-10-27",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "가축 추적대가 목적을 이루지 못하고 돌아오다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1653,
+      "year_start": 1653
+    },
+    {
+      "calendar": "원기록 날짜 보존; 정규화 미검증",
+      "calendar_notes": "산술 후보는 있으나 원문 날짜·발생시점 또는 달력 대조가 완결되지 않았다. 후보를 정확일 색인에 넣지 않는다. 15~18일 묶음 기사의 결의이다. 실제 출항은 7월 3일과 구별한다. 묶음 기사 안의 당일 표현은 마지막 날짜를 가리킬 가능성이 있으나 독립 확인 전 표시 정밀도는 월로 낮춘다. 실제 지속 범위가 아니다.",
+      "category": "항해·식량·행정",
+      "caution": "15~18일 묶음 기사의 결의이다. 실제 출항은 7월 3일과 구별한다. 묶음 기사 안의 당일 표현은 마지막 날짜를 가리킬 가능성이 있으나 독립 확인 전 표시 정밀도는 월로 낮춘다. 실제 지속 범위가 아니다.",
+      "coordinate_status": null,
+      "country": "네덜란드 동인도회사(VOC)·케이프 지역 사회",
+      "date": "1654-06",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1654-06",
+      "date_precision": "month",
+      "day_comparison_eligible": 0,
+      "description": "평의회는 로더포스의 항해가 실패할 경우에 대비해 튈프도 쌀을 구하러 마다가스카르로 보내기로 결의했다. 남동부 연안의 만과 강, 교역 가능성 조사도 지시했다.",
+      "display_end_label": null,
+      "display_start_label": "1654-06",
+      "gregorian_status": "미정규화",
+      "id": 15483,
+      "importance": 3,
+      "latitude": null,
+      "locality": "희망봉 테이블만",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1654-06 일지의 묶음 표제: 15, 16, 17, ende 18 do., noch al goet weer ende wint als vooren. Heden is bij den Raedt geresolveert, gemerckt wij per de Tulp uijt de retourvloote va",
+      "place": "희망봉 테이블만",
+      "public_id": "evt_d1c7a4de565a52f2f678d519fb6c04ae",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 6,
+      "sort_year": 1654,
+      "source_calendar": "원기록 날짜 보존; 정규화 미검증",
+      "source_review_level": null,
+      "sources": [
+        "https://www.dbnl.org/tekst/rieb001dagh01_01/rieb001dagh01_01_0035.php"
+      ],
+      "subject": "",
+      "timeline_anchor": "1654-06",
+      "timeline_date": "1654-06",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "튈프도 마다가스카르로 보내 식량을 확보하기로 하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1654,
+      "year_start": 1654
+    },
+    {
+      "calendar": "원출처의 역법 미확정",
+      "calendar_notes": "",
+      "category": "정치",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "티베트",
+      "date": "1655",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1655",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "드롱메파 틴레 갸초가 티베트 데시직을 계승했다.",
+      "display_end_label": null,
+      "display_start_label": "1655",
+      "gregorian_status": "미정규화",
+      "id": 15849,
+      "importance": 3,
+      "latitude": null,
+      "locality": null,
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1655년 사망·계승 단락",
+      "place": "",
+      "public_id": "evt_74ad5db8902ceb484763684ed0064233",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1655,
+      "source_calendar": "원출처의 역법 미확정",
+      "source_review_level": null,
+      "sources": [
+        "https://www.dalailama.com/the-dalai-lama/previous-dalai-lamas/previous-dalai-lama"
+      ],
+      "subject": "",
+      "timeline_anchor": "1655",
+      "timeline_date": "1655",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "틴레 갸초가 티베트 데시직을 계승하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1655,
+      "year_start": 1655
+    },
+    {
+      "calendar": "일본 태음태양력",
+      "calendar_notes": "",
+      "category": "행정",
+      "caution": "도쿄도 공문서관 공식 사료집 목차 표제와 원일자에 근거. 인용 원사료의 전문을 열람한 것은 아님. 일본 원력의 월·일과 연말 서력 경계는 미검산.",
+      "coordinate_status": null,
+      "country": "도쿠가와 막부",
+      "date": "1656",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1656",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "고케닌 자제의 방종을 경계하다.",
+      "display_end_label": null,
+      "display_start_label": "1656",
+      "gregorian_status": "미정규화",
+      "id": 16228,
+      "importance": 2,
+      "latitude": null,
+      "locality": "에도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1656（明暦2）年7月28日",
+      "place": "에도",
+      "public_id": "evt_a6e2dc61ca14167a2fa35e0a31e4c0ce",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1656,
+      "source_calendar": "일본 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://www.soumu.metro.tokyo.lg.jp/01soumu-archives/06kanko_butsu/0601sisiko/0601sangyo/0601sangyo05"
+      ],
+      "subject": "",
+      "timeline_anchor": "1656",
+      "timeline_date": "1656",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "고케닌 자제의 방종을 경계하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1656,
+      "year_start": 1656
+    },
+    {
+      "calendar": "일본 태음태양력",
+      "calendar_notes": "",
+      "category": "구휼·사회",
+      "caution": "도쿄도 공문서관 공식 사료집 목차 표제와 원일자에 근거. 인용 원사료의 전문을 열람한 것은 아님. 일본 원력의 월·일과 연말 서력 경계는 미검산.",
+      "coordinate_status": null,
+      "country": "도쿠가와 막부",
+      "date": "1657",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1657",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "급미를 미리 빌려 주다.",
+      "display_end_label": null,
+      "display_start_label": "1657",
+      "gregorian_status": "미정규화",
+      "id": 16629,
+      "importance": 2,
+      "latitude": null,
+      "locality": "에도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1657（明暦3）年正月24日",
+      "place": "에도",
+      "public_id": "evt_be9b72c9544b88051885e9d245f3d754",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1657,
+      "source_calendar": "일본 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://www.soumu.metro.tokyo.lg.jp/01soumu-archives/06kanko_butsu/0601sisiko/0601sangyo/0601sangyo05"
+      ],
+      "subject": "",
+      "timeline_anchor": "1657",
+      "timeline_date": "1657",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "급미를 미리 빌려 주다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1657,
+      "year_start": 1657
+    },
+    {
+      "calendar": "원출처의 역법 미확정",
+      "calendar_notes": "원출처 날짜·정밀도를 보존한다. 사건별 역법 검증 전에는 그레고리력 일별 색인에 넣지 않는다.",
+      "category": "화폐·식량·물가·법",
+      "caution": "뉴욕주 간행 원사료 번역판의 본문을 대조했다. 제정·명령과 실제 집행을 구별한다.",
+      "coordinate_status": null,
+      "country": "뉴네덜란드",
+      "date": "1658-11-11",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1658-11-11",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "별도 합의가 없는24길더 초과 왐펌 지급을 제한하고 은화·비버·왐펌별로 빵·맥주·와인의 가격을 표시하도록 했다.",
+      "display_end_label": null,
+      "display_start_label": "1658-11-11",
+      "gregorian_status": "미정규화",
+      "id": 16978,
+      "importance": 3,
+      "latitude": null,
+      "locality": "뉴암스테르담·암스테르담 요새",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1658-11-11",
+      "place": "뉴암스테르담·암스테르담 요새",
+      "public_id": "evt_133fdb207a30bdce0a5500bf1d778034",
+      "range_semantics": null,
+      "region": "아메리카",
+      "resolved_place": null,
+      "sort_day": 11,
+      "sort_month": 11,
+      "sort_year": 1658,
+      "source_calendar": "원출처의 역법 미확정",
+      "source_review_level": null,
+      "sources": [
+        "https://archive.org/details/cu31924080779402"
+      ],
+      "subject": "",
+      "timeline_anchor": "1658-11-11",
+      "timeline_date": "1658-11-11",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "왐펌 법정통용 한도와 세 종류의 생필품 가격이 정해지다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1658,
+      "year_start": 1658
+    },
+    {
+      "calendar": "원출처의 역법 미확정",
+      "calendar_notes": "원출처 날짜·정밀도를 보존한다. 사건별 역법 검증 전에는 그레고리력 일별 색인에 넣지 않는다.",
+      "category": "원주민사회·외교·전쟁",
+      "caution": "조건부 수용과 실제 이주 이행을 구분한다.",
+      "coordinate_status": null,
+      "country": "구알핑가스타 공동체·투쿠만 총독부",
+      "date": "1659-09-05",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1659-09-05",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "돈 안토니오와 원주민 세 사람이 메르카도 이비야코르타의 군사회의에 와 평화를 제안했다. 스페인측은 산악 거주지를 내려오라는 조건으로 이를 받아들였다.",
+      "display_end_label": null,
+      "display_start_label": "1659-09-05",
+      "gregorian_status": "미정규화",
+      "id": 17367,
+      "importance": 3,
+      "latitude": null,
+      "locality": "파시오카",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "5 de septiembre de 1659",
+      "place": "파시오카",
+      "public_id": "evt_e0be365e0f3dca73c5259a46561fdf0f",
+      "range_semantics": null,
+      "region": "아메리카",
+      "resolved_place": null,
+      "sort_day": 5,
+      "sort_month": 9,
+      "sort_year": 1659,
+      "source_calendar": "원출처의 역법 미확정",
+      "source_review_level": null,
+      "sources": [
+        "https://www.upo.es/revistas/index.php/americania/article/download/6509/6301/28694"
+      ],
+      "subject": "",
+      "timeline_anchor": "1659-09-05",
+      "timeline_date": "1659-09-05",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "구알핑가스타 지도자가 평화를 제안하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1659,
+      "year_start": 1659
+    },
+    {
+      "calendar": "그레고리력(원문·역법 근거 검증)",
+      "calendar_notes": "음주 상태는 일지의 보고로 귀속한다. 자정 이전 시각이 명시되어 밤 경계를 별도로 추정하지 않는다. 원출처의 개별 날짜 및 명시적 역법·요일·연속 문맥을 검토했다. 달력 근거를 다른 출처로 일괄 확대하지 않고 UTC시각을 만들지 않는다. 음주 상태는 일지의 보고로 귀속한다. 자정 이전 시각이 명시되어 밤 경계를 별도로 추정하지 않는다.",
+      "category": "사고·군사",
+      "caution": "음주 상태는 일지의 보고로 귀속한다. 자정 이전 시각이 명시되어 밤 경계를 별도로 추정하지 않는다.",
+      "coordinate_status": null,
+      "country": "네덜란드 동인도회사(VOC)·케이프 지역 사회",
+      "date": "1660-08-08",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1660-08-08",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "엘리아스 히르스 상병이 밤 9~10시경 페르서강에서 말과 함께 익사했다. 일지는 그가 취해 있었으며 잃은 말은 임신한 암말이었다고 기록했다.",
+      "display_end_label": null,
+      "display_start_label": "1660-08-08",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 17775,
+      "importance": 3,
+      "latitude": null,
+      "locality": "희망봉 Verse-revier, Keert de Koe 초소 인근",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1660-08-08",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1660-08 일지: Sondagh, den 8en; ’s Avonts omtrent tusschen 9 ende thien uyren",
+      "place": "희망봉 Verse-revier, Keert de Koe 초소 인근",
+      "public_id": "evt_6d7162e6e65c95903be98ef192ddbcd8",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 8,
+      "sort_month": 8,
+      "sort_year": 1660,
+      "source_calendar": "그레고리력(원문·역법 근거 검증)",
+      "source_review_level": null,
+      "sources": [
+        "https://www.dbnl.org/tekst/rieb001dagh03_01/rieb001dagh03_01_0022.php"
+      ],
+      "subject": "",
+      "timeline_anchor": "1660-08-08",
+      "timeline_date": "1660-08-08",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "상병 엘리아스 히르스와 군마가 강에서 익사하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1660,
+      "year_start": 1660
+    },
+    {
+      "calendar": "그레고리력(원문·역법 근거 검증)",
+      "calendar_notes": "일지의 출발 명단은 사절3명이나 삽입 지침에는2명으로 적힌 대목이 있다. 전체 인원 합계는 확정하지 않는다. 원출처의 개별 날짜 및 명시적 역법·요일·연속 문맥을 검토했다. 달력 근거를 다른 출처로 일괄 확대하지 않고 UTC시각을 만들지 않는다. 일지의 출발 명단은 사절3명이나 삽입 지침에는2명으로 적힌 대목이 있다. 전체 인원 합계는 확정하지 않는다.",
+      "category": "탐사·외교·통역",
+      "caution": "일지의 출발 명단은 사절3명이나 삽입 지침에는2명으로 적힌 대목이 있다. 전체 인원 합계는 확정하지 않는다.",
+      "coordinate_status": null,
+      "country": "VOC 희망봉·코이코이 지역 사회",
+      "date": "1661-03-21",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1661-03-21",
+      "date_precision": "day",
+      "day_comparison_eligible": 1,
+      "description": "유럽계 대원9명과 통역자 얀 코닌케이·투사베, 우다소아의 사절들이 나마를 향해 떠났다. 지도자의 방문과 교역을 권하고 광물·교역품을 살피라는 지침을 받았다.",
+      "display_end_label": null,
+      "display_start_label": "1661-03-21",
+      "gregorian_status": "검산 완료(소급 그레고리력)",
+      "id": 18189,
+      "importance": 3,
+      "latitude": null,
+      "locality": "희망봉 요새",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": "1661-03-21",
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1661-03 일지: 21 <dito>",
+      "place": "희망봉 요새",
+      "public_id": "evt_387a449b1057e0b9d6af06d9cc4bc116",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 21,
+      "sort_month": 3,
+      "sort_year": 1661,
+      "source_calendar": "그레고리력(원문·역법 근거 검증)",
+      "source_review_level": null,
+      "sources": [
+        "https://www.dbnl.org/tekst/rieb001dagh03_01/rieb001dagh03_01_0029.php"
+      ],
+      "subject": "",
+      "timeline_anchor": "1661-03-21",
+      "timeline_date": "1661-03-21",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "메이르호프의 사절단이 통역자·우다소아 사절과 출발하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1661,
+      "year_start": 1661
+    },
+    {
+      "calendar": "일본 태음태양력",
+      "calendar_notes": "",
+      "category": "행정·도시",
+      "caution": "도쿄도 공문서관의 사료집 목차 표제를 직접 열람. 열거된 원전 전문 열람으로 간주하지 않음. 원력 월일을 그레고리력으로 치환하지 않음.",
+      "coordinate_status": null,
+      "country": "도쿠가와 막부",
+      "date": "1661",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1661",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "도로와 다리 위의 상행위와 상품 적재를 금하다.",
+      "display_end_label": null,
+      "display_start_label": "1661",
+      "gregorian_status": "미정규화",
+      "id": 18576,
+      "importance": 2,
+      "latitude": null,
+      "locality": "에도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1661（寛文元）9月17日",
+      "place": "에도",
+      "public_id": "evt_8e2a81f36b231933ce117ca701d26f6f",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1661,
+      "source_calendar": "일본 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://www.soumu.metro.tokyo.lg.jp/01soumu-archives/06kanko_butsu/0601sisiko/0601sangyo/0601sangyo05"
+      ],
+      "subject": "",
+      "timeline_anchor": "1661",
+      "timeline_date": "1661",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "도로와 다리 위의 상행위와 상품 적재를 금하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1661,
+      "year_start": 1661
+    },
+    {
+      "calendar": "일본 태음태양력",
+      "calendar_notes": "",
+      "category": "행정·도시",
+      "caution": "도쿄도 공문서관의 사료집 목차 표제를 직접 열람. 열거된 원전 전문 열람으로 간주하지 않음. 원력 월일을 그레고리력으로 치환하지 않음.",
+      "coordinate_status": null,
+      "country": "도쿠가와 막부",
+      "date": "1662",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1662",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "마부의 시내 승마를 다시 금하다.",
+      "display_end_label": null,
+      "display_start_label": "1662",
+      "gregorian_status": "미정규화",
+      "id": 18942,
+      "importance": 2,
+      "latitude": null,
+      "locality": "에도",
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1662（寛文2）年4月22日",
+      "place": "에도",
+      "public_id": "evt_d51927b156d6b89af9d8ab9b5a20466f",
+      "range_semantics": null,
+      "region": "동아시아/오세아니아",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1662,
+      "source_calendar": "일본 태음태양력",
+      "source_review_level": null,
+      "sources": [
+        "https://www.soumu.metro.tokyo.lg.jp/01soumu-archives/06kanko_butsu/0601sisiko/0601sangyo/0601sangyo06"
+      ],
+      "subject": "",
+      "timeline_anchor": "1662",
+      "timeline_date": "1662",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "마부의 시내 승마를 다시 금하다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1662,
+      "year_start": 1662
+    },
+    {
+      "calendar": "원출처 날짜 라벨; 그레고리력 정규화는 별도 검증 대상",
+      "calendar_notes": "",
+      "category": "과학",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "잉글랜드 왕국",
+      "date": "1663",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1663",
+      "date_precision": "year",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1663",
+      "gregorian_status": "미정규화",
+      "id": 19315,
+      "importance": 3,
+      "latitude": null,
+      "locality": null,
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "1663",
+      "place": "",
+      "public_id": "evt_2212c3241e905c50bb0fa3e2a39841aa",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 0,
+      "sort_month": 0,
+      "sort_year": 1663,
+      "source_calendar": "원출처 날짜 라벨; 그레고리력 정규화는 별도 검증 대상",
+      "source_review_level": null,
+      "sources": [
+        "https://www.royalsociety.org/blog/2019/07/turning-a-new-page-in-the-charter-book/"
+      ],
+      "subject": "",
+      "timeline_anchor": "1663",
+      "timeline_date": "1663",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "왕립학회가 두 번째 왕실 특허장을 받다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1663,
+      "year_start": 1663
+    },
+    {
+      "calendar": "원출처 날짜 라벨; 그레고리력 정규화는 별도 검증 대상",
+      "calendar_notes": "",
+      "category": "문화",
+      "caution": "",
+      "coordinate_status": null,
+      "country": "프랑스 왕국",
+      "date": "1665-02-15",
+      "date_basis": "source_display_label_not_necessarily_gregorian",
+      "date_label": "1665-02-15",
+      "date_precision": "day",
+      "day_comparison_eligible": 0,
+      "description": "",
+      "display_end_label": null,
+      "display_start_label": "1665-02-15",
+      "gregorian_status": "미정규화",
+      "id": 19690,
+      "importance": 3,
+      "latitude": null,
+      "locality": null,
+      "location_precision": null,
+      "location_resolution_method": null,
+      "longitude": null,
+      "map_status": "unresolved",
+      "normalized_gregorian_date": null,
+      "normalized_gregorian_end": null,
+      "normalized_gregorian_start": null,
+      "original_date": "15 février 1665",
+      "place": "",
+      "public_id": "evt_d6f85e865300d8eed92857a9ae71a850",
+      "range_semantics": null,
+      "region": "유럽/아프리카",
+      "resolved_place": null,
+      "sort_day": 15,
+      "sort_month": 2,
+      "sort_year": 1665,
+      "source_calendar": "원출처 날짜 라벨; 그레고리력 정규화는 별도 검증 대상",
+      "source_review_level": null,
+      "sources": [
+        "https://www.comedie-francaise.fr/www/comedie/media/document/docpedagogiqueparcoursmoliere.pdf"
+      ],
+      "subject": "",
+      "timeline_anchor": "1665-02-15",
+      "timeline_date": "1665-02-15",
+      "timeline_index_basis": "source_claim_not_independently_reverified",
+      "title": "몰리에르의 돈 주앙이 초연되다",
+      "verification": "imported_not_independently_reverified",
+      "year_end": 1665,
+      "year_start": 1665
+    }
+  ]
+}
