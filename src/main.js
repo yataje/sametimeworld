@@ -1,11 +1,15 @@
 import './style.css';
 import {fetchDataset} from './packets.js';
+import {createSeriesUI} from './series.js';
+import {escapeAction} from './series-core.js';
 import {createEventMap} from './event-map.js';
 import {loadLeaderHeaders,refreshLeaderHeaders} from './leaders.js';
 
 let DATA=[];
+let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
+function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.6.0';
+const PAGE_VERSION='v0.7.0';
 const DB_VERSION_FALLBACK='v22';
 function normalizeRegion(value){
   const v=String(value??'').trim();
@@ -133,7 +137,7 @@ for(const [key,[inputId]] of Object.entries(DISPLAY_CONTROL_MAP)){
 }
 const displaySettingsReset=document.getElementById('displaySettingsReset');
 if(displaySettingsReset)displaySettingsReset.addEventListener('click',()=>{displaySettings={...DISPLAY_DEFAULTS};applyDisplaySettings(true);saveDisplaySettings();});
-window.addEventListener('keydown',e=>{if(e.key==='Escape'&&displaySettingsOverlay?.classList.contains('open'))closeDisplaySettings();});
+
 
 const AUDIO_SETTINGS_KEY='stw-audio-enabled-v1';
 let audioEnabled=true;
@@ -347,7 +351,7 @@ function rebuildEventIndexes(){
  byId=new Map(DATA.map(x=>[x.id,x]));
  maps=LEVELS.map(()=>new Map());specialRows=LEVELS.map(()=>[]);specialRowsBefore=LEVELS.map(()=>new Map());
  const specialBuckets=LEVELS.map(()=>new Map());
- for(const x of DATA){
+ for(const x of seriesFilteredEvents()){
   const dt=parseDate(x);if(!dt)continue;const span=eventDateSpan(x);if(!span)continue;x.precision=dt.precision;
   for(let z=0;z<LEVELS.length;z++){
    if(!eventFitsLevel(x,z))continue;
@@ -423,12 +427,12 @@ function selectTimelineCards(sorted,limit,focusedId){
 function timelineCardHTML(x,z,{summary=false}={}){
  const fuzzy=!summary&&(x.eligible_for_normalized_day_index===false||/범위|추정/.test(x.precision)||(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일'));
  const labelDate=x.date_label||x.date;
- return `<div role="button" tabindex="0" class="event ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}"><span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
+ return `<div role="button" tabindex="0" class="event ${seriesState.active&&seriesState.ids.has(x.id)?'series-match':''} ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}"><span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
 }
 function timelineRegionCards(events,z,level,{summary=false}={}){
  const groups=REGIONS.map(r=>events.filter(x=>x.region===r));
  return groups.map(g=>{
-  const sorted=g.slice().sort((a,b)=>(b.importance||0)-(a.importance||0)||String(a.date||'').localeCompare(String(b.date||''))||a.id-b.id);
+  const sorted=g.slice().sort((a,b)=>seriesState.active?(Number(seriesState.ids.has(b.id))-Number(seriesState.ids.has(a.id))||String(a.timeline_date||a.date||'').localeCompare(String(b.timeline_date||b.date||''))||a.id-b.id):((b.importance||0)-(a.importance||0)||String(a.date||'').localeCompare(String(b.date||''))||a.id-b.id));
   const limit=summary||level.kind==='day'?Infinity:level.limit;
   const shown=Number.isFinite(limit)?selectTimelineCards(sorted,limit,zoomFocusEventId):sorted;
   const cards=shown.map(x=>timelineCardHTML(x,z,{summary})).join('');
@@ -455,7 +459,7 @@ function render(){if(activeAppTab==='web')return;let z=zoom,level=LEVELS[z],heig
  rows.innerHTML=content;
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
- $('#status').textContent=`${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위${level.kind==='day'?' · 해당 날짜 카드 전체 표시':''}`;
+ $('#status').textContent=`${seriesState.active&&!seriesState.context?seriesState.ids.size.toLocaleString('ko-KR')+' / ':''}${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위${level.kind==='day'?' · 해당 날짜 카드 전체 표시':''}`;
  refreshLeaderHeaders(center);
 }
 let renderQueued=false;function requestRender(){if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;render()});}
@@ -638,6 +642,8 @@ tabExperience.onclick=returnToTimeline;
 tabWeb.onclick=()=>{const id=activeDetailEventId??lastDetailEventId;if(id!==null&&activeAppTab!=='web')openWebForEvent(id);};
 function openWebForEvent(id,{historyMode='push'}={}){
  const x=byId.get(Number(id));if(!x)return;
+ if(activeAppTab==='web'&&historyMode==='push')historyMode='replace';
+ seriesUI?.setCurrent(x.id);
  const d=eventDetails(x);activeDetailEventId=x.id;lastDetailEventId=x.id;tabWeb.disabled=false;
  tabWebLabel.textContent='사건 상세';
  webQuery.textContent=x.title;
@@ -655,8 +661,18 @@ function openWebForEvent(id,{historyMode='push'}={}){
  setAppTab('web');
  webPanel.querySelector('.event-detail').scrollTop=0;
  if(historyMode==='push')history.pushState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
+ else if(historyMode==='replace')history.replaceState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
 }
 document.getElementById('backToTimeline')?.addEventListener('click',returnToTimeline);
+window.addEventListener('keydown',e=>{
+ if(e.key!=='Escape'||e.isComposing)return;
+ const action=escapeAction({repeat:e.repeat,dialog:!!document.querySelector('dialog[open]'),settings:displaySettingsOverlay?.classList.contains('open'),search:!document.getElementById('searchResults')?.hidden,detail:activeAppTab==='web'});
+ if(action==='dialog'||action==='none')return;
+ e.preventDefault();e.stopImmediatePropagation();
+ if(action==='settings')closeDisplaySettings();
+ else if(action==='search'){hideSearchSuggestions();searchInput.blur();}
+ else returnToTimeline();
+},true);
 window.addEventListener('popstate',e=>{
  const state=e.state;
  if(state?.stwTab==='web'&&state.eventId!=null){openWebForEvent(state.eventId,{historyMode:'none'});return;}
@@ -749,16 +765,16 @@ function searchScore(x,query){
   searchFieldScore(d.description,query,45,50,60)
  );
 }
-function searchEvents(raw){
+function searchEvents(raw,pool=DATA){
  const q=String(raw??'').trim();if(!q)return {all:[],shown:[],dateQuery:null};
  const dq=parseSearchDateQuery(q);let all;
  if(dq){
-  all=DATA.filter(x=>eventMatchesDate(x,dq))
+  all=pool.filter(x=>eventMatchesDate(x,dq))
     .slice()
     .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  }else{
   const query=normalizedSearchText(q);
-  all=DATA.map(x=>({x,score:searchScore(x,query)}))
+  all=pool.map(x=>({x,score:searchScore(x,query)}))
     .filter(item=>Number.isFinite(item.score))
     .sort((a,b)=>String(a.x.date||'').localeCompare(String(b.x.date||''))||a.score-b.score||(b.x.importance||0)-(a.x.importance||0)||a.x.id-b.x.id)
     .map(item=>item.x);
@@ -774,7 +790,7 @@ function hideSearchSuggestions(){searchResults.hidden=true;searchResults.replace
 function renderSearch(){
  const q=searchInput.value.trim();
  if(!q){hideSearchSuggestions();return;}
- const result=searchEvents(q);
+ const result=searchEvents(q,seriesFilteredEvents());
  if(!result.shown.length){
   const jump=dateNavigationTarget(q);
   searchResults.innerHTML=jump?`<button type="button" class="search-suggestion search-date-jump" data-date="${escapeHTML(jump.date)}"><span class="ss-date">${escapeHTML(jump.date)}</span><span class="ss-main"><strong>해당 날짜로 이동</strong><small>수록 사건 없음 · 지도자 자료 확인</small></span></button>`:'<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
@@ -786,6 +802,7 @@ function renderSearch(){
 }
 function zoomForEvent(x){const p=eventPrecision(x);return eventDayComparable(x)?LEVELS.findIndex(v=>v.kind==='day'):['day','month','month_range','day_range'].includes(p)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
 function navigateToEvent(id){
+ seriesUI?.setCurrent(Number(id));
  const x=byId.get(Number(id));if(!x)return;const dt=parseDate(x);if(!dt||!REGIONS.includes(x.region)){hideSearchSuggestions();openWebForEvent(x.id);return;}
  const regionKey={'유럽/아프리카':'europe','중동':'middle','동아시아/오세아니아':'east','아메리카':'americas'}[x.region];
  if(regionKey)applyMobileRegion(regionKey);
@@ -802,7 +819,7 @@ function navigateToDateQuery(raw){
  $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;viewport.scrollTop=Math.max(0,topAt(target.t,zoom)+LEVELS[zoom].h/2-viewport.clientHeight/2);render();
 }
 function goToBestSearchResult(){
- const first=searchEvents(searchInput.value).shown[0];
+ const first=searchEvents(searchInput.value,seriesFilteredEvents()).shown[0];
  if(first)navigateToEvent(first.id);else navigateToDateQuery(searchInput.value);
 }
 searchInput.addEventListener('input',renderSearch);
@@ -856,6 +873,12 @@ async function bootSameTimeWorld(){
   viewport.scrollTop=topAt(utc(1900,0,1),zoom)-viewport.clientHeight/3;
   $('#level').textContent=LEVELS[zoom].name;
   render();
+  seriesUI=createSeriesUI({getEvents:()=>DATA,onFilter:state=>{
+   const anchor=timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom);
+   if(zoomTransition)stopZoomTransition();cancelAnimationFrame(animation);seriesState=state;
+   rebuildEventIndexes();space.style.height=totalHeight(zoom)+'px';viewport.scrollTop=Math.max(0,topAt(anchor,zoom)-viewport.clientHeight/2);requestRender();
+  },onNavigate:id=>{if(activeAppTab==='web'){activeDetailEventId=null;setAppTab('experience');history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);}navigateToEvent(id);},onDetail:id=>openWebForEvent(id,{historyMode:'replace'})});
+  await seriesUI.restore();
  }catch(error){
   console.error('Packaged events load failed:',error);
   if(statusEl)statusEl.textContent=`자료 로드 실패 · ${error?.message||error}`;

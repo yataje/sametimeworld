@@ -34,6 +34,10 @@ function buildModule(relative){
  const name=putAsset(path.basename(relative,'.js'),'js',code);
  visiting.delete(relative);built.set(relative,name);return name;
 }
+const seriesConfig=(await import('../src/series-config.js')).default;
+if(!/^s\/[a-f0-9]{24}\.txt$/.test(seriesConfig.file))throw new Error('Invalid series path');
+const catalogue=read('public/'+seriesConfig.file);if(hash(catalogue)!==seriesConfig.sha256)throw new Error('Series catalogue integrity mismatch');
+files.set(seriesConfig.file,catalogue);
 const mainName=buildModule('src/main.js');
 const mapName=putAsset('world-map','png',read('src/assets/world-map.png'));
 const cssName=putAsset('style','css',text('src/style.css').replaceAll('./assets/world-map.png','./'+mapName));
@@ -47,7 +51,7 @@ for(const [name,bytes] of files){
  if(bytes.subarray(0,15).toString()==='SQLite format 3')throw new Error('Raw source data in output');
  if(/\.(html|js|css|txt)$/.test(name)&&/firebasedatabase\.app|firebaseio\.com|[\w()-]+\.d[b]\b|db-filename|<<<<<<< HEAD/.test(bytes.toString('utf8')))throw new Error('Legacy source information in '+name);
 }
-const manifest={page_version:pkg.version,data_version:data.meta.events_db_version,data_hash:descriptor.d,counts:descriptor.n,build_method:'portable-esm+sealed',files:[...files].map(([name,b])=>({path:name,size:b.length,sha256:hash(b)}))};
+const manifest={series_version:seriesConfig.version,series_count:seriesConfig.series_count,series_sha256:seriesConfig.sha256,page_version:pkg.version,data_version:data.meta.events_db_version,data_hash:descriptor.d,counts:descriptor.n,build_method:'portable-esm+sealed',files:[...files].map(([name,b])=>({path:name,size:b.length,sha256:hash(b)}))};
 files.set('release.json',Buffer.from(JSON.stringify(manifest,null,2)+'\n'));
 const stage=path.join(root,`.stw-dist-stage-${process.pid}`),old=path.join(root,`.stw-dist-old-${process.pid}`),dist=path.join(root,'dist');
 let moved=false;

@@ -19,3 +19,5 @@ TEST_REPORT.txt
 browser-results.json
 MANIFEST.sha256
 README_KO.txt
+/installer/build/
+/installer/__pycache__/
