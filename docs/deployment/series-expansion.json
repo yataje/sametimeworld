@@ -1,0 +1,35 @@
+{
+  "events_scanned": 38920,
+  "registered_definitions": 210,
+  "active_target_series": 121,
+  "catalogue_series": 131,
+  "new_series": 118,
+  "new_candidate_names": 105,
+  "new_series_links": 4811,
+  "waiting_for_events": 89,
+  "master_unchanged": true,
+  "original_ids_and_memberships_preserved": true,
+  "quick_check": "ok",
+  "series_sha256": "5a8a79f4be70ef4625f3d59b5361314384992abdabdaf879c1546eadbd6b9012",
+  "catalogue": {
+    "file": "s/83a83523e065c8c19c547a38.txt",
+    "sha256": "83a83523e065c8c19c547a38b99be44627890f619a6700c2e962058496bceace",
+    "version": 2,
+    "series_count": 131,
+    "concept_count": 21980,
+    "war_tag_count": 145,
+    "war_tag_links": 1073,
+    "entity_series_count": 121
+  },
+  "tests": {
+    "node": 136,
+    "python": 67,
+    "windows_installer": 14,
+    "future_event_refresh_and_idempotence": true
+  },
+  "identity_references": [
+    "https://www.army.mil/article/119007/band_of_brothers_easy_company_returns_from_afghanistan_ends_era",
+    "https://www.history.navy.mil/content/history/museums/nmusn/explore/photography/ships-us/ships-usn-e/uss-enterprise-cv-6.html",
+    "https://www.1stmardiv.marines.mil/About/Lineage/lang/en/"
+  ]
+}

@@ -14,7 +14,8 @@ with sync_playwright() as p:
  for name,viewport in [('desktop',{'width':1440,'height':950}),('mobile',{'width':393,'height':852})]:
   context=browser.new_context(viewport=viewport,is_mobile=name=='mobile',has_touch=name=='mobile');page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(url,wait_until='networkidle');page.wait_for_function("document.querySelector('#status').textContent.includes('38,920')",timeout=90000)
-  assert not page.locator('#seriesBar').is_visible();page.locator('#seriesOpen').click();page.locator('.series-choice-main').first.wait_for();assert page.locator('.series-choice-main').count()==13
+  assert not page.locator('#seriesBar').is_visible();page.locator('#seriesOpen').click();page.locator('.series-choice-main').first.wait_for();assert page.locator('.series-choice-main').count()==131
+  assert page.locator('.series-category-title').filter(has_text='인물').count()==1;assert page.locator('.series-category-title').filter(has_text='교통·인프라').count()==1
   for entity,count in [('이지중대',46),('해병대 제1사단',48),('엔터프라이즈 CV-6',78)]:
    choice=page.locator('.series-choice-main').filter(has_text=entity);assert choice.count()==1;assert str(count)+'건' in choice.inner_text();choice.click();assert entity in page.locator('#seriesBar').inner_text();assert str(count)+'건' in page.locator('#seriesBar').inner_text();page.locator('#seriesOpen').click();page.locator('.series-choice-main').first.wait_for()
   page.screenshot(path=str(out/(name+'-series.png')),full_page=True)
@@ -32,6 +33,6 @@ with sync_playwright() as p:
   page.reload(wait_until='networkidle');page.locator('#seriesBar').wait_for(timeout=90000);assert '산업과 기술' in page.locator('#seriesBar').inner_text()
   page.locator('#seriesOpen').click();page.locator('#seriesSearch').fill('천문학');page.wait_for_timeout(300);assert page.locator('.concept-choice').count()>0;page.locator('.concept-choice input').first.check();page.locator('#seriesName').fill('나의 천문 시리즈');page.locator('#seriesSave').click();assert '나의 천문 시리즈' in page.locator('#seriesBar').inner_text();page.locator('.series-clear').click();page.wait_for_timeout(100);assert not page.locator('#seriesBar').is_visible();assert page.locator('#status').inner_text().startswith('38,920')
   assert page.locator('body').evaluate('(e)=>e.scrollWidth<=innerWidth+1');assert not errors,errors
-  report.append({'viewport':name,'success':True,'checks':['10-starter-and-3-entity-series','real-622-members','matching-cards','detail-sequence','modal-Escape-priority','single-Escape-return','scroll-preserved','world-context','restore-selection','custom-series','clear','no-overflow','no-runtime-errors']});context.close()
+  report.append({'viewport':name,'success':True,'checks':['10-starter-and-121-target-series','real-622-members','matching-cards','detail-sequence','modal-Escape-priority','single-Escape-return','scroll-preserved','world-context','restore-selection','custom-series','clear','no-overflow','no-runtime-errors']});context.close()
  browser.close()
 server.shutdown();(out/'report.json').write_text(json.dumps({'success':True,'results':report},ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False))

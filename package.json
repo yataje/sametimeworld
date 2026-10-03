@@ -14,7 +14,8 @@
     "test:node": "node --test tests/*.test.cjs",
     "publish:integrated": "node scripts/publish-integrated.mjs",
     "test:export": "python3 -m unittest discover -s tests -p test_integrated_export.py",
-    "repack:lean": "node scripts/repack-lean.mjs"
+    "repack:lean": "node scripts/repack-lean.mjs",
+    "refresh:series": "python scripts/expand-entity-series.py --root . --output _local/series-refresh --apply"
   },
   "dependencies": {},
   "devDependencies": {

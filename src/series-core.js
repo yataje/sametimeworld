@@ -6,6 +6,11 @@ export function combineConcepts(concepts,ids,mode='any'){
 }
 export function neighbours(ids,current){const index=ids.indexOf(current);return {index,previous:index>0?ids[index-1]:null,next:index<ids.length-1?ids[index+1]:null};}
 export function escapeAction(s){return s.repeat?'none':s.dialog?'dialog':s.settings?'settings':s.search?'search':s.detail?'timeline':'none';}
+export function groupSeriesChoices(rows){
+ const groups=new Map();
+ for(const row of rows){const code=row.kind==='local'?0:row.category_code||99,title=row.kind==='local'?'내 브라우저 시리즈':row.category_name||'기존 시리즈';if(!groups.has(code))groups.set(code,{code,title,rows:[]});groups.get(code).rows.push(row);}
+ return [...groups.values()].sort((a,b)=>a.code-b.code);
+}
 export function validateCatalogue(data){
  if(data?.schema!==1||!Array.isArray(data.series)||!Array.isArray(data.concepts))throw new Error('지원하지 않는 시리즈 자료입니다.');
  const check=(rows,kind)=>{const ids=new Set();for(const row of rows){if(!row||ids.has(row.id)||!Array.isArray(row.events)||row.events.some(id=>!Number.isSafeInteger(id)||id<=0))throw new Error('잘못된 시리즈 연결입니다.');if(kind==='concept'&&(!Number.isSafeInteger(row.id)||typeof row.name!=='string'))throw new Error('잘못된 개념입니다.');ids.add(row.id);}};

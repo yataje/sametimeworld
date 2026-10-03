@@ -9,7 +9,7 @@ export function indexEventChoices(catalogue,byId,custom=[]){
  }
  const order={topic:0,person:1,technology:2,place:3,polity:4};
  for(const c of [...catalogue.concepts].sort((a,b)=>Number(!!b.war_tag)-Number(!!a.war_tag)||(order[a.type]??9)-(order[b.type]??9)||a.name.localeCompare(b.name,'ko'))){
-  if(c.entity_tag&&catalogue.series.some(s=>s.kind==='entity'&&s.concept_ids?.includes(c.id)))continue;
+  if(c.entity_tag&&catalogue.series.some(s=>s.kind==='entity'&&(s.entity_concept_id===c.id||s.concept_ids?.includes(c.id))))continue;
   add({id:'concept-'+c.id,title:c.name,type:c.type,kind:'concept',events:orderedMembers(c.events,byId)});
  }
  return index;
