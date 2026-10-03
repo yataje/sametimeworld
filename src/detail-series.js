@@ -35,7 +35,7 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
   const scroll=choices.scrollLeft;choices.replaceChildren();
   const rows=index?.get(current)||[];
   if(selected&&!rows.some(s=>s.id===selected.id))selected=null;
-  for(const s of rows){const b=button(s.title,()=>choose(s),'detail-series-choice');b.dataset.choiceId=s.id;b.setAttribute('aria-pressed',String(selected?.id===s.id));const kind=s.kind==='concept'?`기존 ${s.type||'개념'} 연결`:s.kind==='local'?'내 브라우저 시리즈':'기존 자동 시리즈';b.title=`${s.title} · ${kind} · ${s.events.length.toLocaleString()}건`;choices.append(b);}
+  for(const s of rows){const b=button(s.title,()=>choose(s),'detail-series-choice');b.dataset.choiceId=s.id;b.setAttribute('aria-pressed',String(selected?.id===s.id));const kind=s.kind==='concept'?(s.war_tag?'전쟁·전역 연결':`기존 ${s.type||'개념'} 연결`):s.kind==='local'?'내 브라우저 시리즈':s.kind==='entity'?'부대·함선 기록':'기존 자동 시리즈';b.title=`${s.title} · ${kind} · ${s.events.length.toLocaleString()}건`;choices.append(b);}
   if(!rows.length)choices.append(make('span','등록된 관련 항목 없음','detail-series-empty'));
   choices.scrollLeft=scroll;updateActions();setStatus(summary());
  }

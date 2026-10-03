@@ -54,4 +54,20 @@ class ExportTests(unittest.TestCase):
    self.assertEqual(events[1]['map_status'],'unresolved')
    self.assertNotIn('latitude',events[1])
 
+ def test_war_tags_are_read_from_series_without_changing_master(self):
+  with tempfile.TemporaryDirectory() as td:
+   db=pathlib.Path(td)/'master.db';series=pathlib.Path(td)/'series.db';out=pathlib.Path(td)/'events.gz'
+   with sqlite3.connect(db) as c:
+    c.execute('CREATE TABLE event_data(event_id INTEGER PRIMARY KEY,date TEXT,year INTEGER,title TEXT)')
+    c.executemany('INSERT INTO event_data VALUES(?,?,?,?)',[(1,'1942',1942,'엘 알라메인'),(2,'1942',1942,'문학')])
+   c.close()
+   with sqlite3.connect(series) as c:
+    c.executescript('CREATE TABLE metadata(key TEXT PRIMARY KEY,value TEXT);CREATE TABLE concepts(concept_id INTEGER PRIMARY KEY,name TEXT);CREATE TABLE concept_events(concept_id INTEGER,event_id INTEGER);')
+    c.execute('INSERT INTO metadata VALUES(?,?)',('war_tag_concept_ids',json.dumps({'제2차 세계대전':9})))
+    c.execute('INSERT INTO concepts VALUES(9,?)',('제2차 세계대전',));c.execute('INSERT INTO concept_events VALUES(9,1)')
+   c.close()
+   before=db.read_bytes();self.m.export(db,out);events=json.loads(gzip.decompress(out.read_bytes()))['events']
+   self.assertEqual(events[0].get('war_tags'),['제2차 세계대전'])
+   self.assertNotIn('war_tags',events[1]);self.assertEqual(db.read_bytes(),before)
+
 if __name__=='__main__':unittest.main()

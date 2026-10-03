@@ -727,9 +727,9 @@ function eventDisplayTime(x,z){
  if(z>=4||eventPrecision(x)!=='day')return Math.floor((span.from+span.to)/2);
  return dt.t;
 }
-function eventMatchesDate(x,q){
+function eventMatchesDate(x,q,querySpan=eventDateSpan({date:q.normalized})){
  if(q.precision==='day')return eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized;
- const span=eventDateSpan(x),querySpan=eventDateSpan({date:q.normalized});if(!span||!querySpan)return false;
+ const span=searchDateSpan(x);if(!span||!querySpan)return false;
  if(q.precision==='month'&&['year','year_range','circa','decade'].includes(eventPrecision(x)))return false;
  return span.from<=querySpan.to&&span.to>=querySpan.from;
 }
@@ -747,36 +747,48 @@ function eventDetails(x){
  }
  result.description=body.join('\n').trim();return result;
 }
-function normalizedSearchText(value){return String(value??'').trim().toLocaleLowerCase('ko-KR');}
-function searchFieldScore(value,query,exact,start,contains){
- const text=normalizedSearchText(value);if(!text)return Infinity;
+function normalizedSearchText(value){return String(value??'').trim().toLowerCase();}
+const searchRecords=new WeakMap(),searchDateSpans=new WeakMap();
+function searchDateSpan(x){if(!searchDateSpans.has(x))searchDateSpans.set(x,eventDateSpan(x));return searchDateSpans.get(x);}
+const searchWeights=[[0,5,12],[8,14,22],[10,16,24],[12,18,26],[16,22,30],[18,24,32],[20,26,34],[45,50,60],[16,22,30]];
+function searchRecord(x){
+ let record=searchRecords.get(x);if(record)return record;
+ const d=eventDetails(x);
+ record=[x.title,d.subject,x.country,d.place,x.category,x.region,x.date,d.description,(x.war_tags||[]).join(' · ')].map(normalizedSearchText);
+ searchRecords.set(x,record);return record;
+}
+function searchFieldScore(text,query,exact,start,contains){
+ if(!text)return Infinity;
  if(text===query)return exact;
  if(text.startsWith(query))return start;
  if(text.includes(query))return contains;
  return Infinity;
 }
 function searchScore(x,query){
- const d=eventDetails(x);
- return Math.min(
-  searchFieldScore(x.title,query,0,5,12),
-  searchFieldScore(d.subject,query,8,14,22),
-  searchFieldScore(x.country,query,10,16,24),
-  searchFieldScore(d.place,query,12,18,26),
-  searchFieldScore(x.category,query,16,22,30),
-  searchFieldScore(x.region,query,18,24,32),
-  searchFieldScore(x.date,query,20,26,34),
-  searchFieldScore(d.description,query,45,50,60)
- );
+ const record=searchRecord(x);let score=Infinity;
+ for(let i=0;i<record.length;i++){
+  const text=record[i];if(!text||!text.includes(query))continue;
+  const weights=searchWeights[i],value=text===query?weights[0]:text.startsWith(query)?weights[1]:weights[2];
+  if(value<score)score=value;if(score===0)break;
+ }
+ return score;
+}
+function warmSearchRecords(pool){
+ let offset=0;
+ const queue=work=>typeof requestIdleCallback==='function'?requestIdleCallback(work,{timeout:1000}):setTimeout(()=>work(null),0);
+ const batch=deadline=>{let n=0;while(offset<pool.length&&n++<250){const x=pool[offset++];searchRecord(x);searchDateSpan(x);if(deadline&&deadline.timeRemaining()<1)break;}if(offset<pool.length)queue(batch);};
+ queue(batch);
 }
 function searchEvents(raw,pool=DATA){
  const q=String(raw??'').trim();if(!q)return {all:[],shown:[],dateQuery:null};
  const dq=parseSearchDateQuery(q);let all;
  if(dq){
-  all=pool.filter(x=>eventMatchesDate(x,dq))
+  const querySpan=eventDateSpan({date:dq.normalized});
+  all=pool.filter(x=>eventMatchesDate(x,dq,querySpan))
     .slice()
     .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  }else{
-  const query=normalizedSearchText(q);
+  const query=normalizedSearchText(q).replace(/^(?:제?2차\s*(?:세계)?대전|wwii|ww2)$/,'제2차 세계대전').replace(/^(?:제?1차\s*(?:세계)?대전|wwi|ww1)$/,'제1차 세계대전');
   all=pool.map(x=>({x,score:searchScore(x,query)}))
     .filter(item=>Number.isFinite(item.score))
     .sort((a,b)=>String(a.x.date||'').localeCompare(String(b.x.date||''))||a.score-b.score||(b.x.importance||0)-(a.x.importance||0)||a.x.id-b.x.id)
@@ -789,7 +801,7 @@ function searchSuggestionHTML(x){
  const sub=[x.country,d.subject].filter(Boolean).join(' · ');
  return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
-function hideSearchSuggestions(){searchResults.hidden=true;searchResults.replaceChildren();}
+function hideSearchSuggestions(){searchScheduler.cancel();searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
  const q=searchInput.value.trim();
  if(!q){hideSearchSuggestions();return;}
@@ -803,6 +815,13 @@ function renderSearch(){
  searchResults.innerHTML=result.shown.map(searchSuggestionHTML).join('');
  searchResults.hidden=false;
 }
+function createSearchScheduler(callback,{delay=120,setTimer=setTimeout,clearTimer=clearTimeout}={}){
+ let timer=null,composing=false;
+ const cancel=()=>{if(timer!==null)clearTimer(timer);timer=null;};
+ const schedule=()=>{cancel();if(composing)return;timer=setTimer(()=>{timer=null;callback();},delay);};
+ return {schedule,cancel,compositionStart(){composing=true;cancel();},compositionEnd(){composing=false;schedule();},get composing(){return composing;}};
+}
+const searchScheduler=createSearchScheduler(renderSearch);
 function zoomForEvent(x){const p=eventPrecision(x);return eventDayComparable(x)?LEVELS.findIndex(v=>v.kind==='day'):['day','month','month_range','day_range'].includes(p)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
 function navigateToEvent(id){
  seriesUI?.setCurrent(Number(id));
@@ -822,12 +841,16 @@ function navigateToDateQuery(raw){
  $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;viewport.scrollTop=Math.max(0,topAt(target.t,zoom)+LEVELS[zoom].h/2-viewport.clientHeight/2);render();
 }
 function goToBestSearchResult(){
+ searchScheduler.cancel();
  const first=searchEvents(searchInput.value,seriesFilteredEvents()).shown[0];
  if(first)navigateToEvent(first.id);else navigateToDateQuery(searchInput.value);
 }
-searchInput.addEventListener('input',renderSearch);
-searchInput.addEventListener('focus',renderSearch);
+searchInput.addEventListener('input',()=>{if(!searchInput.value.trim())hideSearchSuggestions();else searchScheduler.schedule();});
+searchInput.addEventListener('focus',()=>searchScheduler.schedule());
+searchInput.addEventListener('compositionstart',()=>searchScheduler.compositionStart());
+searchInput.addEventListener('compositionend',()=>searchScheduler.compositionEnd());
 searchInput.addEventListener('keydown',e=>{
+ if(e.isComposing||e.keyCode===229||searchScheduler.composing)return;
  if(e.key==='Enter'){e.preventDefault();goToBestSearchResult();return;}
  if(e.key==='Escape'){e.preventDefault();hideSearchSuggestions();searchInput.blur();}
 });
@@ -863,6 +886,7 @@ async function bootSameTimeWorld(){
     fetchDataset('leaders')
   ]);
   DATA=normalizeEvents(rawEvents);
+  warmSearchRecords(DATA);
   if(!DATA.length)throw new Error('사건 자료가 비어 있습니다.');
   configureTimelineStart(DATA,rawLeaders);
   rebuildTimelineBins();

@@ -66,6 +66,7 @@ function leanEvent(e){
     normalized_gregorian_date:e.normalized_gregorian_date,
     normalized_gregorian_range:e.normalized_gregorian_range,
     day_comparison_eligible:eligible==null?undefined:(eligible===true||eligible===1?1:0),
+    war_tags:Array.isArray(e.war_tags)?e.war_tags:undefined,
     sources
   });
 }

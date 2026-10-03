@@ -62,3 +62,27 @@ test('clicking an autocomplete item navigates to that event',()=>{
  assert.match(source,/closest\('\.search-suggestion'\)/);
  assert.match(source,/navigateToEvent\(result\.dataset\.id\)/);
 });
+
+test('repeated keyword input reuses parsed and normalized event records',()=>{
+ const ctx=context();let parsed=0;const details=ctx.eventDetails;ctx.eventDetails=x=>{parsed++;return details(x);};
+ ctx.searchEvents('해병');const initial=parsed;ctx.searchEvents('해병대');ctx.searchEvents('노르망디');
+ assert.equal(parsed,initial,'Typing re-parsed every event description');
+ assert.equal(initial,rows.length);
+});
+test('war tags are searchable without tagging an unrelated record',()=>{
+ const ctx=context([{id:1,date:'1942',title:'엘 알라메인 전투',war_tags:['제2차 세계대전']},{id:2,date:'1942',title:'문학 작품 발표'}]);
+ assert.deepEqual(Array.from(ctx.searchEvents('2차대전').all,x=>x.id),[1]);
+});
+test('search scheduling coalesces keystrokes and suspends Korean composition',async()=>{
+ assert.ok(source.includes('function createSearchScheduler('),'Missing input scheduler');
+ const ctx={setTimeout,clearTimeout};vm.createContext(ctx);
+ vm.runInContext(source.slice(source.indexOf('function createSearchScheduler('),source.indexOf('const searchScheduler=')),ctx);
+ let searches=0;const schedule=ctx.createSearchScheduler(()=>searches++,{delay:15});
+ schedule.schedule();schedule.schedule();schedule.schedule();assert.equal(searches,0);
+ await new Promise(r=>setTimeout(r,30));assert.equal(searches,1);
+ schedule.compositionStart();schedule.schedule();await new Promise(r=>setTimeout(r,30));assert.equal(searches,1);
+ schedule.compositionEnd();await new Promise(r=>setTimeout(r,30));assert.equal(searches,2);
+ schedule.schedule();schedule.cancel();await new Promise(r=>setTimeout(r,30));assert.equal(searches,2);
+});
+
+test('date queries reuse event spans and compute the query interval once',()=>{const ctx=context();let spans=0;const span=ctx.eventDateSpan;ctx.eventDateSpan=x=>{spans++;return span(x);};ctx.searchEvents('1942');spans=0;ctx.searchEvents('1943');assert.equal(spans,1,'Repeated date query recalculated all record or query intervals');});

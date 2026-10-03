@@ -10,9 +10,9 @@
     "size": 50060
   },
   "tests/browser-smoke.py": {
-    "file": "source-pack/7d14bb2f3dd8fbcd3ef2f799.txt",
-    "sha256": "7d14bb2f3dd8fbcd3ef2f799b4e17ac832ef84d81fa35a9ce193519b5f02e976",
-    "size": 7640
+    "file": "source-pack/afa24eb35346db512817e847.txt",
+    "sha256": "afa24eb35346db512817e84759c15ea337508b7fa4a9bbdf3dea211f3287e4c8",
+    "size": 7725
   },
   "tests/date-precision.test.cjs": {
     "file": "source-pack/a362cd05ef35e1b7bd4e7383.txt",

@@ -23,7 +23,7 @@ with sync_playwright() as p:
    page.locator('#searchInput').fill('일본군의 부산 상륙과 임진왜란 발발');page.locator('#searchInput').press('Enter');card=page.locator('.event[data-id="8479"]:visible').first;card.wait_for();card.scroll_into_view_if_needed();bookmark=page.locator('#viewport').evaluate('e=>e.scrollTop');card.click();page.wait_for_function("document.body.classList.contains('event-detail-active')")
    page.locator('[data-choice-id="concept-4539"]').wait_for();title=page.locator('#webQuery').inner_text()
    assert page.locator('#seriesDetailNav [data-action]:disabled').count()==5
-   labels=page.locator('#detailSeriesChoices button').all_text_contents();assert set(labels)=={'전쟁과 군사','전쟁','부산포','조선'},labels
+   labels=page.locator('#detailSeriesChoices button').all_text_contents();assert set(labels)=={'전쟁과 군사','임진왜란','전쟁','부산포','조선'},labels
    checks+=['exact-existing-memberships-only','actions-disabled-before-choice']
    def geometry():return page.evaluate("""()=>Object.fromEntries(['webEventMeta','eventDetailScroll','seriesDetailNav','backToTimeline'].map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [id,{x:r.x,y:r.y,w:r.width,h:r.height}]}))""")
    before=geometry();page.locator('#eventDetailScroll').evaluate('e=>e.scrollTop=e.scrollHeight');page.wait_for_timeout(150);after=geometry()

@@ -47,8 +47,24 @@ def _urls(text:str)->list[str]:
             seen.add(url);out.append(url)
     return out
 
+def read_war_tags(series:pathlib.Path)->dict:
+    if not series.exists():return {}
+    with closing(sqlite3.connect(series.resolve().as_uri()+'?mode=ro',uri=True)) as c:
+        names={r[0] for r in c.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if not {'metadata','concept_events','concepts'}<=names:return {}
+        setting=c.execute("SELECT value FROM metadata WHERE key='war_tag_concept_ids'").fetchone()
+        if not setting:return {}
+        selected=json.loads(setting[0]);ids=list(selected.values())
+        if not ids:return {}
+        if any(type(i) is not int or i<=0 for i in ids):raise ValueError('Invalid war tag IDs')
+        tags={}
+        q='SELECT ce.event_id,c.name FROM concept_events ce JOIN concepts c USING(concept_id) WHERE ce.concept_id IN ('+','.join('?' for _ in ids)+') ORDER BY c.name'
+        for eid,name in c.execute(q,ids):tags.setdefault(eid,[]).append(name)
+        return {eid:sorted(set(v)) for eid,v in tags.items()}
+
 def export(master:pathlib.Path,output:pathlib.Path)->dict:
     before=hashlib.sha256(master.read_bytes()).hexdigest()
+    war_tags=read_war_tags(master.parent/'series.db')
     with closing(sqlite3.connect(master.resolve().as_uri()+'?mode=ro',uri=True)) as c:
         c.row_factory=sqlite3.Row
         if c.execute('PRAGMA quick_check').fetchone()[0]!='ok':
@@ -84,6 +100,7 @@ def export(master:pathlib.Path,output:pathlib.Path)->dict:
                 'map_status':r.get('coordinate_status') or ('reference_coordinate_checked' if r.get('latitude') is not None and r.get('longitude') is not None else 'unresolved'),
                 'location_resolution_method':r.get('location_resolution_method') or '',
                 'sources':_urls(r.get('description') or ''),
+                'war_tags':war_tags.get(r['event_id'],[]),
             }
             # Do not publish empty compatibility fields.
             event={k:v for k,v in event.items() if v not in (None,'',[]) or k in ('id','date','timeline_date','region','country','category','title','description','importance')}
@@ -96,7 +113,7 @@ def export(master:pathlib.Path,output:pathlib.Path)->dict:
 
     meta={
         'schema':'stw-events-export-2',
-        'data_version':'2026-10-04-coordinate-audit',
+        'data_version':'2026-10-04-war-tags-search',
         'events_count':len(events),
         'source_master_sha256':before,
         'coordinates_available':sum(e.get('latitude') is not None and e.get('longitude') is not None for e in events),

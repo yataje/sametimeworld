@@ -1,1 +1,1 @@
-export default {"file":"s/38fc0bc1dd74ee83e42a8b65.txt","sha256":"38fc0bc1dd74ee83e42a8b65bc5ad50dd97e702d6d31b7eafbb643d836768786","version":1,"series_count":10,"concept_count":21832,"master_sha256":"465ba96ba23d6604d275eed2b33abfd26454444a0ba76ff4752214e997354c5b"};
+export default {"file":"s/abedf23aa9532e7699e23e9c.txt","sha256":"abedf23aa9532e7699e23e9c760e3b912cf83eda8af5ba76d6a442b0cda4199c","version":2,"series_count":13,"concept_count":21980,"war_tag_count":145,"war_tag_links":1073,"entity_series_count":3};
