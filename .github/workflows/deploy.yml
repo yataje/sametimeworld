@@ -36,6 +36,9 @@ jobs:
       - name: Test search, leaders and audio
         run: npm test
 
+      - name: Repack public data for lean viewer
+        run: npm run repack:lean
+
       - name: Build portable web release
         run: npm run build
 
