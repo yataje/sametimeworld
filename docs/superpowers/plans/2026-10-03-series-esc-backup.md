@@ -1,0 +1,8 @@
+# Series, Escape, and safe local bundle
+User directed implementation now with existing UI, feedback afterwards. No additional approval gate. Work stays on feature branch until tests pass, then deploy as explicitly requested.
+- [ ] Preserve event packet and all 6,338 leaders. Back up input master and add automatic series derived ONLY from existing concept links; do not rewrite events/coordinates/dates.
+- [ ] Export a lazy, hash-verified concept/series catalogue. Ten topic-based starter series; concept search creates a temporary grouping. Same timeline with related-only/world-context toggle, chronological event list and detail previous/next. No invented historical narrative. Existing search/settings/sound order remains.
+- [ ] Escape closes topmost modal first, then search, then event detail; preserve selected series/date/zoom and history.
+- [ ] Windows offline EXE: path default C:\sametimeworld, no browser start, no network. Validate embedded payload first; stage a copy preserving unmanaged files; verify original inventory; rename entire original to timestamped sibling backup; replace only once ready; rollback on commit failure. Abort on junctions, unsafe paths, active database journals, file locks, corruption. Never delete old backups.
+- [ ] Red/green module tests, full regression suite, real desktop/mobile browser checks, Windows executable tests, byte-verified payload. Deploy to GitHub main and verify live release. Deliver matching master/source/EXE plus report.
+Release target page 0.7.0; event packet remains v22 since event contents are unchanged; new catalogue version S1 is separate.

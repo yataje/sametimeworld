@@ -53,7 +53,7 @@ test('selected event stays visible without breaking chronological order',()=>{
  assert.deepEqual(Array.from(ctx.selectTimelineCards(items,2,4),x=>x.id),[1,4]);
 });
 test('Enter and magnifier use the best autocomplete result',()=>{
- assert.match(source,/function goToBestSearchResult\(\)[\s\S]*searchEvents\(searchInput\.value\)\.shown\[0\]/);
+ assert.match(source,/function goToBestSearchResult\(\)[\s\S]*searchEvents\(searchInput\.value,seriesFilteredEvents\(\)\)\.shown\[0\]/);
  assert.match(source,/if\(e\.key==='Enter'\)\{e\.preventDefault\(\);goToBestSearchResult\(\);return;\}/);
  assert.match(source,/searchGo\.addEventListener\('click',goToBestSearchResult\)/);
 });
