@@ -1,0 +1,17 @@
+name: Location regression checks
+on:
+  push:
+    branches: ['fix/location-resolution-20261003']
+    paths: ['.github/workflows/location-check.yml']
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Reproduce current location defects
+        run: node --test tests/location-v2.test.cjs
