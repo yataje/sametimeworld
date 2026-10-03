@@ -1,0 +1,34 @@
+name: Inspect public location inputs
+on:
+  push:
+    branches: ['fix/location-resolution-20261003']
+    paths: ['.github/workflows/location-inspect.yml']
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Inspect public source data only
+        run: |
+          mkdir -p docs/location
+          node --input-type=module > docs/location/public-baseline.json <<'JS'
+          import geo from './src/geography-reference.js';
+          import world from './src/world-data.js';
+          import {ALIASES} from './src/map-core.js';
+          import {readDescriptor,readPacket,unseal} from './scripts/seal.mjs';
+          const root=process.cwd(),d=readDescriptor(root),data=unseal(readPacket(root,d),d),events=data.events;
+          const count=key=>Object.entries(events.reduce((a,e)=>(a[String(e[key])]=(a[String(e[key])]||0)+1,a),{})).sort((a,b)=>b[1]-a[1]);
+          console.log(JSON.stringify({events:events.length,leaders:data.leaders.length,geoKeys:Object.keys(geo),geoMeta:geo.meta,cities:geo.cities.length,admin1:geo.admin1.length,citySamples:geo.cities.slice(0,3),adminSamples:geo.admin1.slice(0,3),countries:world.features.map(x=>x.properties),aliases:ALIASES,countryCounts:count('country').slice(0,100),mapStatusCounts:count('map_status'),precisionCounts:count('location_precision'),examples:events.filter(e=>e.title.includes('일본군의 부산 상륙')||[159,160].includes(e.id)),unresolved:events.filter(e=>e.latitude==null).filter((e,i)=>i%317===0).slice(0,45)},null,2));
+          JS
+      - name: Save diagnostic report, not database
+        run: |
+          git config user.name 'SameTimeWorld Verification'
+          git config user.email 'actions@users.noreply.github.com'
+          git add docs/location/public-baseline.json
+          git commit -m 'docs: public geographic input inventory'
+          git push origin HEAD:fix/location-resolution-20261003
