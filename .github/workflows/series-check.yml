@@ -1,35 +1,124 @@
-name: Windows backup diagnostic
+name: Series and safe installer checks
 on:
   push:
     branches: ['feature/series-esc-backup-20261003']
     paths: ['.github/workflows/series-check.yml']
 permissions:
   contents: read
-  actions: read
 jobs:
+  stage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import approved code and catalogue
+        env:
+          TRANSFER_URL: 'https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-1148-8206-9640-fc5bc82b7e3e/raw?se=2026-10-03T00%3A43%3A41Z&sp=r&sv=2026-02-06&sr=b&scid=da8e4f62-8edb-53d5-a12c-bb4a7fd03ed2&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-02T22%3A03%3A04Z&ske=2026-10-03T22%3A03%3A04Z&sks=b&skv=2026-02-06&sig=cZOyLgMZwlNuwRfAX0jyOqSVtl5f/dTkbdw%2B6b/zRJM%3D'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$TRANSFER_URL"
+          curl -fsSL --max-time 120 "$TRANSFER_URL" -o "$RUNNER_TEMP/overlay.zip"
+          echo "f3815bf13ee005c53b3fe5e52e6630779452050d6fcd5a7fd9b81443f9e76681  $RUNNER_TEMP/overlay.zip" | sha256sum -c -
+          python3 - <<'PY'
+          import json,os,pathlib,zipfile
+          root=pathlib.Path.cwd()
+          def target(name):
+              p=(root/name).resolve()
+              if not p.is_relative_to(root) or any(s in ['.git','.github'] for s in pathlib.PurePosixPath(name).parts): raise ValueError('unsafe path')
+              return p
+          with zipfile.ZipFile(os.environ['RUNNER_TEMP']+'/overlay.zip') as z:
+              for n in z.namelist():
+                  if n=='_deployment_delete.json':continue
+                  p=target(n);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(n))
+              for n in json.loads(z.read('_deployment_delete.json')):
+                  if not n.startswith('source-pack/'):raise ValueError('unexpected removal')
+                  target(n).unlink(missing_ok=True)
+          PY
+          BASE=$(git rev-parse HEAD)
+          git config user.name 'SameTimeWorld Build'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: concept-based series, Escape navigation and backup-first offline saver'
+          git archive --format=zip HEAD -o source.zip
+          git bundle create change.bundle HEAD ^$BASE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: series-staged-source
+          path: |
+            source.zip
+            change.bundle
+          retention-days: 7
+  browser:
+    needs: stage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: series-staged-source
+      - run: unzip -q source.zip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Full regression and build
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _local/series-checks
+          npm test > _local/series-checks/unit.log 2>&1
+          python3 -m unittest discover -s tests -p 'test_*.py' >> _local/series-checks/unit.log 2>&1
+          npm run build > _local/series-checks/build.log 2>&1
+          python3 -m pip install playwright --quiet
+          python3 -m playwright install --with-deps chromium > "$RUNNER_TEMP/browser-install.log" 2>&1
+      - name: Real desktop and mobile tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tests/browser-series.py > _local/series-checks/browser.log 2>&1
+          python3 tests/browser-smoke.py --integrated --output _local/original-browser-checks --expected-events 38920 --expected-leaders 6338 --expected-hash 70000ab5e07e7dec0af978a8c5a292bfda7e5a7231ff872fcd429cc02b410467 >> _local/series-checks/browser.log 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: series-browser-checks
+          path: |
+            _local/series-checks/
+            _local/original-browser-checks/
+            dist/release.json
+          retention-days: 7
   windows:
+    needs: stage
     runs-on: windows-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
           name: series-staged-source
-          run-id: 37082672752
-          github-token: ${{ github.token }}
       - run: Expand-Archive -Path source.zip -DestinationPath project -Force
-      - name: Diagnose actual EXE failure
+      - name: Compile and test backup-first EXE
         shell: pwsh
         run: |
-          $p='project/installer/test_installer.py'
-          $s=Get-Content $p -Raw
-          $s=$s.Replace("def runexe(self,*args):return subprocess.run([str(self.exe),*map(str,args)],capture_output=True,timeout=60).returncode", "def runexe(self,*args):`n  r=subprocess.run([str(self.exe),*map(str,args)],capture_output=True,timeout=60);print('EXE',args,r.returncode,r.stderr.decode('utf-8',errors='replace'));return r.returncode")
-          [IO.File]::WriteAllText((Join-Path $pwd $p),$s,[Text.UTF8Encoding]::new($false))
-          $p='project/installer/LocalSave.cs';$s=(Get-Content $p -Raw).Replace('Console.Error.WriteLine(e.Message)','Console.Error.WriteLine(e.ToString())');[IO.File]::WriteAllText((Join-Path $pwd $p),$s,[Text.UTF8Encoding]::new($false))
           New-Item -ItemType Directory project/installer/build -Force | Out-Null
           & powershell -NoProfile -File project/installer/build.ps1 *> project/installer/build/windows-tests.log
-          if ($LASTEXITCODE -ne 0) { Get-Content project/installer/build/windows-tests.log -Tail 100; throw 'Windows verification failed' }
+          if ($LASTEXITCODE -ne 0) { Get-Content project/installer/build/windows-tests.log -Tail 80; throw 'Windows verification failed' }
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: windows-diagnostic
+          name: series-windows-installer
           path: project/installer/build/
           retention-days: 7
+  commit:
+    needs: [browser,windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: series-staged-source
+          path: _local/staged
+      - name: Push only the tested commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch _local/staged/change.bundle HEAD:refs/remotes/staged/series
+          git merge --ff-only refs/remotes/staged/series
+          git push origin HEAD:feature/series-esc-backup-20261003
