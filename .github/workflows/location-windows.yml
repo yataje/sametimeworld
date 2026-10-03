@@ -1,0 +1,48 @@
+name: Windows location update checks
+on:
+  push:
+    branches: ['fix/location-resolution-20261003']
+    paths: ['.github/workflows/location-windows.yml','installer/LocalSave.cs']
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile DB helper and original safe saver
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory installer/build -Force | Out-Null
+          python -m pip install pyinstaller==6.22.3 --quiet
+          if ($LASTEXITCODE) { throw 'Helper build dependency failed' }
+          python -m PyInstaller --noconfirm --clean --onefile --noupx --name LocationDBUpdate --distpath installer/build --workpath _local/helper-build --specpath _local scripts/apply-location-update.py *> installer/build/helper-build.log
+          if ($LASTEXITCODE) { Get-Content installer/build/helper-build.log -Tail 30; throw 'DB helper compilation failed' }
+          & powershell -NoProfile -File installer/build.ps1 *> installer/build/legacy-tests.log
+          if ($LASTEXITCODE) { Get-Content installer/build/legacy-tests.log -Tail 40; throw 'Base installer checks failed' }
+      - name: Exercise actual EXE migration and rollback
+        shell: pwsh
+        run: |
+          python installer/test_location_installer.py *> installer/build/location-tests.log
+          $code=$LASTEXITCODE
+          Get-Content installer/build/location-tests.log -Tail 90
+          New-Item -ItemType Directory docs/location -Force | Out-Null
+          Copy-Item installer/build/location-tests.log docs/location/windows-status.txt
+          git config user.name 'SameTimeWorld Windows Verification'
+          git config user.email 'actions@users.noreply.github.com'
+          git add docs/location/windows-status.txt
+          git commit -m 'test: actual Windows location updater results'
+          git fetch origin fix/location-resolution-20261003
+          git rebase origin/fix/location-resolution-20261003
+          git push origin HEAD:fix/location-resolution-20261003
+          exit $code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: location-windows-components
+          path: installer/build/
+          retention-days: 7
