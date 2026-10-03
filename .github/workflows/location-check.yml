@@ -14,44 +14,52 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Read current public events
+      - name: Normalize administrative feature names and SQL binding count
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          p=pathlib.Path('scripts/prepare-location-reference.py');s=p.read_text();s=s.replace("precision=x[7].lower() if x[7].startswith('ADM') else 'city'", "precision='admin'+x[7][-1] if x[7].startswith('ADM') else 'city'");p.write_text(s)
+          p=pathlib.Path('scripts/apply-location-update.py');s=p.read_text();s=s.replace('INSERT INTO location_places_v2 VALUES(?,?,?,?,?,?,?,?,?,?,?)','INSERT INTO location_places_v2 VALUES(?,?,?,?,?,?,?,?,?,?)');p.write_text(s)
+          PY
+      - name: Read public data and prepare missing reference
         run: |
           mkdir -p _local/location-checks
           node --input-type=module <<'JS'
           import fs from 'node:fs';import {readDescriptor,readPacket,unseal} from './scripts/seal.mjs';
-          const r=process.cwd(),d=readDescriptor(r),data=unseal(readPacket(r,d),d);
-          fs.writeFileSync('_local/previous-events.json',JSON.stringify(data));
+          const r=process.cwd(),d=readDescriptor(r),data=unseal(readPacket(r,d),d);fs.writeFileSync('_local/previous-events.json',JSON.stringify(data));
           JS
-      - name: Prepare modern county and district references
-        run: python3 scripts/prepare-location-reference.py _local/previous-events.json
-      - name: Compute repair decisions and run regressions
+          if [ $(wc -c < src/location-extra.js) -lt 1000 ]; then python3 scripts/prepare-location-reference.py _local/previous-events.json; fi
+      - name: Compute decisions and collect every test outcome
         shell: bash
         run: |
+          set +e
           set -uo pipefail
-          node scripts/repair-locations.mjs > _local/location-checks/repair.log 2>&1
-          REPAIR=$?
-          node --test tests/location-v2.test.cjs > _local/location-checks/location.log 2>&1
-          LOC=$?
-          npm test > _local/location-checks/full.log 2>&1
-          FULL=$?
+          node scripts/repair-locations.mjs > _local/location-checks/repair.log 2>&1; REPAIR=$?
+          node --test tests/location-v2.test.cjs > _local/location-checks/location.log 2>&1; LOC=$?
+          npm test > _local/location-checks/full.log 2>&1; FULL=$?
+          python3 -m unittest discover -s tests -p 'test_*.py' > _local/location-checks/python.log 2>&1; SQL=$?
           python3 - <<'PY'
           import pathlib,re
           out=[]
-          for name in ['repair','location','full']:
-              p=pathlib.Path('_local/location-checks/'+name+'.log');s=p.read_text(errors='replace');out.append('=== '+name+' ===')
-              if name=='repair':out.append(s[-12000:])
+          for name in ['repair','location','full','python']:
+              s=pathlib.Path('_local/location-checks/'+name+'.log').read_text(errors='replace');out.append('=== '+name+' ===')
+              if name=='repair':out.append(s[-6000:])
+              elif name=='python':out.append(s[-4000:])
               else:
-                  out.extend(x for x in s.splitlines() if re.search(r'not ok|# (tests|pass|fail)|error:|expected:|actual:|ERR_',x))
+                  lines=s.splitlines()
+                  for i,l in enumerate(lines):
+                      if 'not ok ' in l:out.append('\n'.join(lines[i:i+30])[:2500])
+                  out.extend(l for l in lines if re.search(r'^# (tests|pass|fail)',l))
           pathlib.Path('docs/location/check-status.txt').write_text('\n'.join(out),encoding='utf8')
           PY
-          cat docs/location/check-status.txt
-          echo "REPAIR=$REPAIR LOC=$LOC FULL=$FULL"
-      - name: Save reference and diagnostics on feature branch only
+          tail -100 docs/location/check-status.txt
+          echo "$(( REPAIR || LOC || FULL || SQL ))" > _local/location-checks/exitcode
+      - name: Preserve work only on development branch
         run: |
           git config user.name 'SameTimeWorld Geographic Repair'
           git config user.email 'actions@users.noreply.github.com'
-          git add src/location-extra.js docs/location data/location
-          git commit -m 'data: scoped GeoNames references and proposed location repair results'
+          git add src/location-extra.js docs/location data/location scripts/prepare-location-reference.py scripts/apply-location-update.py
+          git commit -m 'data: administrative reference and complete regression diagnostics'
           git fetch origin fix/location-resolution-20261003
           git rebase origin/fix/location-resolution-20261003
           git push origin HEAD:fix/location-resolution-20261003
@@ -63,3 +71,5 @@ jobs:
             _local/location-checks/
             docs/location/
           retention-days: 7
+      - name: Fail honestly if any check failed
+        run: exit $(cat _local/location-checks/exitcode)
