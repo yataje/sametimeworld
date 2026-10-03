@@ -696,12 +696,17 @@ function dateNavigationTarget(raw){
  const q=parseSearchDateQuery(raw);if(!q)return null;const a=q.normalized.split('-').map(Number),t=utc(a[0],(a[1]||1)-1,a[2]||1);
  return t<start||t>=end?null:{t,zoom:q.precision==='day'?6:q.precision==='month'?3:2,date:q.normalized};
 }
+function eventDateBasis(x){
+ if(x.timeline_index_basis)return x.eligible_for_normalized_day_index===true?'원자료의 그레고리력 일자 · 독립 재검증 전':x.normalized_gregorian_range?'원자료의 환산 범위 · 독립 재검증 전':'원문 정밀도 유지 · 일별 동시성 미확정';
+ if(x.date_basis==='verified_gregorian_interval'&&x.normalized_gregorian_range)return x.range_semantics==='event_duration'?'검증된 그레고리력 기간':'검증된 그레고리력 범위 · 발생일 미상';
+ return x.eligible_for_normalized_day_index===true?'검증된 그레고리력':x.eligible_for_normalized_day_index===false?'원출처 날짜 · 역법/정밀도 확인 중':'기존 수록 날짜';
+}
 function eventPrecision(x){
  if(x.date_precision)return x.date_precision;
  const v=String(x.date||'');return /^\d{4}-\d{2}-\d{2}$/.test(v)?'day':/^\d{4}-\d{2}$/.test(v)?'month':/[/~–]/.test(v)?'year_range':'year';
 }
 function eventDayComparable(x){
- return /^\d{4}-\d{2}-\d{2}$/.test(x.date||'')&&eventPrecision(x)==='day';
+ return /^\d{4}-\d{2}-\d{2}$/.test(x.normalized_gregorian_date||x.date||'')&&eventPrecision(x)==='day'&&x.eligible_for_normalized_day_index!==false;
 }
 function eventFitsLevel(x,z){
  // Zooming in must not make a known historical record disappear. Fine levels use one representative slot for imprecise/range dates.
@@ -720,13 +725,13 @@ function eventDisplayTime(x,z){
  return dt.t;
 }
 function eventMatchesDate(x,q){
- if(q.precision==='day')return eventDayComparable(x)&&x.date===q.normalized;
+ if(q.precision==='day')return eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized;
  const span=eventDateSpan(x),querySpan=eventDateSpan({date:q.normalized});if(!span||!querySpan)return false;
  if(q.precision==='month'&&['year','year_range','circa','decade'].includes(eventPrecision(x)))return false;
  return span.from<=querySpan.to&&span.to>=querySpan.from;
 }
 function eventDetails(x){
- return {subject:x.subject||'',place:x.locality||'',original_date:x.original_date||'',description:String(x.description||'').trim()};
+ return {subject:x.subject||'',place:x.locality||x.place||'',original_date:x.original_date||'',description:String(x.description||'').trim()};
 }
 function normalizedSearchText(value){return String(value??'').trim().toLocaleLowerCase('ko-KR');}
 function searchFieldScore(value,query,exact,start,contains){
