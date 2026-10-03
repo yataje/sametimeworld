@@ -23,11 +23,14 @@ function normalizeEvents(raw){
   const id=number(x.id??x.event_id);if(!Number.isSafeInteger(id)||id<=0)throw new Error('Invalid event identifier');
   if(ids.has(id))throw new Error('Duplicate event identifier');ids.add(id);
   const lat=number(x.latitude),lon=number(x.longitude),valid=Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=-90&&lat<=90&&lon>=-180&&lon<=180;
+  const eligible=x.day_comparison_eligible==null?x.eligible_for_normalized_day_index:x.day_comparison_eligible;
   return {...x,id,
    date:String(x.date??''),timeline_date:String(x.timeline_date??x.date??''),date_precision:String(x.date_precision??''),
-   region:normalizeRegion(x.region??x.continent),country:String(x.country??''),locality:String(x.locality??''),category:String(x.category??''),title:String(x.title??''),
-   description:String(x.description??''),subject:String(x.subject??''),original_date:String(x.original_date??''),importance:Number(x.importance??0),
-   latitude:valid?lat:null,longitude:valid?lon:null,location_precision:String(x.location_precision??''),sources:Array.isArray(x.sources)?x.sources:[]
+   region:normalizeRegion(x.region??x.continent),country:String(x.country??''),locality:String(x.locality??''),map_region:String(x.map_region??''),category:String(x.category??''),title:String(x.title??''),
+   description:String(x.description??''),subject:String(x.subject??''),place:String(x.place??''),original_date:String(x.original_date??''),importance:Number(x.importance??0),
+   latitude:valid?lat:null,longitude:valid?lon:null,location_precision:String(x.location_precision??''),map_status:String(x.map_status??''),resolved_place:String(x.resolved_place??''),
+   normalized_gregorian_date:x.normalized_gregorian_date||null,normalized_gregorian_range:x.normalized_gregorian_range||null,
+   eligible_for_normalized_day_index:eligible==null?null:eligible===true||eligible===1,sources:Array.isArray(x.sources)?x.sources:[]
   };
  });
 }
