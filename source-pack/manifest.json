@@ -4,11 +4,6 @@
     "sha256": "fcac0a2d1bf8c239339b8863d65beb286519ccaa85b0b8ef74d18b0175593671",
     "size": 26451
   },
-  "src/main.js": {
-    "file": "source-pack/192a1afe286751900a4f486b.txt",
-    "sha256": "192a1afe286751900a4f486b1037f8bc0201305f9c0e8ca35f42a09adf5e2bb2",
-    "size": 59334
-  },
   "src/style.css": {
     "file": "source-pack/34ec6b30b3ddb6f92fcd7f0c.txt",
     "sha256": "34ec6b30b3ddb6f92fcd7f0c1d28189e02cc68ae6c607a93e37b573bec567409",
