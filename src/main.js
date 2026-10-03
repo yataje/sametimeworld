@@ -9,7 +9,7 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.7.0';
+const PAGE_VERSION='v0.8.0';
 const DB_VERSION_FALLBACK='v22';
 function normalizeRegion(value){
   const v=String(value??'').trim();
@@ -591,6 +591,7 @@ let timelineBookmark=null;
 tabWeb.disabled=true;
 function setAppTab(name){
  const previous=activeAppTab,web=name==='web';
+ if(!web)seriesUI?.leaveDetail();
  if(web&&previous!=='web'){
   // Stop only transient timeline effects; preserve the selected date and zoom.
   if(zoomTransition)stopZoomTransition();
@@ -635,15 +636,17 @@ function renderEventMeta(x){
  }
 }
 function returnToTimeline(){
+ seriesUI?.stopSpeech();
  if(activeAppTab==='web'&&history.state?.stwTab==='web'){history.back();return;}
  activeDetailEventId=null;setAppTab('experience');
 }
 tabExperience.onclick=returnToTimeline;
 tabWeb.onclick=()=>{const id=activeDetailEventId??lastDetailEventId;if(id!==null&&activeAppTab!=='web')openWebForEvent(id);};
-function openWebForEvent(id,{historyMode='push'}={}){
+function openWebForEvent(id,{historyMode='push',fromTts=false}={}){
  const x=byId.get(Number(id));if(!x)return;
  if(activeAppTab==='web'&&historyMode==='push')historyMode='replace';
  seriesUI?.setCurrent(x.id);
+ seriesUI?.showDetail(x.id,{fromTts});
  const d=eventDetails(x);activeDetailEventId=x.id;lastDetailEventId=x.id;tabWeb.disabled=false;
  tabWebLabel.textContent='사건 상세';
  webQuery.textContent=x.title;
@@ -659,7 +662,7 @@ function openWebForEvent(id,{historyMode='push'}={}){
  const link=$('#externalSearch');link.hidden=false;
  link.href='https://www.google.com/search?q='+encodeURIComponent([x.date,d.subject,x.title].filter(Boolean).join(' '));
  setAppTab('web');
- webPanel.querySelector('.event-detail').scrollTop=0;
+ document.getElementById('eventDetailScroll').scrollTop=0;
  if(historyMode==='push')history.pushState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
  else if(historyMode==='replace')history.replaceState({stwTab:'web',eventId:x.id},'',`#event-${x.id}`);
 }
@@ -877,7 +880,7 @@ async function bootSameTimeWorld(){
    const anchor=timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom);
    if(zoomTransition)stopZoomTransition();cancelAnimationFrame(animation);seriesState=state;
    rebuildEventIndexes();space.style.height=totalHeight(zoom)+'px';viewport.scrollTop=Math.max(0,topAt(anchor,zoom)-viewport.clientHeight/2);requestRender();
-  },onNavigate:id=>{if(activeAppTab==='web'){activeDetailEventId=null;setAppTab('experience');history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);}navigateToEvent(id);},onDetail:id=>openWebForEvent(id,{historyMode:'replace'})});
+  },onNavigate:id=>{if(activeAppTab==='web'){activeDetailEventId=null;setAppTab('experience');history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);}navigateToEvent(id);},onDetail:(id,options={})=>openWebForEvent(id,{historyMode:'replace',...options}),getReadout:eventDetails});
   await seriesUI.restore();
  }catch(error){
   console.error('Packaged events load failed:',error);
