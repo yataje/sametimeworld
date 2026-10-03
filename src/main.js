@@ -734,7 +734,18 @@ function eventMatchesDate(x,q){
  return span.from<=querySpan.to&&span.to>=querySpan.from;
 }
 function eventDetails(x){
- return {subject:x.subject||'',place:x.locality||x.place||'',original_date:x.original_date||'',description:String(x.description||'').trim()};
+ const result={subject:x.subject||'',place:x.locality||x.place||'',original_date:x.original_date||'',verification:x.verification||'',description:''};
+ const INTERNAL_DETAIL_LABEL=/^(?:원역법|날짜 검증|검증 상태)(?:\s*[:：]|\s+|$)/;
+ const labels={'대상:':'subject','장소:':'place','원문 날짜:':'original_date','등록 상태:':'verification','검증 상태:':'verification'};
+ const body=[];
+ for(const line of String(x.description||'').split('\n')){
+  const trimmed=line.trim();const prefix=Object.keys(labels).find(p=>trimmed.startsWith(p));
+  if(prefix){result[labels[prefix]] ||= trimmed.slice(prefix.length).trim();continue;}
+  if(INTERNAL_DETAIL_LABEL.test(trimmed))continue;
+  if(trimmed.startsWith('출처 파일:'))continue;
+  body.push(line);
+ }
+ result.description=body.join('\n').trim();return result;
 }
 function normalizedSearchText(value){return String(value??'').trim().toLocaleLowerCase('ko-KR');}
 function searchFieldScore(value,query,exact,start,contains){
