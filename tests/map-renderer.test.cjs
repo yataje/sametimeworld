@@ -30,9 +30,9 @@ test('admin area names resolve to one representative point rather than a filled 
  const h=await harness();h.api.showEvent({id:4,locality:'캘리포니아주',country:'미국',region:'아메리카'});
  const p=h.api.snapshot().point;assert.equal(p.precision,'admin1');assert.ok(Math.abs(p.lat-36.75)<1);assert.ok(Math.abs(p.lon+119.59)<1);assert.equal(h.canvas.dataset.level,'point');h.api.destroy();
 });
-test('unknown places fall back to country or region points',async()=>{
+test('known country fallback works and unknown continental scopes clear the marker',async()=>{
  const h=await harness();h.api.showEvent({id:5,country:'프랑스',region:'유럽/아프리카'});assert.equal(h.api.snapshot().point.precision,'country');
- h.api.showEvent({id:6,country:'미상',region:'중동'});assert.equal(h.api.snapshot().point.precision,'region');h.api.destroy();
+ h.api.showEvent({id:6,country:'미상',region:'중동'});assert.equal(h.api.snapshot().point,null);assert.equal(h.canvas.dataset.level,'unresolved');h.api.destroy();
 });
 test('reduced motion and resize keep the point map stable',async()=>{
  const h=await harness({reduced:true});h.api.showEvent({id:7,locality:'서울',country:'대한민국',region:'동아시아/오세아니아'});assert.equal(h.api.snapshot().animation,null);

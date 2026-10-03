@@ -1,27 +1,10 @@
 {
   "schema": "stw-events-export-2",
-  "data_version": "2026-10-03-integrated-v1",
+  "data_version": "2026-10-04-coordinate-audit",
   "events_count": 38920,
-  "source_master_sha256": "76fa63c6cc6b81ebb3ae9ec4622fdb04d5000a20543dbbd00d8915de78ec646d",
-  "timeline_anchor_corrections": [
-    {
-      "id": 38705,
-      "previous_anchor": "1220",
-      "timeline_date": "1805/1806"
-    },
-    {
-      "id": 38742,
-      "previous_anchor": "1224",
-      "timeline_date": "1809/1810"
-    },
-    {
-      "id": 38948,
-      "previous_anchor": "1248",
-      "timeline_date": "1832/1833"
-    }
-  ],
-  "coordinates_available": 7958,
-  "sources_available": 34068,
+  "source_master_sha256": "0c28d9d66a0ea27e69e77bfd6c94a0f207a5a93f1fadcdda3e4735f8e18fbace",
+  "coordinates_available": 38906,
+  "sources_available": 0,
   "unclassified_events": 89,
-  "viewer_contract": "date is source text; timeline_date is an indexing interval, not a verified date; respect map_status; preserve existing leader payload"
+  "viewer_contract": "Lean runtime export: duplicate/raw/audit fields omitted; date is source display text and timeline_date is the chronological index."
 }

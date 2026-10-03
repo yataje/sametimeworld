@@ -29,6 +29,7 @@ class ExportTests(unittest.TestCase):
       original_date TEXT,continent TEXT,country TEXT,region TEXT,category TEXT,title TEXT,description TEXT,
       importance INTEGER,subject TEXT,latitude REAL,longitude REAL,location_precision TEXT)''')
     c.execute('''INSERT INTO event_data VALUES(1,'1877-01-01','day',1877,NULL,NULL,'','중동','인도(영국령)','인도 델리','정치','테스트 사건','설명 https://example.com/source',3,'',28.67,77.22,'city')''')
+   c.close()
    meta=self.m.export(db,out)
    self.assertEqual(meta['events_count'],1)
    payload=json.loads(gzip.decompress(out.read_bytes()))
@@ -36,5 +37,21 @@ class ExportTests(unittest.TestCase):
    self.assertEqual(e['id'],1);self.assertEqual(e['region'],'중동');self.assertEqual(e['locality'],'인도 델리')
    self.assertEqual(e['sources'],['https://example.com/source'])
    self.assertNotIn('display_start_label',e);self.assertNotIn('normalized_gregorian_date',e)
+
+ def test_decade_stays_a_range_without_changing_source_date(self):
+  self.assertEqual(self.m.timeline_date({'event_id':2,'date':'1850','date_precision':'decade','year':1850}),'1850/1859')
+
+ def test_map_decision_is_authoritative_in_export(self):
+  with tempfile.TemporaryDirectory() as td:
+   db=pathlib.Path(td)/'master.db';out=pathlib.Path(td)/'events.gz'
+   with sqlite3.connect(db) as c:
+    c.execute("CREATE TABLE event_data(event_id INTEGER PRIMARY KEY,date TEXT,year INTEGER,place TEXT,latitude REAL,longitude REAL,location_precision TEXT,coordinate_status TEXT,location_resolution_method TEXT)")
+    c.executemany("INSERT INTO event_data VALUES(?,?,?,?,?,?,?,?,?)",[(1,'1900',1900,'서울',37.56,126.98,'city','reference_coordinate_checked','cache'),(2,'1901',1901,'세계',None,None,'unresolved','unresolved','unresolved')])
+   c.close()
+   self.m.export(db,out);events=json.loads(gzip.decompress(out.read_bytes()))['events']
+   self.assertEqual(events[0]['resolved_place'],'서울')
+   self.assertEqual(events[0]['map_status'],'reference_coordinate_checked')
+   self.assertEqual(events[1]['map_status'],'unresolved')
+   self.assertNotIn('latitude',events[1])
 
 if __name__=='__main__':unittest.main()

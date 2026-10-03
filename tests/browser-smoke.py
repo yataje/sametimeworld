@@ -50,7 +50,7 @@ try:
    open_event(159)
    state=page.evaluate('window.__stwMap.snapshot()');assert state['point'] and 48<state['point']['lat']<49 and 16<state['point']['lon']<17,state
    page.locator('#backToTimeline').click();page.wait_for_timeout(600)
-   open_event(1)
+   open_event(72)
    state=page.evaluate('window.__stwMap.snapshot()');assert state['point'] is None and state['available'],state
    assert page.locator('#eventMapCanvas').get_attribute('data-lon') is None
    assert '좌표' in page.locator('#eventMapNote').inner_text()

@@ -20,8 +20,8 @@ test('point resolver knows historical aliases and representative admin areas',as
  const st=P.resolvePoint({locality:'스탈린그라드',country:'러시아',region:'유럽/아프리카'});assert.ok(Math.abs(st.lon-44.5)<.3);
  const ca=P.resolvePoint({locality:'캘리포니아주',country:'미국',region:'아메리카'});assert.equal(ca.precision,'admin1');
 });
-test('unknown locations still get an honest country or region representative point',async()=>{
+test('known countries get representatives; unnamed continental scopes stay unresolved',async()=>{
  const P=await import(pathToFileURL(path.join(root,'src/point-resolver.js')));
  assert.equal(P.resolvePoint({country:'프랑스',region:'유럽/아프리카'}).precision,'country');
- assert.equal(P.resolvePoint({country:'미상',region:'중동'}).precision,'region');
+ assert.equal(P.resolvePoint({country:'미상',region:'중동'}),null);
 });

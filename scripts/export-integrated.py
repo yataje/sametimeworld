@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Export the lean SameTimeWorld SQLite master to the public event snapshot."""
 from __future__ import annotations
+from contextlib import closing
 import argparse, gzip, hashlib, json, pathlib, re, sqlite3
 
 REGIONS={'유럽/아프리카','중동','동아시아/오세아니아','아메리카'}
@@ -12,6 +13,10 @@ def timeline_date(row:dict)->str:
     precision=str(row.get('date_precision') or '').strip()
     year=row.get('year')
     year_end=row.get('year_end')
+
+    if precision=='decade' and year is not None:
+        first=int(year)
+        return f'{first:04d}/{int(year_end) if year_end is not None else first+9:04d}'
 
     # Already machine-readable dates stay authoritative for the viewer.
     if re.fullmatch(r'\d{4}(?:-\d{2})?(?:-\d{2})?',date):
@@ -44,7 +49,7 @@ def _urls(text:str)->list[str]:
 
 def export(master:pathlib.Path,output:pathlib.Path)->dict:
     before=hashlib.sha256(master.read_bytes()).hexdigest()
-    with sqlite3.connect(master.resolve().as_uri()+'?mode=ro',uri=True) as c:
+    with closing(sqlite3.connect(master.resolve().as_uri()+'?mode=ro',uri=True)) as c:
         c.row_factory=sqlite3.Row
         if c.execute('PRAGMA quick_check').fetchone()[0]!='ok':
             raise ValueError('Invalid master database')
@@ -60,6 +65,8 @@ def export(master:pathlib.Path,output:pathlib.Path)->dict:
                 'date':r.get('date') or '',
                 'date_precision':r.get('date_precision') or '',
                 'timeline_date':timeline_date(r),
+                'date_label':timeline_date(r).replace('/','–') if r.get('date_precision')=='decade' else '',
+                'day_comparison_eligible':r.get('day_comparison_eligible'),
                 'region':r.get('continent') or '',
                 'country':r.get('country') or '',
                 'locality':r.get('region') or '',
@@ -72,6 +79,10 @@ def export(master:pathlib.Path,output:pathlib.Path)->dict:
                 'latitude':r.get('latitude'),
                 'longitude':r.get('longitude'),
                 'location_precision':r.get('location_precision') or '',
+                'place':r.get('place') or '',
+                'resolved_place':r.get('place') or '',
+                'map_status':r.get('coordinate_status') or ('reference_coordinate_checked' if r.get('latitude') is not None and r.get('longitude') is not None else 'unresolved'),
+                'location_resolution_method':r.get('location_resolution_method') or '',
                 'sources':_urls(r.get('description') or ''),
             }
             # Do not publish empty compatibility fields.
@@ -85,7 +96,7 @@ def export(master:pathlib.Path,output:pathlib.Path)->dict:
 
     meta={
         'schema':'stw-events-export-2',
-        'data_version':'2026-10-03-lean-v2',
+        'data_version':'2026-10-04-coordinate-audit',
         'events_count':len(events),
         'source_master_sha256':before,
         'coordinates_available':sum(e.get('latitude') is not None and e.get('longitude') is not None for e in events),

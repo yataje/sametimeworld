@@ -1,6 +1,6 @@
 import geo from './geography-reference.js';
 import world from './world-data.js';
-import {ALIASES,GROUPS,regionId} from './map-core.js';
+import {ALIASES} from './map-core.js';
 
 const norm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[“”"'「」『』]/g,'').replace(/\s+/g,' ').trim();
 const trimSuffix=s=>norm(s).replace(/특별시$|광역시$|자치시$|자치도$|자치구$|직할시$|도$|주$|현$|부$|시$/,'');
@@ -48,7 +48,7 @@ function scoreCandidate(row,codes){
 }
 function choose(index,name,codes){
  const key=trimSuffix(name),direct=index.get(key)||[];
- if(direct.length)return direct.slice().sort((a,b)=>scoreCandidate(b,codes)-scoreCandidate(a,codes))[0];
+ if(direct.length){const compatible=direct.filter(row=>scoreCandidate(row,codes)>=0);if(!codes.length&&new Set(compatible.map(row=>row.c)).size>1)return null;return compatible.slice().sort((a,b)=>scoreCandidate(b,codes)-scoreCandidate(a,codes))[0]||null;}
  let best=null,bestLen=0;
  for(const [k,rows] of index){
   if(k.length<3||(!key.includes(k)&&!k.includes(key)))continue;
@@ -69,21 +69,17 @@ function candidateNames(event){
  }
  return [...new Set(out)];
 }
-function regionFallback(event){
- const id=regionId(event.region);if(!id)return {name:'세계',lon:0,lat:0,precision:'world'};
- const b=GROUPS[id].bounds;return {name:GROUPS[id].label,lon:(b[0]+b[2])/2,lat:-(b[1]+b[3])/2,precision:'region'};
-}
 export function resolvePoint(event){
  // Integrated records have an authoritative map decision; never override a withheld point.
  if(Object.prototype.hasOwnProperty.call(event,'map_status')){
-  if(!['reference_coordinate_checked','inherited_context_checked_not_reverified'].includes(event.map_status))return null;
+  if(!['reference_coordinate_checked','inherited_context_checked_not_reverified','source_text_representative','country_representative','historical_region_representative'].includes(event.map_status))return null;
   const valid=v=>v!==null&&v!==undefined&&typeof v!=='boolean'&&String(v).trim()!==''&&Number.isFinite(Number(v));
   if(!valid(event.latitude)||!valid(event.longitude))return null;
-  const lat=Number(event.latitude),lon=Number(event.longitude);if(lat< -90||lat>90||lon< -180||lon>180)return null;
+  const lat=Number(event.latitude),lon=Number(event.longitude);if(lat< -90||lat>90||lon< -180||lon>180||(lat===0&&lon===0)||['world','region'].includes(event.location_precision))return null;
   return {name:event.resolved_place||event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db',status:event.map_status};
  }
  const rawLat=event.latitude,rawLon=event.longitude,lat=Number(rawLat),lon=Number(rawLon);
- if(rawLat!==null&&rawLat!==undefined&&rawLat!==''&&rawLon!==null&&rawLon!==undefined&&rawLon!==''&&Number.isFinite(lat)&&Number.isFinite(lon))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
+ if(rawLat!==null&&rawLat!==undefined&&rawLat!==''&&rawLon!==null&&rawLon!==undefined&&rawLon!==''&&Number.isFinite(lat)&&Number.isFinite(lon)&&lat>=-90&&lat<=90&&lon>=-180&&lon<=180&&(lat!==0||lon!==0)&&!['world','region'].includes(event.location_precision))return {name:event.map_region||event.locality||event.place||event.country||'위치',lat,lon,precision:event.location_precision||'db'};
  const codes=countryCodes(event.country);
  for(const name of candidateNames(event)){
   const special=SPECIAL_POINTS.get(norm(name));if(special)return {...special,name:String(event.place||name).trim()||special.name};
@@ -93,10 +89,10 @@ export function resolvePoint(event){
   if(hit)return {name,lon:hit.x,lat:hit.y,precision:hit===adminHit?'admin1':'city'};
  }
  const pts=codes.map(c=>countryByCode.get(c)).filter(Boolean);
- if(pts.length){
+ if(pts.length===1){
   const lon=pts.reduce((s,p)=>s+p.labelPoint[0],0)/pts.length;
   const lat=-pts.reduce((s,p)=>s+p.labelPoint[1],0)/pts.length;
   return {name:cleanCandidate(event.country)||event.country||'국가',lon,lat,precision:'country'};
  }
- return regionFallback(event);
+ return null;
 }

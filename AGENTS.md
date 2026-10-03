@@ -8,3 +8,4 @@
 - Failed backup, invalid payload, active SQLite journals, file locks or reparse points must abort without overwriting the existing project. No need to install a permanent updater or service.
 - Include the master DB, preserved leader records/DB, source, built web files, manifests and restore instructions in the local package. Never publish private master/raw research archives as browser assets.
 - Verify full regression tests, desktop/mobile browser behavior, Windows installer tests, source packet/leader hashes and live public asset hashes. Do not present local testing as live verification.
+- Whenever series.db is created, modified, renumbered, or otherwise updated, immediately regenerate C:\\sametimeworld\\series_candidates_review.txt from the current DB using only `ID<TAB>텍스트` rows; never leave the review text stale.

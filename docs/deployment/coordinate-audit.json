@@ -1,0 +1,46 @@
+{
+  "events": 38920,
+  "existing_normal_reused": 7317,
+  "original_missing": 30962,
+  "processing_routes": {
+    "automatic": 966,
+    "context": 3845,
+    "reuse": 33738,
+    "unresolved": 14,
+    "ai": 357
+  },
+  "precision": {
+    "country": 15378,
+    "named_region": 649,
+    "city": 11463,
+    "admin1": 7215,
+    "unresolved": 14,
+    "historical_city": 4201
+  },
+  "available": 38906,
+  "unresolved": 14,
+  "coordinate_changes": 31589,
+  "schema_preserved": true,
+  "all_historical_fields_preserved": true,
+  "all_other_tables_preserved": true,
+  "event_ids_preserved": true,
+  "quick_check": "ok",
+  "master_sha256": "0c28d9d66a0ea27e69e77bfd6c94a0f207a5a93f1fadcdda3e4735f8e18fbace",
+  "series_sha256": "edb179325dfc644988c419d9d0455e5cc31413521525dd59178ea8b850b381c5",
+  "series_relations": {
+    "series_items": {
+      "unique_event_refs": 15412,
+      "refs_not_in_master": 0
+    },
+    "concept_events": {
+      "unique_event_refs": 38920,
+      "refs_not_in_master": 0
+    },
+    "candidate_events": {
+      "unique_event_refs": 3650,
+      "refs_not_in_master": 0
+    }
+  },
+  "leaders_sha256": "2a65c5918722ea6a83a5bd80167d77b85c687da4fdac9a1fc8341b204aa096e5",
+  "scope": "Full automated and contextual coordinate maintenance; representative points are labelled, not exact historical sites; actor countries may differ from modern occurrence territories."
+}

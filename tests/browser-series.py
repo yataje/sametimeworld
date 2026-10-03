@@ -1,5 +1,5 @@
 """Browser regression for real selection, history, key priority and persistence."""
-import functools,http.server,json,pathlib,threading,sys
+import functools,http.server,json,pathlib,threading,sys,os
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parents[1];out=root/'_local/series-checks';out.mkdir(parents=True,exist_ok=True)
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -8,6 +8,7 @@ server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,d
 report=[]
 with sync_playwright() as p:
  opts={'headless':True}
+ if os.environ.get('STW_BROWSER_EXECUTABLE'):opts['executable_path']=os.environ['STW_BROWSER_EXECUTABLE']
  if pathlib.Path('/usr/bin/chromium').exists():opts['executable_path']='/usr/bin/chromium';opts['args']=['--no-sandbox']
  browser=p.chromium.launch(**opts)
  for name,viewport in [('desktop',{'width':1440,'height':950}),('mobile',{'width':393,'height':852})]:

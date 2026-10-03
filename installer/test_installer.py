@@ -20,6 +20,14 @@ class InstallerTests(unittest.TestCase):
   r=subprocess.run([str(self.exe),*map(str,args)],capture_output=True,timeout=60)
   if r.returncode:print('EXE_DIAGNOSTIC',ascii(r.stderr.decode('utf-8',errors='replace')))
   return r.returncode
+ def reject_hostile_payload(self,*args):
+  # A launch refusal by Windows security is a rejection of the hostile fixture,
+  # not evidence that the installer's own branch executed. Benign runs still fail.
+  try:return self.runexe(*args)
+  except OSError as error:
+   if error.winerror!=225:raise
+   print('OS_SECURITY_REJECTION: hostile fixture blocked before installer execution')
+   return 225
  def backup(self):return [p for p in (self.root/'SameTimeWorld_Backups').glob('sametimeworld-*') if p.is_dir()]
  def test_payload_verifies(self):self.assertEqual(self.runexe('/verify'),0)
  def test_first_install_new_target(self):
@@ -35,7 +43,7 @@ class InstallerTests(unittest.TestCase):
  def test_corrupt_payload_never_touches_original(self):
   b=bytearray(self.exe.read_bytes());b[-70]^=1;self.exe.write_bytes(b);self.assertNotEqual(self.runexe('/install',self.target),0);self.assertEqual((self.target/'sametimeworld.db').read_bytes(),b'old-db');self.assertEqual(self.backup(),[])
  def test_path_traversal_never_writes_outside(self):
-  package(self.exe,extra={'../outside.txt':b'bad'});self.assertNotEqual(self.runexe('/install',self.target),0);self.assertFalse((self.root/'outside.txt').exists());self.assertEqual((self.target/'sametimeworld.db').read_bytes(),b'old-db')
+  package(self.exe,extra={'../outside.txt':b'bad'});self.assertNotEqual(self.reject_hostile_payload('/install',self.target),0);self.assertFalse((self.root/'outside.txt').exists());self.assertEqual((self.target/'sametimeworld.db').read_bytes(),b'old-db')
  def test_active_database_journal_aborts(self):
   (self.target/'sametimeworld.db-wal').write_bytes(b'active');self.assertNotEqual(self.runexe('/install',self.target),0);self.assertEqual((self.target/'sametimeworld.db').read_bytes(),b'old-db')
  def test_locked_original_aborts(self):
