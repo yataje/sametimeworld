@@ -26,8 +26,8 @@ test('decade spans remain decades without fabricating a single year or exact day
  const c=model(),e={date:'1850',timeline_date:'1850/1859',date_precision:'decade',eligible_for_normalized_day_index:false};
  assert.equal(c.eventDateSpan(e).to,Date.UTC(1860,0,1)-1);assert.equal(c.eventDayComparable(e),false);
 });
-test('explicitly withheld coordinates never fall back to geocoding, country or continent',async()=>{
- const p=await import('../src/point-resolver.js');for(const e of [{map_status:'unresolved',country:'프랑스',latitude:null,longitude:null},{map_status:'unresolved',country:'프랑스',latitude:48,longitude:2}])assert.equal(p.resolvePoint(e),null);
+test('reviewed policy-v2 withheld decisions are not reinterpreted by the viewer',async()=>{
+ const p=await import('../src/point-resolver.js');for(const e of [{map_status:'unresolved',country:'프랑스',latitude:null,longitude:null},{map_status:'unresolved',country:'프랑스',latitude:48,longitude:2}])assert.equal(p.resolvePoint({...e,location_policy_version:2}),null);
 });
 test('active inherited coordinates keep their status instead of becoming verified observations',async()=>{
  const p=await import('../src/point-resolver.js'),e={map_status:'inherited_context_checked_not_reverified',resolved_place:'빈',latitude:48.2082,longitude:16.3738,location_precision:'city'};

@@ -4,20 +4,21 @@
     "cities": 7342,
     "admin1": 4596,
     "supplemental": 17643,
-    "aliases": 70025
+    "aliases": 69957
   },
   "before": 7958,
-  "after": 36627,
-  "recovered": 28712,
-  "refined": 784,
-  "withheld": 2293,
+  "after": 36535,
+  "recovered": 28622,
+  "refined": 657,
+  "withheld": 2385,
   "precision": {
-    "country": 14242,
-    "city": 14614,
-    "admin1": 7545,
-    "admin4": 33,
-    "admin2": 171,
-    "admin3": 22
+    "country": 14991,
+    "city": 12548,
+    "admin1": 8610,
+    "admin4": 34,
+    "admin2": 314,
+    "admin3": 37,
+    "named_region": 1
   },
   "examples": [
     {
@@ -74,386 +75,22 @@
       "country": "조선",
       "place": "부산포",
       "locality": "부산포",
-      "latitude": 38.68772,
-      "longitude": 127.52281500000001,
-      "resolved_place": "한반도 대표점",
-      "precision": "country",
-      "method": "historical_country_representative"
+      "latitude": 35.096999,
+      "longitude": 129.008102,
+      "resolved_place": "부산광역시",
+      "precision": "city",
+      "method": "place_name_country_match"
     }
   ]
 }
 
-=== location ===
-not ok 1 - Busanpo resolves within Busan instead of rejecting an unresolved import
-  ---
-  duration_ms: 656.581135
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:5:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"한반도 대표점","lon":127.52281500000001,"lat":38.68772,"precision":"country","country_code":"KOR+PRK","status":"country_representative","method":"historical_country_representative","source":"Natural Earth modern Korean land bounds","note":"조선·대한제국의 세부 위치 미확정. 한반도 개략 대표점이며 역사적 국경의 중심을 계산한 것은 아닙니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    near (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:4:95)
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:5:90)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
-  ...
-# Subtest: explicit event-location sentence is used when place fields are empty
-not ok 2 - explicit event-location sentence is used when place fields are empty
-  ---
-  duration_ms: 0.756453
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"군대","lat":37.52944,"lon":128.94411,"precision":"city","country_code":"KOR","place_id":"geonames:1889405","status":"gazetteer_context_matched","method":"title_name_country_match","matched":"군대","source":"https://www.geonames.org/1889405/","evidence":"등록 지명과 국가·행정구역 문맥","note":"현대 지명 자료의 대표점이며 사건 현장의 정확한 좌표를 뜻하지 않습니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-not ok 2 - explicit event-location sentence is used when place fields are empty
-  ---
-  duration_ms: 0.756453
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"군대","lat":37.52944,"lon":128.94411,"precision":"city","country_code":"KOR","place_id":"geonames:1889405","status":"gazetteer_context_matched","method":"title_name_country_match","matched":"군대","source":"https://www.geonames.org/1889405/","evidence":"등록 지명과 국가·행정구역 문맥","note":"현대 지명 자료의 대표점이며 사건 현장의 정확한 좌표를 뜻하지 않습니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    near (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:4:95)
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:87)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: Vienna under Austria never becomes Vinh Vietnam
-ok 3 - Vienna under Austria never becomes Vinh Vietnam
-  ---
-  duration_ms: 0.461397
-  type: 'test'
-  ...
-# Subtest: California province is more specific than a US country representative
-not ok 4 - California province is more specific than a US country representative
-  ---
-  duration_ms: 0.657063
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:1'
-not ok 4 - California province is more specific than a US country representative
-  ---
-  duration_ms: 0.657063
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    Expected values to be strictly equal:
-    + actual - expected
-    
-    + 'country'
-    - 'admin1'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'admin1'
-  actual: 'country'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:173)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: historical Korea permits a North Korean administrative region
-ok 5 - historical Korea permits a North Korean administrative region
-  ---
-  duration_ms: 0.20502
-  type: 'test'
-  ...
-# Subtest: registered Japanese prefecture is an administrative point
-# tests 14
-# pass 11
-# fail 3
 === full ===
-not ok 42 - point resolver knows historical aliases and representative admin areas
-  ---
-  duration_ms: 1161.602037
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/event-map.test.cjs:17:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    The expression evaluated to a falsy value:
-    
-      assert.ok(Math.abs(seoul.lat-37.54)<.2)
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/event-map.test.cjs:19:86)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: unknown locations still get an honest country or region representative point
-not ok 43 - unknown locations still get an honest country or region representative point
-  ---
-  duration_ms: 1.287135
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/event-map.test.cjs:23:1'
-  failureType: 'testCodeFailure'
-  error: "Cannot read properties of null (reading 'precision')"
-  code: 'ERR_TEST_FAILURE'
-not ok 43 - unknown locations still get an honest country or region representative point
-  ---
-  duration_ms: 1.287135
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/event-map.test.cjs:23:1'
-  failureType: 'testCodeFailure'
-  error: "Cannot read properties of null (reading 'precision')"
-  code: 'ERR_TEST_FAILURE'
-  name: 'TypeError'
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/event-map.test.cjs:26:57)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: importance observer tolerates a detached text node during rapid view changes
-ok 44 - importance observer tolerates a detached text node during rapid view changes
-  ---
-  duration_ms: 1.819659
-  type: 'test'
-  ...
-# Subtest: publisher preserves leader payload and unions citations only for identical old events
-ok 45 - publisher preserves leader payload and unions citations only for identical old events
-  ---
-  duration_ms: 9.138366
-  type: 'test'
-  ...
-# Subtest: publisher refuses to drop prior events or replace leaders with an empty array
-ok 46 - publisher refuses to drop prior events or replace leaders with an empty array
-  ---
-  duration_ms: 0.686156
-not ok 52 - explicitly withheld coordinates never fall back to geocoding, country or continent
-  ---
-  duration_ms: 885.876941
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/integrated.test.cjs:29:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    Expected values to be strictly equal:
-    + actual - expected
-    
-    + {
-    +   country_code: 'FRA',
-    +   lat: 46.8951,
-    +   lon: 2.0992,
-    +   method: 'declared_country',
-    +   name: '프랑스',
-    +   note: '세부 위치를 확정하지 못해 국가 대표점으로 표시합니다. 사건의 실제 현장 좌표는 아닙니다.',
-    +   place_id: 'country:FRA',
-    +   precision: 'country',
-    +   source: 'Natural Earth country label point',
-    +   status: 'country_representative'
-    + }
-    - null
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: ~
-  actual:
-    name: '프랑스'
-    lon: 2.0992
-not ok 67 - Busanpo resolves within Busan instead of rejecting an unresolved import
-  ---
-  duration_ms: 1106.208038
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:5:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"한반도 대표점","lon":127.52281500000001,"lat":38.68772,"precision":"country","country_code":"KOR+PRK","status":"country_representative","method":"historical_country_representative","source":"Natural Earth modern Korean land bounds","note":"조선·대한제국의 세부 위치 미확정. 한반도 개략 대표점이며 역사적 국경의 중심을 계산한 것은 아닙니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    near (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:4:95)
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:5:90)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
-  ...
-# Subtest: explicit event-location sentence is used when place fields are empty
-not ok 68 - explicit event-location sentence is used when place fields are empty
-  ---
-  duration_ms: 0.96606
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"군대","lat":37.52944,"lon":128.94411,"precision":"city","country_code":"KOR","place_id":"geonames:1889405","status":"gazetteer_context_matched","method":"title_name_country_match","matched":"군대","source":"https://www.geonames.org/1889405/","evidence":"등록 지명과 국가·행정구역 문맥","note":"현대 지명 자료의 대표점이며 사건 현장의 정확한 좌표를 뜻하지 않습니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-not ok 68 - explicit event-location sentence is used when place fields are empty
-  ---
-  duration_ms: 0.96606
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:1'
-  failureType: 'testCodeFailure'
-  error: '{"name":"군대","lat":37.52944,"lon":128.94411,"precision":"city","country_code":"KOR","place_id":"geonames:1889405","status":"gazetteer_context_matched","method":"title_name_country_match","matched":"군대","source":"https://www.geonames.org/1889405/","evidence":"등록 지명과 국가·행정구역 문맥","note":"현대 지명 자료의 대표점이며 사건 현장의 정확한 좌표를 뜻하지 않습니다."}'
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    near (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:4:95)
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:6:87)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: Vienna under Austria never becomes Vinh Vietnam
-ok 69 - Vienna under Austria never becomes Vinh Vietnam
-  ---
-  duration_ms: 0.507927
-  type: 'test'
-  ...
-# Subtest: California province is more specific than a US country representative
-not ok 70 - California province is more specific than a US country representative
-  ---
-  duration_ms: 1.155496
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:1'
-not ok 70 - California province is more specific than a US country representative
-  ---
-  duration_ms: 1.155496
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    Expected values to be strictly equal:
-    + actual - expected
-    
-    + 'country'
-    - 'admin1'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'admin1'
-  actual: 'country'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/location-v2.test.cjs:8:173)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: historical Korea permits a North Korean administrative region
-ok 71 - historical Korea permits a North Korean administrative region
-  ---
-  duration_ms: 0.233713
-  type: 'test'
-  ...
-# Subtest: registered Japanese prefecture is an administrative point
-not ok 82 - historical aliases share modern representative coordinates
-  ---
-  duration_ms: 79.595471
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:23:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    The expression evaluated to a falsy value:
-    
-      assert.ok(Math.abs(a.lat-37.54)<.2&&Math.abs(a.lon-126.99)<.2)
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: true
-  actual: false
-  operator: '=='
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:25:40)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: admin area names resolve to one representative point rather than a filled polygon
-not ok 83 - admin area names resolve to one representative point rather than a filled polygon
-  ---
-  duration_ms: 7.524198
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:29:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    Expected values to be strictly equal:
-not ok 83 - admin area names resolve to one representative point rather than a filled polygon
-  ---
-  duration_ms: 7.524198
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:29:1'
-  failureType: 'testCodeFailure'
-  error: |-
-    Expected values to be strictly equal:
-    + actual - expected
-    
-    + 'country'
-    - 'admin1'
-    
-  code: 'ERR_ASSERTION'
-  name: 'AssertionError'
-  expected: 'admin1'
-  actual: 'country'
-  operator: 'strictEqual'
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:31:40)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: unknown places fall back to country or region points
-not ok 84 - unknown places fall back to country or region points
-  ---
-  duration_ms: 7.842818
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:33:1'
-  failureType: 'testCodeFailure'
-not ok 84 - unknown places fall back to country or region points
-  ---
-  duration_ms: 7.842818
-  type: 'test'
-  location: '/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:33:1'
-  failureType: 'testCodeFailure'
-  error: "Cannot read properties of null (reading 'precision')"
-  code: 'ERR_TEST_FAILURE'
-  name: 'TypeError'
-  stack: |-
-    TestContext.<anonymous> (/home/runner/work/sametimeworld/sametimeworld/tests/map-renderer.test.cjs:35:86)
-    async Test.run (node:internal/test_runner/test:1054:7)
-    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
-  ...
-# Subtest: reduced motion and resize keep the point map stable
-ok 85 - reduced motion and resize keep the point map stable
-  ---
-  duration_ms: 6.417866
-  type: 'test'
-  ...
-# Subtest: lack of Canvas never breaks text UI
-ok 86 - lack of Canvas never breaks text UI
-  ---
-  duration_ms: 1.351111
-  type: 'test'
-  ...
-# Subtest: authenticated encrypted packet round-trips through browser-native decoding
-ok 87 - authenticated encrypted packet round-trips through browser-native decoding
-  ---
-  duration_ms: 37.772291
 # tests 138
-# pass 129
-# fail 9
+# pass 138
+# fail 0
 === python ===
 ................
 ----------------------------------------------------------------------
-Ran 16 tests in 0.178s
+Ran 16 tests in 0.263s
 
 OK

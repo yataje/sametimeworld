@@ -9,30 +9,32 @@
     "cities": 7342,
     "admin1": 4596,
     "supplemental": 17643,
-    "aliases": 70025
+    "aliases": 69957
   },
   "before": 7958,
-  "after": 36627,
-  "recovered": 28712,
-  "refined": 784,
-  "withheld": 2293,
+  "after": 36535,
+  "recovered": 28622,
+  "refined": 657,
+  "withheld": 2385,
   "precision": {
-    "country": 14242,
-    "city": 14614,
-    "admin1": 7545,
-    "admin4": 33,
-    "admin2": 171,
-    "admin3": 22
+    "country": 14991,
+    "city": 12548,
+    "admin1": 8610,
+    "admin4": 34,
+    "admin2": 314,
+    "admin3": 37,
+    "named_region": 1
   },
   "method": {
-    "declared_country": 2950,
-    "title_name_country_match": 4228,
-    "exact_label_country_context": 1574,
-    "historical_country_representative": 4010,
-    "historical_core_representative": 7282,
-    "place_name_country_match": 13810,
-    "description_name_country_match": 347,
-    "country_field_name_country_match": 2426
+    "declared_country": 2938,
+    "title_name_country_match": 1862,
+    "place_name_country_match": 15093,
+    "historical_country_representative": 4878,
+    "historical_core_representative": 7175,
+    "exact_label_country_context": 1507,
+    "description_name_country_match": 534,
+    "country_field_name_country_match": 2547,
+    "preserved_named_region": 1
   },
   "examples": [
     {
@@ -89,45 +91,41 @@
       "country": "조선",
       "place": "부산포",
       "locality": "부산포",
-      "latitude": 38.68772,
-      "longitude": 127.52281500000001,
-      "resolved_place": "한반도 대표점",
-      "precision": "country",
-      "method": "historical_country_representative"
+      "latitude": 35.096999,
+      "longitude": 129.008102,
+      "resolved_place": "부산광역시",
+      "precision": "city",
+      "method": "place_name_country_match"
     }
   ],
   "unresolved_countries": [
     [
       "네덜란드 동인도회사",
-      30
+      37
     ],
     [
       "마다가스카르 지역 정체·유럽 해상 세력",
-      24
+      25
     ],
     [
       "마다가스카르의 여러 정체·네덜란드 VOC·프랑스 식민 거점",
-      23
-    ],
-    [
-      "후금",
-      22
+      24
     ],
     [
       "네덜란드 동인도회사·마다가스카르 지역사회·모리셔스",
-      21
+      22
     ],
     [
       "폴란드-리투아니아",
-      19
+      21
     ],
     [
       "한국(해방 이후)",
-      18
+      20
     ],
     [
       "오스만 제국 이집트",
-      18
+      19
     ],
     [
       "VOC",
@@ -135,18 +133,26 @@
     ],
     [
       "코스타리카 식민정부·원주민사회",
-      14
+      15
     ],
     [
       "null",
-      13
+      15
     ],
     [
       "에스파냐 군주국",
-      12
+      14
     ],
     [
       "합스부르크 군주국",
+      14
+    ],
+    [
+      "후금",
+      13
+    ],
+    [
+      "나폴리 왕국",
       12
     ],
     [
@@ -154,7 +160,11 @@
       12
     ],
     [
-      "VOC·명시된 지역 공동체",
+      "한국",
+      11
+    ],
+    [
+      "합스부르크령 네덜란드",
       11
     ],
     [
@@ -162,51 +172,51 @@
       10
     ],
     [
-      "플리머스·왐파노아그 주변 사회",
+      "오스만 제국·합스부르크 군주국",
       10
     ],
     [
-      "네덜란드 동인도회사·서호주 지역사회",
+      "네덜란드 연합주·에스파냐 군주국",
       10
-    ],
-    [
-      "영국계 아메리카 식민지",
-      10
-    ],
-    [
-      "합스부르크 에스파냐 군주국",
-      9
-    ],
-    [
-      "나폴리 왕국",
-      9
     ],
     [
       "메이플라워 정착민·왐파노아그",
-      9
+      10
     ],
     [
-      "플리머스",
-      9
+      "폴란드 리투아니아",
+      10
     ],
     [
-      "네덜란드VOC·모리셔스",
-      9
-    ],
-    [
-      "VOC 모리셔스 식민지",
-      9
+      "통킹·아유타야",
+      10
     ],
     [
       "서아프리카 여러 정체·네덜란드 서인도회사",
+      10
+    ],
+    [
+      "태평양 원주민 공동체·키로스 원정대",
       9
     ],
     [
-      "에스파냐 칠레 총독령 / 마푸체 공동체",
+      "VOC·명시된 지역 공동체",
+      9
+    ],
+    [
+      "네덜란드 동인도회사·서호주 지역사회",
+      9
+    ],
+    [
+      "차모로 사회·스페인 선교 식민세력",
+      9
+    ],
+    [
+      "합스부르크 네덜란드",
       8
     ],
     [
-      "합스부르크령 네덜란드",
+      "에스파냐 칠레 총독령 / 마푸체 공동체",
       8
     ],
     [
@@ -214,19 +224,27 @@
       8
     ],
     [
-      "플리머스 식민지",
+      "덴마크-노르웨이",
       8
     ],
     [
-      "폴란드 리투아니아",
+      "웬다트·예수회",
       8
     ],
     [
-      "폴란드-리투아니아·카자크",
+      "코스타리카 식민지·지역 원주민",
       8
     ],
     [
-      "통킹·아유타야",
+      "네덜란드VOC·모리셔스",
+      8
+    ],
+    [
+      "아이누 공동체·마쓰마에번",
+      8
+    ],
+    [
+      "VOC 모리셔스 식민지",
       8
     ],
     [
@@ -234,35 +252,27 @@
       7
     ],
     [
-      "한국",
+      "합스부르크 에스파냐 군주국",
       7
     ],
     [
-      "합스부르크 네덜란드",
+      "합스부르크 군주국·오스만 제국",
       7
     ],
     [
-      "에스파냐령 리오데라플라타",
+      "트란실바니아",
       7
     ],
     [
-      "덴마크-노르웨이",
+      "폴란드 리투아니아·자포리자 코사크",
       7
     ],
     [
-      "네덜란드 연합주·에스파냐 군주국",
+      "폴란드-리투아니아·카자크·크림 칸국",
       7
     ],
     [
-      "오스만 제국·합스부르크 군주국",
-      7
-    ],
-    [
-      "차모로 사회·스페인 선교 식민세력",
-      7
-    ],
-    [
-      "마타람·VOC",
+      "폴란드-리투아니아·카자크",
       7
     ],
     [
@@ -270,7 +280,15 @@
       7
     ],
     [
+      "영국 동인도회사령 벵골",
+      7
+    ],
+    [
       "스웨덴·덴마크",
+      6
+    ],
+    [
+      "에스파냐령 누에바그라나다",
       6
     ],
     [
@@ -279,22 +297,6 @@
     ],
     [
       "네덜란드 서인도회사",
-      6
-    ],
-    [
-      "폴란드-리투아니아·카자크·크림 칸국",
-      6
-    ],
-    [
-      "요카빌·투쿠만 식민정부",
-      6
-    ],
-    [
-      "아이누 공동체·마쓰마에번",
-      6
-    ],
-    [
-      "영국 동인도회사령 벵골",
       6
     ]
   ],
@@ -324,11 +326,47 @@
       "method": "country_or_location_unresolved"
     },
     {
+      "id": 45,
+      "title": "베네딕트 15세 출생(258대 교황)",
+      "country": "사르데냐 왕국",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
       "id": 72,
       "title": "태양대폭풍 발생",
       "country": "전세계(국가 비귀속)",
       "place": "",
       "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 251,
+      "title": "영국, 뉴기니 보호령 선포",
+      "country": "뉴기니",
+      "place": "뉴기니 남동부",
+      "locality": "뉴기니 남동부",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 385,
+      "title": "부산·나가사키 간 해저전신 개통",
+      "country": "부산·나가사키",
+      "place": "부산 · 나가사키현",
+      "locality": "부산 · 나가사키현",
       "latitude": null,
       "longitude": null,
       "resolved_place": null,
@@ -365,18 +403,6 @@
       "country": "전세계(국가 비귀속)",
       "place": "",
       "locality": "",
-      "latitude": null,
-      "longitude": null,
-      "resolved_place": null,
-      "precision": null,
-      "method": "country_or_location_unresolved"
-    },
-    {
-      "id": 496,
-      "title": "몽펠레 화산 폭발 3만명 사망",
-      "country": "마르티니크",
-      "place": "몽펠레 화산",
-      "locality": "몽펠레 화산",
       "latitude": null,
       "longitude": null,
       "resolved_place": null,
@@ -425,18 +451,6 @@
       "country": "쓰시마 해협",
       "place": "쓰시마 해협",
       "locality": "쓰시마 해협",
-      "latitude": null,
-      "longitude": null,
-      "resolved_place": null,
-      "precision": null,
-      "method": "country_or_location_unresolved"
-    },
-    {
-      "id": 689,
-      "title": "진주만 해군기지 확충 승인",
-      "country": "하와이",
-      "place": "하와이주",
-      "locality": "하와이주",
       "latitude": null,
       "longitude": null,
       "resolved_place": null,
@@ -504,6 +518,18 @@
       "method": "country_or_location_unresolved"
     },
     {
+      "id": 764,
+      "title": "타이타닉호 침몰",
+      "country": "북대서양",
+      "place": "북대서양",
+      "locality": "북대서양",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
       "id": 812,
       "title": "제2차 발칸전쟁 발발",
       "country": "발칸반도",
@@ -533,6 +559,18 @@
       "country": "독일·영국·프랑스",
       "place": "독일·영국·프랑스",
       "locality": "독일·영국·프랑스",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 916,
+      "title": "병원선 브리타닉, 에게해에서 침몰",
+      "country": "에게해",
+      "place": "에게해",
+      "locality": "에게해",
       "latitude": null,
       "longitude": null,
       "resolved_place": null,
@@ -617,42 +655,6 @@
       "country": "소비에트 러시아(인물: 미국)",
       "place": "",
       "locality": "",
-      "latitude": null,
-      "longitude": null,
-      "resolved_place": null,
-      "precision": null,
-      "method": "country_or_location_unresolved"
-    },
-    {
-      "id": 1130,
-      "title": "탄누투바 인민공화국 수립",
-      "country": "투바",
-      "place": "",
-      "locality": "",
-      "latitude": null,
-      "longitude": null,
-      "resolved_place": null,
-      "precision": null,
-      "method": "country_or_location_unresolved"
-    },
-    {
-      "id": 1221,
-      "title": "마산시~오사카 정기항로 개설",
-      "country": "마산·오사카",
-      "place": "경상남도 · 오사카부",
-      "locality": "경상남도 · 오사카부",
-      "latitude": null,
-      "longitude": null,
-      "resolved_place": null,
-      "precision": null,
-      "method": "country_or_location_unresolved"
-    },
-    {
-      "id": 1261,
-      "title": "태극기 휘날리며 이진태 출생",
-      "country": "한국(일제강점기·작품 설정)",
-      "place": "한국(일제강점기·작품 설정)",
-      "locality": "한국(일제강점기·작품 설정)",
       "latitude": null,
       "longitude": null,
       "resolved_place": null,

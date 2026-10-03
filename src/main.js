@@ -9,8 +9,8 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.0';
-const DB_VERSION_FALLBACK='v22';
+const PAGE_VERSION='v0.8.1';
+const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
   if(v==='아메리카/하와이'||v==='아메리카·하와이')return '아메리카';

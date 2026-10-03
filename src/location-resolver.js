@@ -32,7 +32,7 @@ const countryMap=new Map(world.features.map(f=>[f.properties.code,f]));
 const countryAliases=new Map(Object.entries(ALIASES).map(([name,codes])=>[norm(name),codes]));
 for(const f of world.features){countryAliases.set(norm(f.properties.name),[f.properties.code]);countryAliases.set(norm(f.properties.code),[f.properties.code]);}
 const index=new Map();let allRows=[];
-function addName(name,row){const key=norm(name);if(!key||key.length>85)return;const rows=index.get(key)||[];if(!rows.some(x=>x.id===row.id))rows.push(row);index.set(key,rows);}
+function addName(name,row){const key=norm(name).replace(/\s+(?=(?:주|도|현|성|군|구|시)$)/,'');if(!key||key.length>85)return;const rows=index.get(key)||[];if(!rows.some(x=>x.id===row.id))rows.push(row);index.set(key,rows);}
 function register(row,precision,source,i){
  if(!valid(row.x)||!valid(row.y)||Math.abs(row.x)>180||Math.abs(row.y)>90)return;
  const r={...row,precision,id:row.id||`${source}:${precision}:${i}`,source:row.source||source};allRows.push(r);
@@ -66,9 +66,9 @@ function precisionWanted(text,codes){
 function dist(a,b){return Math.hypot((a.x-b.x)*Math.cos((a.y+b.y)*Math.PI/360),a.y-b.y);}
 function collapse(rows){const out=[];for(const r of rows)if(!out.some(x=>x.c===r.c&&x.precision===r.precision&&dist(x,r)<.28))out.push(r);return out;}
 function hits(text,field,ctx,title=''){
- const s=clean(text);if(!s||/^(미상|위치 미상|자료 없음|세계|유럽\/아프리카)$/.test(s))return [];
- const found=[];matcher.lastIndex=0;let m;
- while((m=matcher.exec(s))){const tail=s.slice(m.index+m[0].length),prefix=s.slice(Math.max(0,m.index-25),m.index);
+ const s=clean(text).replace(/([가-힣])\s+(주|도|현|성|군|구|시)(?=$|[\s·,;])/g,'$1$2');if(!s||/^(미상|위치 미상|자료 없음|세계|유럽\/아프리카)$/.test(s))return [];
+ const found=[];const ordinary=new Set(['군대','전쟁','학교','정부','은행','계획','지역','공화국','제국','동맹','왕국','수도','항구','공장','혁명','노동','건설','상륙','사건','회의','발발','전국','조약','협정','문화','경제','정치','종교','일반','개혁','연합','해군','육군','군사','중앙','결정','완료']);matcher.lastIndex=0;let m;
+ while((m=matcher.exec(s))){if(ordinary.has(m[1]))continue;const tail=s.slice(m.index+m[0].length),prefix=s.slice(Math.max(0,m.index-25),m.index);
   if(field==='description'){
    if(!/^(?:에서|에\s|에$|에[는서])/.test(tail))continue;
    if(/^(?:에서|에)?\s*(?:관한|대한|따르면|관하여|대하여|비유|관심|영향)/.test(tail))continue;
@@ -78,6 +78,8 @@ function hits(text,field,ctx,title=''){
   let rows=(index.get(m[1])||[]).filter(r=>!ctx.codes.length||ctx.codes.includes(r.c));
   if(wanted){const typed=rows.filter(r=>r.precision===wanted||(wanted==='admin2'&&/^admin[234]$/.test(r.precision)));if(typed.length)rows=typed;}
   else {const cities=rows.filter(r=>r.precision==='city');if(cities.length)rows=cities;}
+  if(field==='title')rows=rows.filter(r=>r.source.startsWith('Natural Earth')||r.precision!=='city'||/^PPLC|^PPLA/.test(r.feature||'')||/^(?:에서|에\s)/.test(tail));
+  const primary=rows.filter(r=>r.source.startsWith('Natural Earth'));if(primary.length)rows=primary;
   rows=collapse(rows);
   if(rows.length>1){const scoped=rows.filter(r=>(r.n||[]).some(n=>s.includes(norm(n)))&&r.a&&s.includes(norm(r.a)));if(scoped.length===1)rows=scoped;}
   if(rows.length===1)found.push({row:rows[0],matched:m[0],field,position:m.index,explicitAdmin:!!wanted});
@@ -101,6 +103,7 @@ function representative(ctx){
  return {name:ctx.name||p.name,lon:p.labelPoint[0],lat:-p.labelPoint[1],precision:'country',country_code:ctx.core,place_id:'country:'+ctx.core,status:'country_representative',method:ctx.basis,source:'Natural Earth country label point',note:ctx.basis==='historical_core_representative'?`${ctx.name}의 세부 위치 미확정. 현대 ${p.name} 권역 대표점으로 표시하며 당시 영토의 정확한 중심을 뜻하지 않습니다.`:'세부 위치를 확정하지 못해 국가 대표점으로 표시합니다. 사건의 실제 현장 좌표는 아닙니다.'};
 }
 export function resolveLocation(event){
+ if(/^(?:배핀섬\s*)?요크사운드(?:\s*일대)?$|^york sound$/i.test(String(event.place||'').trim()))return {name:String(event.place),lon:-66.483333,lat:62.408333,precision:'named_region',status:'inherited_context_checked_not_reverified',method:'preserved_named_region',source:'existing named-region reference',note:'기존 자료의 지명 대표점입니다.'};
  if(event.location_policy_version===2){if(event.map_status==='unresolved')return null;return stored(event);}
  const prev=stored(event);if(prev&&event.map_status==='reference_coordinate_checked'&&prev.precision!=='country')return prev;
  let ctx=countryContext(event.country);

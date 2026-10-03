@@ -12,7 +12,6 @@ export function planLocations(data){
   if(before&&p&&(Math.abs(e.latitude-p.lat)>1e-6||Math.abs(e.longitude-p.lon)>1e-6))stats.refined++;
   rows.push({id:e.id,fields});return {...e,...fields};
  });
- if(hash(canonical(data.leaders))!==hash(canonical(data.leaders)))throw new Error('Leader preservation failure');
  for(let i=0;i<events.length;i++)if(JSON.stringify(identity(events[i]))!==JSON.stringify(identity(data.events[i])))throw new Error('Event content changed');
  return {events,leaders:data.leaders,rows,stats};
 }
