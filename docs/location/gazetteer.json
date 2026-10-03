@@ -1,0 +1,17 @@
+{
+  "source": "https://download.geonames.org/export/dump/allCountries.zip",
+  "license": "CC BY 4.0",
+  "attribution": "GeoNames https://www.geonames.org/",
+  "retrieved": "2026-10-03T06:59:53.327961+00:00",
+  "sha256": "20750fa22fe3f4074d2be7950bc5f3161c29b2b25b5ab1e6fff5795004375016",
+  "scanned": 13472240,
+  "retained": 17643,
+  "precision_counts": {
+    "city": 16666,
+    "admin4": 152,
+    "admin3": 281,
+    "admin1": 166,
+    "admin2": 378
+  },
+  "bytes": 3391455
+}

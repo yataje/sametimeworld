@@ -1,0 +1,663 @@
+{
+  "policy_version": 2,
+  "source_data_version": 22,
+  "events": 38920,
+  "leaders": 6338,
+  "leaders_sha256": "34af3ba87bb3c136184d15de8d567aa2c07a31e2277ff043400b79eb2f06cf16",
+  "identity_sha256": "46218a5ac81cea4304ab46ab16cc011592f6104bd564c402e437e20133e32b97",
+  "reference": {
+    "cities": 7342,
+    "admin1": 4596,
+    "supplemental": 17643,
+    "aliases": 70025
+  },
+  "before": 7958,
+  "after": 36627,
+  "recovered": 28712,
+  "refined": 784,
+  "withheld": 2293,
+  "precision": {
+    "country": 14242,
+    "city": 14614,
+    "admin1": 7545,
+    "admin4": 33,
+    "admin2": 171,
+    "admin3": 22
+  },
+  "method": {
+    "declared_country": 2950,
+    "title_name_country_match": 4228,
+    "exact_label_country_context": 1574,
+    "historical_country_representative": 4010,
+    "historical_core_representative": 7282,
+    "place_name_country_match": 13810,
+    "description_name_country_match": 347,
+    "country_field_name_country_match": 2426
+  },
+  "examples": [
+    {
+      "id": 1,
+      "title": "제1차 아편전쟁 발발",
+      "country": "중국",
+      "place": "중국 연안",
+      "locality": "중국 연안",
+      "latitude": 36.7987,
+      "longitude": 98.7696,
+      "resolved_place": "중국",
+      "precision": "country",
+      "method": "declared_country"
+    },
+    {
+      "id": 159,
+      "title": "빈 증권거래소 폭락",
+      "country": "오스트리아-헝가리",
+      "place": "오스트리아 빈",
+      "locality": "오스트리아 빈",
+      "latitude": 48.20849,
+      "longitude": 16.37208,
+      "resolved_place": "빈",
+      "precision": "city",
+      "method": "exact_label_country_context"
+    },
+    {
+      "id": 160,
+      "title": "빈에서 콜레라 유행",
+      "country": "오스트리아-헝가리",
+      "place": "빈",
+      "locality": "빈",
+      "latitude": 48.20849,
+      "longitude": 16.37208,
+      "resolved_place": "빈",
+      "precision": "city",
+      "method": "exact_label_country_context"
+    },
+    {
+      "id": 2193,
+      "title": "혜산사건 관련자 6명 사형 선고",
+      "country": "한국(일제강점기)",
+      "place": "함경남도",
+      "locality": "함경남도",
+      "latitude": 40.234,
+      "longitude": 127.922,
+      "resolved_place": "함경남도",
+      "precision": "admin1",
+      "method": "place_name_country_match"
+    },
+    {
+      "id": 8479,
+      "title": "일본군의 부산 상륙과 임진왜란 발발",
+      "country": "조선",
+      "place": "부산포",
+      "locality": "부산포",
+      "latitude": 38.68772,
+      "longitude": 127.52281500000001,
+      "resolved_place": "한반도 대표점",
+      "precision": "country",
+      "method": "historical_country_representative"
+    }
+  ],
+  "unresolved_countries": [
+    [
+      "네덜란드 동인도회사",
+      30
+    ],
+    [
+      "마다가스카르 지역 정체·유럽 해상 세력",
+      24
+    ],
+    [
+      "마다가스카르의 여러 정체·네덜란드 VOC·프랑스 식민 거점",
+      23
+    ],
+    [
+      "후금",
+      22
+    ],
+    [
+      "네덜란드 동인도회사·마다가스카르 지역사회·모리셔스",
+      21
+    ],
+    [
+      "폴란드-리투아니아",
+      19
+    ],
+    [
+      "한국(해방 이후)",
+      18
+    ],
+    [
+      "오스만 제국 이집트",
+      18
+    ],
+    [
+      "VOC",
+      16
+    ],
+    [
+      "코스타리카 식민정부·원주민사회",
+      14
+    ],
+    [
+      "null",
+      13
+    ],
+    [
+      "에스파냐 군주국",
+      12
+    ],
+    [
+      "합스부르크 군주국",
+      12
+    ],
+    [
+      "마다가스카르 지역 정체·VOC·프랑스 세력",
+      12
+    ],
+    [
+      "VOC·명시된 지역 공동체",
+      11
+    ],
+    [
+      "싱가포르",
+      10
+    ],
+    [
+      "플리머스·왐파노아그 주변 사회",
+      10
+    ],
+    [
+      "네덜란드 동인도회사·서호주 지역사회",
+      10
+    ],
+    [
+      "영국계 아메리카 식민지",
+      10
+    ],
+    [
+      "합스부르크 에스파냐 군주국",
+      9
+    ],
+    [
+      "나폴리 왕국",
+      9
+    ],
+    [
+      "메이플라워 정착민·왐파노아그",
+      9
+    ],
+    [
+      "플리머스",
+      9
+    ],
+    [
+      "네덜란드VOC·모리셔스",
+      9
+    ],
+    [
+      "VOC 모리셔스 식민지",
+      9
+    ],
+    [
+      "서아프리카 여러 정체·네덜란드 서인도회사",
+      9
+    ],
+    [
+      "에스파냐 칠레 총독령 / 마푸체 공동체",
+      8
+    ],
+    [
+      "합스부르크령 네덜란드",
+      8
+    ],
+    [
+      "덴마크-노르웨이 왕국",
+      8
+    ],
+    [
+      "플리머스 식민지",
+      8
+    ],
+    [
+      "폴란드 리투아니아",
+      8
+    ],
+    [
+      "폴란드-리투아니아·카자크",
+      8
+    ],
+    [
+      "통킹·아유타야",
+      8
+    ],
+    [
+      "영국·프랑스",
+      7
+    ],
+    [
+      "한국",
+      7
+    ],
+    [
+      "합스부르크 네덜란드",
+      7
+    ],
+    [
+      "에스파냐령 리오데라플라타",
+      7
+    ],
+    [
+      "덴마크-노르웨이",
+      7
+    ],
+    [
+      "네덜란드 연합주·에스파냐 군주국",
+      7
+    ],
+    [
+      "오스만 제국·합스부르크 군주국",
+      7
+    ],
+    [
+      "차모로 사회·스페인 선교 식민세력",
+      7
+    ],
+    [
+      "마타람·VOC",
+      7
+    ],
+    [
+      "프랑스령 생도맹그",
+      7
+    ],
+    [
+      "스웨덴·덴마크",
+      6
+    ],
+    [
+      "과라니·예수회",
+      6
+    ],
+    [
+      "네덜란드 서인도회사",
+      6
+    ],
+    [
+      "폴란드-리투아니아·카자크·크림 칸국",
+      6
+    ],
+    [
+      "요카빌·투쿠만 식민정부",
+      6
+    ],
+    [
+      "아이누 공동체·마쓰마에번",
+      6
+    ],
+    [
+      "영국 동인도회사령 벵골",
+      6
+    ]
+  ],
+  "unresolved_samples": [
+    {
+      "id": 2,
+      "title": "1850년대 유럽 열강의 동북아시아 진출",
+      "country": "동북아시아",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 39,
+      "title": "크림전쟁 시노프 해전",
+      "country": "흑해",
+      "place": "시노프 인근 해역",
+      "locality": "시노프 인근 해역",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 72,
+      "title": "태양대폭풍 발생",
+      "country": "전세계(국가 비귀속)",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 415,
+      "title": "윤보선 윤심덕 이상범 주기철 출생",
+      "country": "한국(조선·대한제국 전환기)",
+      "place": "한국(조선·대한제국 전환기)",
+      "locality": "한국(조선·대한제국 전환기)",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 417,
+      "title": "장승업 사망",
+      "country": "한국(조선·대한제국 전환기)",
+      "place": "한국(조선·대한제국 전환기)",
+      "locality": "한국(조선·대한제국 전환기)",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 478,
+      "title": "20세기의 첫날",
+      "country": "전세계(국가 비귀속)",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 496,
+      "title": "몽펠레 화산 폭발 3만명 사망",
+      "country": "마르티니크",
+      "place": "몽펠레 화산",
+      "locality": "몽펠레 화산",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 504,
+      "title": "애니메이션 나디아: 가고일 사망 이후",
+      "country": "미상",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 508,
+      "title": "폴 고갱 사망",
+      "country": "프랑스령 마르키즈 제도",
+      "place": "히바오아섬 아투오나",
+      "locality": "히바오아섬 아투오나",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 533,
+      "title": "황해 해전",
+      "country": "황해",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 566,
+      "title": "쓰시마 해전에서 러시아 패배",
+      "country": "쓰시마 해협",
+      "place": "쓰시마 해협",
+      "locality": "쓰시마 해협",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 689,
+      "title": "진주만 해군기지 확충 승인",
+      "country": "하와이",
+      "place": "하와이주",
+      "locality": "하와이주",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 704,
+      "title": "지구의 핼리혜성 꼬리 통과",
+      "country": "전세계(국가 비귀속)",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 747,
+      "title": "압록강 철교 개통",
+      "country": "압록강",
+      "place": "신의주~중국 단둥",
+      "locality": "신의주~중국 단둥",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 748,
+      "title": "아문센 탐험대, 남극점 도달",
+      "country": "남극",
+      "place": "남극점",
+      "locality": "남극점",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 757,
+      "title": "로버트 스콧 사망",
+      "country": "남극",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 762,
+      "title": "부산 장춘 직통열차 운행",
+      "country": "부산·장춘",
+      "place": "부산 · 지린성",
+      "locality": "부산 · 지린성",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 812,
+      "title": "제2차 발칸전쟁 발발",
+      "country": "발칸반도",
+      "place": "발칸반도",
+      "locality": "발칸반도",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 849,
+      "title": "일본의 요구로 러시아가 한인회 추방하고 권업회 해산시킴",
+      "country": "러시아 극동",
+      "place": "연해주",
+      "locality": "연해주",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 857,
+      "title": "크리스마스 정전",
+      "country": "독일·영국·프랑스",
+      "place": "독일·영국·프랑스",
+      "locality": "독일·영국·프랑스",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 932,
+      "title": "영화 1917의 배경",
+      "country": "영국·프랑스·독일(작품 설정)",
+      "place": "영국·프랑스·독일(작품 설정)",
+      "locality": "영국·프랑스·독일(작품 설정)",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 949,
+      "title": "카포레토 전투",
+      "country": "이손초 전선",
+      "place": "카포레토·이손초 전선",
+      "locality": "카포레토·이손초 전선",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 962,
+      "title": "브레스트-리토프스크 조약 조인",
+      "country": "브레스트",
+      "place": "브레스트리토프스크",
+      "locality": "브레스트리토프스크",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 963,
+      "title": "루덴도르프 공세 시작",
+      "country": "독일·영국·프랑스",
+      "place": "프랑스 피카르디",
+      "locality": "프랑스 피카르디",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 997,
+      "title": "영화 원더우먼의 배경",
+      "country": "영국·벨기에·독일(작품 설정)",
+      "place": "영국·벨기에·독일(작품 설정)",
+      "locality": "영국·벨기에·독일(작품 설정)",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 1008,
+      "title": "스페인독감 세계적 유행",
+      "country": "세계",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 1079,
+      "title": "아이작 아시모프 출생",
+      "country": "소비에트 러시아(인물: 미국)",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 1130,
+      "title": "탄누투바 인민공화국 수립",
+      "country": "투바",
+      "place": "",
+      "locality": "",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 1221,
+      "title": "마산시~오사카 정기항로 개설",
+      "country": "마산·오사카",
+      "place": "경상남도 · 오사카부",
+      "locality": "경상남도 · 오사카부",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    },
+    {
+      "id": 1261,
+      "title": "태극기 휘날리며 이진태 출생",
+      "country": "한국(일제강점기·작품 설정)",
+      "place": "한국(일제강점기·작품 설정)",
+      "locality": "한국(일제강점기·작품 설정)",
+      "latitude": null,
+      "longitude": null,
+      "resolved_place": null,
+      "precision": null,
+      "method": "country_or_location_unresolved"
+    }
+  ]
+}

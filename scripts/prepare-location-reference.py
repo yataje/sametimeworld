@@ -46,7 +46,7 @@ def main():
    names=list(dict.fromkeys([x[1],x[2]]+x[3].split(',')));matches=[n for n in names if norm(n) in wanted]
    if not matches:continue
    names=list(dict.fromkeys(matches+[x[1]]+[n for n in names if re.search('[가-힣]',n)]))
-   precision=x[7].lower() if x[7].startswith('ADM') else 'city'
+   precision='admin'+x[7][-1] if x[7].startswith('ADM') else 'city'
    records.append({'id':'geonames:'+x[0],'n':names,'c':mapping.get(x[8],x[8]),'x':float(x[5]),'y':float(x[4]),'precision':precision,'a':x[10],'a2':x[11],'feature':x[7],'source':'https://www.geonames.org/'+x[0]+'/'})
  records.sort(key=lambda r:r['id'])
  meta={'source':BASE+'allCountries.zip','license':'CC BY 4.0','attribution':'GeoNames https://www.geonames.org/','retrieved':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sha256':hashlib.sha256(zpath.read_bytes()).hexdigest(),'scanned':scanned,'records':records}

@@ -54,7 +54,7 @@ def migrate(c,p):
     if h not in places:
      old=c.execute('SELECT place_id FROM location_places_v2 WHERE fingerprint=?',(h,)).fetchone()
      if old:places[h]=old[0]
-     else:c.execute('INSERT INTO location_places_v2 VALUES(?,?,?,?,?,?,?,?,?,?,?)',[nextid,h]+values);places[h]=nextid;nextid+=1
+     else:c.execute('INSERT INTO location_places_v2 VALUES(?,?,?,?,?,?,?,?,?,?)',[nextid,h]+values);places[h]=nextid;nextid+=1
     pid=places[h]
    c.execute('INSERT OR REPLACE INTO event_location_v2 VALUES(?,?,?,?,?,?)',(r['id'],pid,f.get('map_status','unresolved'),f.get('coordinate_status'),f.get('location_resolution_method'),f.get('location_evidence')))
   first='event_details_pre_location_v2' not in existing_views
