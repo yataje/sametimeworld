@@ -25,3 +25,21 @@ test('the five colors retain the original palette and override contextual text c
 test('the temporary global text scanner is removed',()=>{
  assert.doesNotMatch(read('index.html'),/importance-color-test|MutationObserver|createTreeWalker/);
 });
+test('series cards preserve all five colors and category separators after replacement',()=>{
+ // A small DOM boundary keeps the real renderCards function under test.
+ class Element{
+  constructor(){this.children=[];this.dataset={};this.scrollTop=0;this.text='';}
+  set textContent(v){this.text=String(v??'');this.children=[];}get textContent(){return this.text+this.children.map(x=>x.textContent).join('');}
+  append(...items){this.children.push(...items);}replaceChildren(...items){this.text='';this.children=items;}setAttribute(){}addEventListener(){}
+ }
+ const document={createElement:()=>new Element(),createTextNode:v=>({textContent:v}),getElementById:()=>new Element()};
+ const cards=new Element(),map=new Map(Array.from({length:5},(_,i)=>[i+1,{id:i+1,date:'1900',title:'사건',category:i?'정치':'',importance:i+1}]));
+ const ctx={document,cards,map,listOpen:true,selected:{title:'시리즈',events:[1,2,3,4,5]},current:3,offset:0,PAGE:60};vm.createContext(ctx);
+ const s=read('src/detail-series.js');
+ vm.runInContext(s.slice(s.indexOf('const make='),s.indexOf('/** Detail')),ctx);
+ vm.runInContext(s.slice(s.indexOf(' function renderCards('),s.indexOf(' function showList(')),ctx);
+ for(let pass=0;pass<2;pass++){
+  ctx.renderCards();assert.equal(cards.children.length,5);
+  cards.children.forEach((card,i)=>{const meta=card.children.at(-1),star=meta.children.at(-1);assert.equal(meta.textContent,`${i?'정치 · ':''}★ ${i+1}`);assert.equal(star.className,`importance-color-${i+1}`);});
+ }
+});
