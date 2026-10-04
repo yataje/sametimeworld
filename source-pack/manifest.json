@@ -5,9 +5,9 @@
     "size": 26451
   },
   "src/style.css": {
-    "file": "source-pack/47da5de4c0045fc337e4c969.txt",
-    "sha256": "47da5de4c0045fc337e4c969dc0136a8494b81ba023f987ba6836acfc6f05b96",
-    "size": 42013
+    "file": "source-pack/6c0b0e243195b6366f7a777d.txt",
+    "sha256": "6c0b0e243195b6366f7a777d5d0bae3bc4babc6df34b67e2fe2dc99bf52a00cb",
+    "size": 41924
   },
   "tests/browser-smoke.py": {
     "file": "source-pack/afa24eb35346db512817e847.txt",

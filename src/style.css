@@ -422,3 +422,10 @@ body{position:relative;font:14px/1.45 system-ui,'Malgun Gothic',sans-serif;color
 #detailSeriesStatus{font-size:14px;font-weight:700;color:#ffe6a8;white-space:normal;overflow:visible}
 .series-current-button{font:inherit;font-size:12px;border:1px solid #a77890;background:#713d59;color:#fff2f8;border-radius:6px;padding:7px 10px;cursor:pointer;white-space:nowrap}
 .series-event-panel-head>div:first-child{flex:1}.series-current-button:focus-visible{outline:2px solid #e3a0c0}
+
+/* Importance colors are assigned by event renderers, without DOM scanning. */
+.importance-color-1 { color: #747D8C !important; }
+.importance-color-2 { color: #B8C2D1 !important; }
+.importance-color-3 { color: #4FC3F7 !important; }
+.importance-color-4 { color: #FFB020 !important; }
+.importance-color-5 { color: #FF4D4F !important; }
