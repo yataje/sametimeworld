@@ -53,7 +53,9 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
   const oldScroll=cards.scrollTop;cards.replaceChildren();
   for(const id of ids.slice(offset,offset+PAGE)){
    const e=map.get(id),b=button('',()=>go(id),'series-event-card');b.dataset.eventId=String(id);b.title=`${e.date_label||e.date||'날짜 미상'} · ${e.title}`;b.setAttribute('aria-current',id===current?'true':'false');
-   b.append(make('small',e.date_label||e.date||'날짜 미상','series-card-date'),make('strong',e.title,'series-card-title'),make('span',e.locality||e.place||e.country||'지역 미상','series-card-place'),make('span',[e.category,e.importance?`★ ${e.importance}`:''].filter(Boolean).join(' · '),'series-card-meta'));cards.append(b);
+   const meta=make('span',e.category||'','series-card-meta');
+   if(e.importance){if(e.category)meta.append(document.createTextNode(' · '));meta.append(make('span',`★ ${e.importance}`,Number.isInteger(e.importance)&&e.importance>=1&&e.importance<=5?`importance-color-${e.importance}`:''));}
+   b.append(make('small',e.date_label||e.date||'날짜 미상','series-card-date'),make('strong',e.title,'series-card-title'),make('span',e.locality||e.place||e.country||'지역 미상','series-card-place'),meta);cards.append(b);
   }
   if(ids.length>PAGE){const pager=make('nav',undefined,'series-card-pages');pager.setAttribute('aria-label','사건카드 목록 페이지');const prev=button('이전 묶음',()=>{offset=Math.max(0,offset-PAGE);renderCards();cards.scrollTop=0;}),next=button('다음 묶음',()=>{offset+=PAGE;renderCards();cards.scrollTop=0;});prev.disabled=offset===0;next.disabled=offset+PAGE>=ids.length;pager.append(prev,next);cards.append(pager);}
   cards.scrollTop=oldScroll;

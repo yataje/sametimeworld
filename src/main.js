@@ -389,7 +389,7 @@ function selectTimelineCards(sorted,limit,focusedId,searchId=null){
 function timelineCardHTML(x,z,{summary=false}={}){
  const fuzzy=!summary&&(x.eligible_for_normalized_day_index===false||/범위|추정/.test(x.precision)||(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일'));
  const labelDate=x.date_label||x.date;
- return `<div role="button" tabindex="0" class="event ${x.id===searchArrivalId?'search-arrival':''} ${seriesState.active&&seriesState.ids.has(x.id)?'series-match':''} ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}">${x.id===searchArrivalId?'<span class="search-arrival-label">검색한 사건</span>':''}<span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
+ return `<div role="button" tabindex="0" class="event ${x.id===searchArrivalId?'search-arrival':''} ${seriesState.active&&seriesState.ids.has(x.id)?'series-match':''} ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}">${x.id===searchArrivalId?'<span class="search-arrival-label">검색한 사건</span>':''}<span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance ${Number.isInteger(x.importance)&&x.importance>=1&&x.importance<=5?`importance-color-${x.importance}`:''}" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
 }
 function timelineRegionCards(events,z,level,{summary=false}={}){
  const groups=REGIONS.map(r=>events.filter(x=>x.region===r));
@@ -762,7 +762,7 @@ function searchEvents(raw,pool=DATA){
 function searchSuggestionHTML(x){
  const d=eventDetails(x);
  const sub=[x.country,d.subject].filter(Boolean).join(' · ');
- return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}${eventPrecision(x)==='day'&&!eventDayComparable(x)?'<small>원자료 날짜 · 검증 상태 확인 중</small>':''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
+ return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}${eventPrecision(x)==='day'&&!eventDayComparable(x)?'<small>원자료 날짜 · 검증 상태 확인 중</small>':''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · <span class="${Number.isInteger(x.importance)&&x.importance>=1&&x.importance<=5?`importance-color-${x.importance}`:''}">★ ${escapeHTML(x.importance??'—')}</span></span></button>`;
 }
 function hideSearchSuggestions(){searchScheduler.cancel();searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
