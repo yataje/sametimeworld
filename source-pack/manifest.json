@@ -5,9 +5,9 @@
     "size": 26451
   },
   "src/style.css": {
-    "file": "source-pack/34ec6b30b3ddb6f92fcd7f0c.txt",
-    "sha256": "34ec6b30b3ddb6f92fcd7f0c1d28189e02cc68ae6c607a93e37b573bec567409",
-    "size": 50060
+    "file": "source-pack/14e82120b4f57e9c8d9d4c7a.txt",
+    "sha256": "14e82120b4f57e9c8d9d4c7a05bdf1ccfcf91e31261c6d18677daaac595c05e5",
+    "size": 40608
   },
   "tests/browser-smoke.py": {
     "file": "source-pack/afa24eb35346db512817e847.txt",
@@ -15,9 +15,9 @@
     "size": 7725
   },
   "tests/date-precision.test.cjs": {
-    "file": "source-pack/a362cd05ef35e1b7bd4e7383.txt",
-    "sha256": "a362cd05ef35e1b7bd4e738313794212532c84bec79f6b3a533c13b4847c543c",
-    "size": 9420
+    "file": "source-pack/c57fffc263a17b35931efbca.txt",
+    "sha256": "c57fffc263a17b35931efbca2a71a1b80dc9616b23bb48bd3f70e37b2daef835",
+    "size": 9608
   },
   "tests/leaders.test.cjs": {
     "file": "source-pack/900267ddd10aa6f87319b1c8.txt",

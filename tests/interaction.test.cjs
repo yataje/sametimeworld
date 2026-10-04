@@ -13,8 +13,8 @@ test('zoom animation remains 800ms but does not lock later interaction',()=>{
 });
 
 test('search navigation interrupts zoom instead of waiting for its timeout',()=>{
-  const start=main.indexOf('function navigateToEvent(id)');
-  const end=main.indexOf("$('#searchOpen').onclick",start);
+  const start=main.indexOf('function navigateToEvent(id,');
+  const end=main.indexOf('function navigateToDateQuery(',start);
   const block=main.slice(start,end);
   assert.ok(block.includes('if(zoomTransition)stopZoomTransition();'));
   assert.ok(!block.includes('setTimeout'));

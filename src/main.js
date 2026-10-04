@@ -9,7 +9,7 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.5';
+const PAGE_VERSION='v0.8.6';
 const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
@@ -54,49 +54,6 @@ const eventMap=createEventMap({canvas:document.getElementById('eventMapCanvas'),
  label:document.getElementById('eventMapLabel'),onFailure:error=>console.warn('Background map unavailable:',error)});
 // Local, opt-in inspection only. No data writes or user tracking.
 if(new URLSearchParams(location.search).get('mapDebug')==='1')window.__stwMap=eventMap;
-
-// v3.16 — 모바일에서는 4열을 억지로 축소하지 않고, 같은 날짜를 유지한 채 지역을 탭으로 전환한다.
-const MOBILE_REGION_OPTIONS=[
-  {key:'europe',label:'유럽·아프리카'},
-  {key:'middle',label:'중동'},
-  {key:'east',label:'동아시아'},
-  {key:'americas',label:'아메리카'}
-];
-const MOBILE_REGION_STORAGE_KEY='stw-mobile-region-v1';
-let mobileRegionKey='east';
-try{
-  const savedMobileRegion=localStorage.getItem(MOBILE_REGION_STORAGE_KEY);
-  if(MOBILE_REGION_OPTIONS.some(x=>x.key===savedMobileRegion))mobileRegionKey=savedMobileRegion;
-}catch{}
-function applyMobileRegion(key,save=true){
-  if(!MOBILE_REGION_OPTIONS.some(x=>x.key===key))key='east';
-  mobileRegionKey=key;
-  for(const item of MOBILE_REGION_OPTIONS)document.body.classList.toggle(`mobile-region-${item.key}`,item.key===key);
-  document.querySelectorAll('.mobile-region-btn').forEach(btn=>{
-    const active=btn.dataset.mobileRegion===key;
-    btn.classList.toggle('active',active);
-    btn.setAttribute('aria-pressed',active?'true':'false');
-  });
-  if(save){try{localStorage.setItem(MOBILE_REGION_STORAGE_KEY,key);}catch{}}
-  if(typeof syncTimelineHeaderWidth==='function')requestAnimationFrame(syncTimelineHeaderWidth);
-  if(typeof requestRender==='function')requestRender();
-}
-function initMobileRegionNav(){
-  const head=document.querySelector('.headgrid');
-  if(!head||document.querySelector('.mobile-region-nav'))return;
-  const nav=document.createElement('div');
-  nav.className='mobile-region-nav';
-  nav.setAttribute('role','tablist');
-  nav.setAttribute('aria-label','모바일 지역 선택');
-  nav.innerHTML=MOBILE_REGION_OPTIONS.map(item=>`<button type="button" class="mobile-region-btn" data-mobile-region="${item.key}" role="tab">${item.label}</button>`).join('');
-  head.parentNode.insertBefore(nav,head);
-  nav.addEventListener('click',e=>{
-    const btn=e.target.closest('[data-mobile-region]');
-    if(!btn)return;
-    applyMobileRegion(btn.dataset.mobileRegion,true);
-  });
-  applyMobileRegion(mobileRegionKey,false);
-}
 
 const DISPLAY_SETTINGS_KEY='stw-display-settings-v1';
 const DISPLAY_DEFAULTS=Object.freeze({mapTransparency:58,eventFont:100,cardTransparency:50,detailTransparency:40});
@@ -301,6 +258,7 @@ function displayTimelinePlace(x){
 }
 
 let bins=[], maps=[], specialRows=[], specialRowsBefore=[], zoom=2, animation=0, dragging=false, dragMoved=false, lastY=0, recent=[], suppressClickUntil=0, wheelAccum=0;
+let searchArrivalId=null,searchArrivalQuery='';
 let zoomFocusEventId=null; // 사건 위에서 확대할 때 해당 사건을 다음 단계에서도 유지
 let zoomTransition=false, queuedZoom=null, activeZoomFx=null; const ZOOM_DURATION=800;
 let byId=new Map();
@@ -421,22 +379,24 @@ function indexForPosition(pos,z){
 function timeAt(pos,z){pos-=timelinePadding(z);const arr=bins[z],i=indexForPosition(pos+timelinePadding(z),z),b=arr[i];return b.t+(Math.max(0,Math.min(b.height,pos-b.top))/b.height)*(b.end-b.t);}
 function label(b,z){let [y,m,d]=ymd(b.t),kind=LEVELS[z].kind;if(kind==='decade')return `${y}–${y+9}`;if(kind==='five')return `${y}–${y+4}`;if(kind==='year')return String(y);if(kind==='month')return `${y}.${pad(m)}`;if(kind==='fortnight'||kind==='week'){let [ey,em,ed]=ymd(Math.max(b.t,b.end-DAY));return ey===y&&em===m?`${y}.${pad(m)}.${pad(d)}–${pad(ed)}`:`${y}.${pad(m)}.${pad(d)}–${ey}.${pad(em)}.${pad(ed)}`;}return `${y}.${pad(m)}.${pad(d)}`;}
 function dateCellLabel(b,z){const [y,m,d]=ymd(b.t),kind=LEVELS[z].kind;if(kind==='decade'){return `<span class="date-year">${y}</span><span class="date-rest">–${y+9}</span>`;}if(kind==='five'){return `<span class="date-year">${y}</span><span class="date-rest">–${y+4}</span>`;}if(kind==='year')return String(y);if(kind==='month')return `<span class="date-year">${y}</span><span class="date-rest">${pad(m)}</span>`;if(kind==='fortnight'||kind==='week'){const [ey,em,ed]=ymd(Math.max(b.t,b.end-DAY));const rest=(ey===y&&em===m)?`${pad(m)}.${pad(d)}–${pad(ed)}`:`${pad(m)}.${pad(d)}–${pad(em)}.${pad(ed)}`;return `<span class="date-year">${y}</span><span class="date-rest">${rest}</span>`;}return `<span class="date-year">${y}</span><span class="date-rest">${pad(m)}.${pad(d)}</span>`;}
-function selectTimelineCards(sorted,limit,focusedId){
+function selectTimelineCards(sorted,limit,focusedId,searchId=null){
  const shown=sorted.slice(0,limit),focused=sorted.find(x=>x.id===focusedId);
  if(focused&&!shown.some(x=>x.id===focused.id)){shown[Math.max(0,limit-1)]=focused;const rank=new Map(sorted.map((x,i)=>[x.id,i]));shown.sort((a,b)=>(rank.get(a.id)??Infinity)-(rank.get(b.id)??Infinity));}
+ const searched=sorted.find(x=>x.id===searchId);
+ if(searched&&!shown.some(x=>x.id===searched.id)){let slot=shown.length-1;while(slot>0&&shown[slot]?.id===focusedId)slot--;shown[slot]=searched;const rank=new Map(sorted.map((x,i)=>[x.id,i]));shown.sort((a,b)=>rank.get(a.id)-rank.get(b.id));}
  return shown;
 }
 function timelineCardHTML(x,z,{summary=false}={}){
  const fuzzy=!summary&&(x.eligible_for_normalized_day_index===false||/범위|추정/.test(x.precision)||(z===3&&x.precision==='연도')||(z>=4&&x.precision!=='일'));
  const labelDate=x.date_label||x.date;
- return `<div role="button" tabindex="0" class="event ${seriesState.active&&seriesState.ids.has(x.id)?'series-match':''} ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}"><span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
+ return `<div role="button" tabindex="0" class="event ${x.id===searchArrivalId?'search-arrival':''} ${seriesState.active&&seriesState.ids.has(x.id)?'series-match':''} ${fuzzy?'uncertain':''}" data-id="${x.id}" title="${escapeHTML(labelDate+' · '+x.title+(summary?' · 날짜 미정 주요사건':fuzzy?' · 원출처·범위 날짜, 일별 동시성 미확정':''))}">${x.id===searchArrivalId?'<span class="search-arrival-label">검색한 사건</span>':''}<span class="event-text"><strong>${escapeHTML(displayTimelinePlace(x))}</strong>${fuzzy?'≈ ':''}${escapeHTML(x.title)}</span><span class="event-category">${escapeHTML(x.category||'미분류')}</span><span class="event-importance" aria-label="중요도 ${x.importance??'미상'}">★ ${escapeHTML(x.importance??'—')}</span></div>`;
 }
 function timelineRegionCards(events,z,level,{summary=false}={}){
  const groups=REGIONS.map(r=>events.filter(x=>x.region===r));
  return groups.map(g=>{
   const sorted=g.slice().sort((a,b)=>seriesState.active?(Number(seriesState.ids.has(b.id))-Number(seriesState.ids.has(a.id))||String(a.timeline_date||a.date||'').localeCompare(String(b.timeline_date||b.date||''))||a.id-b.id):((b.importance||0)-(a.importance||0)||String(a.date||'').localeCompare(String(b.date||''))||a.id-b.id));
   const limit=summary||level.kind==='day'?Infinity:level.limit;
-  const shown=Number.isFinite(limit)?selectTimelineCards(sorted,limit,zoomFocusEventId):sorted;
+  const shown=Number.isFinite(limit)?selectTimelineCards(sorted,limit,zoomFocusEventId,searchArrivalId):sorted;
   const cards=shown.map(x=>timelineCardHTML(x,z,{summary})).join('');
   return cards+(Number.isFinite(limit)&&g.length>limit?`<div class="more">외 ${g.length-limit}건 · 확대하여 보기</div>`:'')||'<div class="blank">·</div>';
  });
@@ -459,6 +419,7 @@ function render(){if(activeAppTab==='web')return;let z=zoom,level=LEVELS[z],heig
  const activeCard=document.activeElement?.closest?.('.event[data-id]');
  const activeCardId=activeCard&&rows.contains(activeCard)?activeCard.dataset.id:null;
  rows.innerHTML=content;
+ rows.querySelector?.('.event.search-arrival')?.closest('.timeline-row')?.classList.add('search-arrival-row');
  if(activeCardId)rows.querySelector(`.event[data-id="${Number(activeCardId)}"]`)?.focus({preventScroll:true});
  let center=timeAt(top+height/2,z),[y,m,d]=ymd(center),kind=LEVELS[z].kind;$('#loc').textContent=(kind==='decade'||kind==='five'||kind==='year')?`${y}년`:kind==='month'?`${y}.${pad(m)}`:`${y}.${pad(m)}.${pad(d)}`;
  $('#status').textContent=`${seriesState.active&&!seriesState.context?seriesState.ids.size.toLocaleString('ko-KR')+' / ':''}${DATA.length.toLocaleString('ko-KR')}건 · ${level.name} 단위${level.kind==='day'?' · 해당 날짜 카드 전체 표시':''}`;
@@ -728,7 +689,7 @@ function eventDisplayTime(x,z){
  return dt.t;
 }
 function eventMatchesDate(x,q,querySpan=eventDateSpan({date:q.normalized})){
- if(q.precision==='day')return eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized;
+ if(q.precision==='day')return (eventDayComparable(x)&&(x.normalized_gregorian_date||x.date)===q.normalized)||(eventPrecision(x)==='day'&&x.date===q.normalized);
  const span=searchDateSpan(x);if(!span||!querySpan)return false;
  if(q.precision==='month'&&['year','year_range','circa','decade'].includes(eventPrecision(x)))return false;
  return span.from<=querySpan.to&&span.to>=querySpan.from;
@@ -786,7 +747,7 @@ function searchEvents(raw,pool=DATA){
   const querySpan=eventDateSpan({date:dq.normalized});
   all=pool.filter(x=>eventMatchesDate(x,dq,querySpan))
     .slice()
-    .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
+    .sort((a,b)=>(dq.precision==='day'?Number(eventDayComparable(b))-Number(eventDayComparable(a)):0)||String(a.date||'').localeCompare(String(b.date||''))||(b.importance||0)-(a.importance||0)||a.id-b.id);
  }else{
   const query=normalizedSearchText(q).replace(/^(?:제?2차\s*(?:세계)?대전|wwii|ww2)$/,'제2차 세계대전').replace(/^(?:제?1차\s*(?:세계)?대전|wwi|ww1)$/,'제1차 세계대전');
   all=pool.map(x=>({x,score:searchScore(x,query)}))
@@ -799,7 +760,7 @@ function searchEvents(raw,pool=DATA){
 function searchSuggestionHTML(x){
  const d=eventDetails(x);
  const sub=[x.country,d.subject].filter(Boolean).join(' · ');
- return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
+ return `<button type="button" class="search-suggestion" role="option" data-id="${x.id}" title="${escapeHTML(d.description||x.title)}"><span class="ss-date">${escapeHTML(x.date_label||x.date)}</span><span class="ss-main"><strong>${escapeHTML(x.title)}</strong>${sub?`<small>${escapeHTML(sub)}</small>`:''}${eventPrecision(x)==='day'&&!eventDayComparable(x)?'<small>원자료 날짜 · 검증 상태 확인 중</small>':''}</span><span class="ss-meta">${escapeHTML(x.category||'미분류')} · ★ ${escapeHTML(x.importance??'—')}</span></button>`;
 }
 function hideSearchSuggestions(){searchScheduler.cancel();searchResults.hidden=true;searchResults.replaceChildren();}
 function renderSearch(){
@@ -808,7 +769,7 @@ function renderSearch(){
  const result=searchEvents(q,seriesFilteredEvents());
  if(!result.shown.length){
   const jump=dateNavigationTarget(q);
-  searchResults.innerHTML=jump?`<button type="button" class="search-suggestion search-date-jump" data-date="${escapeHTML(jump.date)}"><span class="ss-date">${escapeHTML(jump.date)}</span><span class="ss-main"><strong>해당 날짜로 이동</strong><small>수록 사건 없음 · 지도자 자료 확인</small></span></button>`:'<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
+  searchResults.innerHTML=jump?`<button type="button" class="search-suggestion search-date-jump" data-date="${escapeHTML(jump.date)}"><span class="ss-date">${escapeHTML(jump.date)}</span><span class="ss-main"><strong>해당 날짜로 이동</strong><small>이 날짜의 검색 결과 없음 · 시간축으로 이동</small></span></button>`:'<div class="search-suggestion-empty">일치하는 사건이 없습니다.</div>';
   searchResults.hidden=false;
   return;
  }
@@ -823,19 +784,20 @@ function createSearchScheduler(callback,{delay=120,setTimer=setTimeout,clearTime
 }
 const searchScheduler=createSearchScheduler(renderSearch);
 function zoomForEvent(x){const p=eventPrecision(x);return eventDayComparable(x)?LEVELS.findIndex(v=>v.kind==='day'):['day','month','month_range','day_range'].includes(p)?LEVELS.findIndex(v=>v.kind==='month'):LEVELS.findIndex(v=>v.kind==='year');}
-function navigateToEvent(id){
+function navigateToEvent(id,{fromSearch=false}={}){
+ if(fromSearch){searchArrivalId=Number(id);searchArrivalQuery=searchInput.value.trim();}
  seriesUI?.setCurrent(Number(id));
  const x=byId.get(Number(id));if(!x)return;const dt=parseDate(x);if(!dt||!REGIONS.includes(x.region)){hideSearchSuggestions();openWebForEvent(x.id);return;}
- const regionKey={'유럽/아프리카':'europe','중동':'middle','동아시아/오세아니아':'east','아메리카':'americas'}[x.region];
- if(regionKey)applyMobileRegion(regionKey);
  hideSearchSuggestions();
  if(zoomTransition)stopZoomTransition();
  cancelAnimationFrame(animation);queuedZoom=null;wheelAccum=0;
  zoomFocusEventId=x.id;const target=Math.max(0,zoomForEvent(x));zoom=target;space.style.height=totalHeight(zoom)+'px';
  $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;
  const rowCenter=topAt(dt.t,zoom)+LEVELS[zoom].h/2;viewport.scrollTop=Math.max(0,rowCenter-viewport.clientHeight/2);render();
+ requestAnimationFrame(()=>{const card=rows.querySelector(`.event[data-id="${Number(id)}"]`);if(!card)return;const a=card.getBoundingClientRect(),v=viewport.getBoundingClientRect();viewport.scrollTop+=(a.top+a.bottom-v.top-v.bottom)/2;render();});
 }
 function navigateToDateQuery(raw){
+ searchArrivalId=null;
  const target=dateNavigationTarget(raw);if(!target)return;hideSearchSuggestions();if(zoomTransition)stopZoomTransition();
  cancelAnimationFrame(animation);queuedZoom=null;wheelAccum=0;zoomFocusEventId=null;zoom=target.zoom;space.style.height=totalHeight(zoom)+'px';
  $('#level').textContent=LEVELS[zoom].name;$('#out').disabled=zoom===0;$('#in').disabled=zoom===LEVELS.length-1;viewport.scrollTop=Math.max(0,topAt(target.t,zoom)+LEVELS[zoom].h/2-viewport.clientHeight/2);render();
@@ -843,9 +805,9 @@ function navigateToDateQuery(raw){
 function goToBestSearchResult(){
  searchScheduler.cancel();
  const first=searchEvents(searchInput.value,seriesFilteredEvents()).shown[0];
- if(first)navigateToEvent(first.id);else navigateToDateQuery(searchInput.value);
+ if(first)navigateToEvent(first.id,{fromSearch:true});else navigateToDateQuery(searchInput.value);
 }
-searchInput.addEventListener('input',()=>{if(!searchInput.value.trim())hideSearchSuggestions();else searchScheduler.schedule();});
+searchInput.addEventListener('input',()=>{if(searchArrivalId!==null&&searchInput.value.trim()!==searchArrivalQuery){searchArrivalId=null;render();}if(!searchInput.value.trim())hideSearchSuggestions();else searchScheduler.schedule();});
 searchInput.addEventListener('focus',()=>searchScheduler.schedule());
 searchInput.addEventListener('compositionstart',()=>searchScheduler.compositionStart());
 searchInput.addEventListener('compositionupdate',()=>searchScheduler.schedule());
@@ -859,7 +821,7 @@ searchGo.addEventListener('click',goToBestSearchResult);
 searchResults.addEventListener('click',e=>{
  const dateJump=e.target.closest('.search-date-jump');if(dateJump){navigateToDateQuery(dateJump.dataset.date);return;}
  const result=e.target.closest('.search-suggestion');
- if(result)navigateToEvent(result.dataset.id);
+ if(result)navigateToEvent(result.dataset.id,{fromSearch:true});
 });
 document.addEventListener('pointerdown',e=>{if(!headerSearch.contains(e.target))hideSearchSuggestions();});
 
@@ -894,7 +856,7 @@ async function bootSameTimeWorld(){
   rebuildEventIndexes();
   loadLeaderHeaders(()=>timeAt(viewport.scrollTop+viewport.clientHeight/2,zoom),fetchDataset);
   updateVersionLabels(meta||{});
-  initMobileRegionNav();
+
   initUnclassifiedEvents();
   window.addEventListener('resize',requestRender);
   space.style.height=totalHeight(zoom)+'px';

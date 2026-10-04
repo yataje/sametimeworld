@@ -60,7 +60,7 @@ test('Enter and magnifier use the best autocomplete result',()=>{
 test('clicking an autocomplete item navigates to that event',()=>{
  assert.match(source,/searchResults\.addEventListener\('click'/);
  assert.match(source,/closest\('\.search-suggestion'\)/);
- assert.match(source,/navigateToEvent\(result\.dataset\.id\)/);
+ assert.match(source,/navigateToEvent\(result\.dataset\.id,\{fromSearch:true\}\)/);
 });
 
 test('repeated keyword input reuses parsed and normalized event records',()=>{
@@ -86,3 +86,11 @@ test('search suggestions update during Korean composition without losing focus',
 });
 
 test('date queries reuse event spans and compute the query interval once',()=>{const ctx=context();let spans=0;const span=ctx.eventDateSpan;ctx.eventDateSpan=x=>{spans++;return span(x);};ctx.searchEvents('1942');spans=0;ctx.searchEvents('1943');assert.equal(spans,1,'Repeated date query recalculated all record or query intervals');});
+
+ test('searched card stays in capped timeline rows alongside a different zoom anchor',()=>{
+ const ctx={};vm.createContext(ctx);
+ vm.runInContext(source.slice(source.indexOf('function selectTimelineCards('),source.indexOf('function timelineCardHTML(')),ctx);
+ const events=[1,2,3,4,5].map(id=>({id}));
+ assert.deepEqual(Array.from(ctx.selectTimelineCards(events,3,4,5),x=>x.id),[1,4,5]);
+ assert.ok(ctx.selectTimelineCards(events,3,null,5).some(x=>x.id===5));
+ });

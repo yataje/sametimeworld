@@ -14,7 +14,8 @@ test('partial dates stay visible at fine zoom without becoming exact-day compari
 });
 test('date search separates original date labels from normalized same-day matches',()=>{
  const data=[{id:1,date:'1550-05-10',eligible_for_normalized_day_index:false},{id:2,date:'1550-05-10',eligible_for_normalized_day_index:true,normalized_gregorian_date:'1550-05-10'},{id:3,date:'1550',date_precision:'year'}];const m=context(data);
- assert.deepEqual(Array.from(m.searchEvents('1550-05-10').all,x=>x.id),[2]);
+ assert.deepEqual(Array.from(m.searchEvents('1550-05-10').all,x=>x.id),[2,1]);
+ assert.equal(m.eventDayComparable(data[0]),false,'Finding a source date must not certify it');
  assert.deepEqual(Array.from(m.searchEvents('1550').all,x=>x.id).sort(),[1,2,3]);
 });
 test('source ranges remain visible across their possible years without fabricated days',()=>{
