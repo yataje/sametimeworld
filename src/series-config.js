@@ -1,1 +1,0 @@
-export default {"file":"s/83a83523e065c8c19c547a38.txt","sha256":"83a83523e065c8c19c547a38b99be44627890f619a6700c2e962058496bceace","version":2,"series_count":131,"concept_count":21980,"war_tag_count":145,"war_tag_links":1073,"entity_series_count":121};

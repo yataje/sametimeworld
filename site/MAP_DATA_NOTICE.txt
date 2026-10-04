@@ -1,0 +1,16 @@
+Map data: Natural Earth, public domain.
+https://www.naturalearthdata.com/about/terms-of-use/
+
+This prototype uses a low-resolution Natural Earth geometry snapshot distributed
+with the installed pyogrio test fixtures (naturalearth_lowres). Only map geometry
+and minimal naming fields are included. Population and GDP fields are omitted.
+Geometry is rounded to 5 decimal places for packaging; this does not increase
+source accuracy. The snapshot is not a statement of current or historical borders.
+
+The country/region matching and camera logic are a local UI experiment, not a
+complete geocoding service or a verified historical geography dataset.
+
+Subregions (v0.4.7): 16 US states and District of Columbia, modern overview boundaries.
+Source: https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_1_states_provinces.geojson
+Source blob: 9a5deadd82ba6f260985a426fb9276c19c3244bd; vertices rounded to 0.001 degrees. Natural Earth public domain.
+Unregistered or ambiguous subregions fall back to country/continent. This is not a reconstruction of historical borders.

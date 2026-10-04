@@ -1,67 +1,46 @@
-name: Deploy SameTimeWorld to GitHub Pages
-
+name: Deploy verified protected release
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
-
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - name: Verify protected release hashes and reject private material
+        run: |
+          python3 - <<'PY'
+          import pathlib,json,hashlib,re
+          root=pathlib.Path('site');m=json.loads((root/'release.json').read_text())
+          assert m['build_method']=='bundled-obfuscated-v1'
+          paths={f['path'] for f in m['files']}|{'release.json'}
+          assert paths=={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
+          assert len([n for n in paths if n.endswith('.js')])==1
+          allowed=r'(?:index\.html|release\.json|\.nojekyll|MAP_DATA_NOTICE\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|[ts]/[a-f0-9]{24}\.txt)'
+          for n in paths:
+              assert re.fullmatch(allowed,n),n
+              p=root/n;assert not p.is_symlink();b=p.read_bytes()
+              assert not b.startswith(b'SQLite format 3')
+              if n.endswith(('.html','.js','.css')):assert not re.search(rb'sourceMappingURL|sourcesContent|github_pat_|ghp_[A-Za-z0-9]{20}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY',b),n
+          for f in m['files']:
+              b=(root/f['path']).read_bytes();assert len(b)==f['size'] and hashlib.sha256(b).hexdigest()==f['sha256'],f['path']
+          print('Protected public files verified:',len(paths))
+          PY
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          node-version: 22
-          cache: npm
-
-      # The production builder and tests use only Node.js built-ins.
-      # Vite remains available for local development, but is not required in CI.
-
-      - name: Test search, leaders and audio
-        run: npm test
-
-      - name: Repack public data for lean viewer
-        run: npm run repack:lean
-
-      - name: Build portable web release
-        run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-
+          path: site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Verify deployed release and public assets
-        run: python3 scripts/verify-live.py --url "${{ steps.deployment.outputs.page_url }}" --expected-release dist/release.json --output live-verification.json
-
-      - name: Save public release verification
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: public-release-verification
-          path: live-verification.json
-          if-no-files-found: ignore
-          retention-days: 7
