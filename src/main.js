@@ -1,4 +1,3 @@
-import './melo-settings.js';
 import './style.css';
 import {fetchDataset} from './packets.js';
 import {createSeriesUI} from './series.js';
@@ -10,7 +9,7 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.2';
+const PAGE_VERSION='v0.8.4';
 const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
