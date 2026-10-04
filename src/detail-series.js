@@ -1,5 +1,5 @@
 import {indexEventChoices,detailActions,narrationParts} from './detail-series-core.js';
-import {createAutoReader} from './auto-reader.js';
+import {createMeloReader} from './melo-client.js';
 const make=(tag,value,cls)=>{const e=document.createElement(tag);if(value!==undefined)e.textContent=value;if(cls)e.className=cls;return e;};
 const button=(label,fn,cls)=>{const b=make('button',label,cls);b.type='button';b.addEventListener('click',fn);return b;};
 /** Detail selection never navigates. Only a subsequent action/card click executes. */
@@ -7,8 +7,9 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
  const host=document.getElementById('seriesDetailNav'),choices=document.getElementById('detailSeriesChoices'),actions=document.getElementById('detailSeriesActions'),status=document.getElementById('detailSeriesStatus'),panel=document.getElementById('seriesEventPanel'),cards=document.getElementById('seriesEventCards');
  let current=null,selected=null,index=null,indexKey='',map=null,visible=false,request=0,listOpen=false,offset=0;
  const PAGE=60,buttons=new Map();
+ window.addEventListener('tts-stop',()=>reader.stop());
  const setStatus=msg=>{status.textContent=msg;status.title=msg;};
- const reader=createAutoReader({synth:window.speechSynthesis,Utterance:window.SpeechSynthesisUtterance,
+ const reader=createMeloReader({
   readout:id=>{const e=map.get(id);return narrationParts(e,getReadout(e));},
   next:id=>{if(!visible||!selected)return null;return detailActions(selected.events,id,true).next;},
   onNavigate:id=>go(id,true),onState:s=>{updateActions();if(s.message)setStatus(s.message);}});
@@ -23,7 +24,7 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
   const state=detailActions(selected?.events||[],current,!!selected);
   for(const [key,b] of buttons)b.disabled=!state.enabled||(['previous','next'].includes(key)&&state[key]===null);
   const speech=buttons.get('tts');speech.textContent=reader.playing?'정지':'자동 TTS';speech.setAttribute('aria-pressed',String(reader.playing));
-  if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){speech.disabled=true;speech.title='이 브라우저는 음성 읽기를 지원하지 않습니다.';}
+
   buttons.get('list').setAttribute('aria-expanded',String(listOpen));
  }
  function summary(){const s=detailActions(selected?.events||[],current,!!selected);return s.enabled?`${selected.title} · ${s.index+1} / ${selected.events.length.toLocaleString()}건`:'관련 항목을 선택한 후 아래 동작을 누르세요.';}
@@ -57,7 +58,7 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
  function go(id,fromTts=false){if(id==null||!selected?.events.includes(id))return;if(!fromTts)reader.stop();onDetail(id,{fromTts});}
  function execute(key){
   const s=detailActions(selected?.events||[],current,!!selected);if(!s.enabled)return;
-  if(key==='tts'){if(reader.playing){reader.stop();setStatus(summary());}else reader.start(current);return;}
+  if(key==='tts'){window.dispatchEvent(new Event('tts-preview-stop'));if(reader.playing){reader.stop();setStatus(summary());}else reader.start(current);return;}
   if(key==='list'){showList();return;}
   go(s[key]);
  }
@@ -74,7 +75,7 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
   }catch(error){if(ticket!==request||!visible)return;selected=null;hideList();choices.replaceChildren(make('span','관련 항목을 불러오지 못했습니다.','detail-series-empty'),button('다시 읽기',()=>setEvent(current),'detail-series-choice'));updateActions();setStatus(String(error.message||error));}
  }
  document.getElementById('seriesEventClose').addEventListener('click',()=>{hideList();buttons.get('list').focus();});
- document.addEventListener('visibilitychange',()=>{if(document.hidden&&reader.playing)reader.stop('다른 화면으로 이동하여 자동 TTS를 정지했습니다.');});
+
  window.addEventListener('pagehide',()=>reader.stop());
  host.hidden=false;
  return {setEvent,stopSpeech(){reader.stop();},leave(){visible=false;request++;reader.stop();hideList();},clear(){reader.stop();selected=null;hideList();if(index)renderChoices();},get selection(){return selected;}};
