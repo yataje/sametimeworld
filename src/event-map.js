@@ -23,8 +23,8 @@ export function createEventMap({canvas,note,motion,label,onFailure=()=>{}}={}){
   function pointCamera(p){
    if(!p)return worldCamera();
    const span=p.precision==='city'||p.precision==='historical_city'||p.precision==='db'?7:p.precision==='admin1'?18:p.precision==='named_region'?24:p.precision==='country'?44:90;
-   const b=[p.lon-span,-p.lat-span*.62,p.lon+span,-p.lat+span*.62],mobile=state.width<=720,c=C.fitCamera(b,state.width*(mobile?.96:.68),state.height*.75,{padding:18});
-   const canonicalLon=p.lon<C.WORLD_BOUNDS[0]?p.lon+360:p.lon;const cx=state.width*(mobile?.50:.72),cy=state.height*(mobile?.46:.52);c.x=canonicalLon-(cx-state.width/2)/c.scale;c.y=-p.lat-(cy-state.height/2)/c.scale;return c;
+   const b=[p.lon-span,-p.lat-span*.62,p.lon+span,-p.lat+span*.62],c=C.fitCamera(b,state.width*.68,state.height*.75,{padding:18});
+   const canonicalLon=p.lon<C.WORLD_BOUNDS[0]?p.lon+360:p.lon;const cx=state.width*.72,cy=state.height*.52;c.x=canonicalLon-(cx-state.width/2)/c.scale;c.y=-p.lat-(cy-state.height/2)/c.scale;return c;
   }
   function draw(){
    if(disposed||!state.camera)return;
