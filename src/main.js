@@ -9,7 +9,7 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.6';
+const PAGE_VERSION='v0.8.7';
 const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
@@ -645,7 +645,9 @@ window.addEventListener('popstate',e=>{
 if(!history.state?.stwTab)history.replaceState(TIMELINE_HISTORY_STATE,'',location.pathname+location.search);
 const headerSearch=$('#headerSearch'), searchInput=$('#searchInput'), searchGo=$('#searchGo'), searchResults=$('#searchResults');
 function parseSearchDateQuery(raw){
- const cleaned=String(raw??'').trim().replace(/[년월일.\/-]/g,' ').replace(/\s+/g,' ').trim();
+ const input=String(raw??'').trim();
+ const expanded=/^\d{8}$/.test(input)?`${input.slice(0,4)}-${input.slice(4,6)}-${input.slice(6,8)}`:input;
+ const cleaned=expanded.replace(/[년월일.\/-]/g,' ').replace(/\s+/g,' ').trim();
  if(!cleaned)return null;
  const p=cleaned.split(' '); if(p.length<1||p.length>3||!p.every(x=>/^\d+$/.test(x)))return null;
  const y=Number(p[0]); if(y<1000||y>9999)return null;

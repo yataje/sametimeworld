@@ -94,3 +94,12 @@ test('date queries reuse event spans and compute the query interval once',()=>{c
  assert.deepEqual(Array.from(ctx.selectTimelineCards(events,3,4,5),x=>x.id),[1,4,5]);
  assert.ok(ctx.selectTimelineCards(events,3,null,5).some(x=>x.id===5));
  });
+
+ test('compact eight-digit dates match separated dates and reject invalid days',()=>{
+ const ctx=context([{id:1032,date:'1919-03-01',title:'3·1운동',eligible_for_normalized_day_index:false}]);
+ assert.equal(ctx.parseSearchDateQuery('19190301')?.normalized,'1919-03-01');
+ assert.deepEqual(Array.from(ctx.searchEvents('19190301').all,x=>x.id),[1032]);
+ assert.equal(ctx.parseSearchDateQuery('20000229')?.normalized,'2000-02-29');
+ for(const value of ['19190229','19191301','19190431','19190001','19190300','1919030','191903011'])assert.equal(ctx.parseSearchDateQuery(value),null,value);
+ assert.equal(ctx.parseSearchDateQuery('1919')?.precision,'year');
+ });
