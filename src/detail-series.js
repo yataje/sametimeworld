@@ -1,4 +1,5 @@
 import {indexEventChoices,detailActions,narrationParts} from './detail-series-core.js';
+import {enableListDrag} from './list-drag.js';
 import {createAutoReader} from './auto-reader.js';
 const make=(tag,value,cls)=>{const e=document.createElement(tag);if(value!==undefined)e.textContent=value;if(cls)e.className=cls;return e;};
 const button=(label,fn,cls)=>{const b=make('button',label,cls);b.type='button';b.addEventListener('click',fn);return b;};
@@ -6,7 +7,10 @@ const button=(label,fn,cls)=>{const b=make('button',label,cls);b.type='button';b
 export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,onDetail,getReadout}){
  const host=document.getElementById('seriesDetailNav'),choices=document.getElementById('detailSeriesChoices'),actions=document.getElementById('detailSeriesActions'),status=document.getElementById('detailSeriesStatus'),panel=document.getElementById('seriesEventPanel'),cards=document.getElementById('seriesEventCards');
  let current=null,selected=null,index=null,indexKey='',map=null,visible=false,request=0,listOpen=false,offset=0;
- const PAGE=60,buttons=new Map();
+ const PAGE=60,buttons=new Map(),listPositions=new Map();
+ enableListDrag(cards);
+ const currentButton=button('현재 사건으로',()=>renderCards({focusCurrent:true}),'series-current-button');
+ document.getElementById('seriesEventClose').before(currentButton);
  const setStatus=msg=>{status.textContent=msg;status.title=msg;};
  const reader=createAutoReader({synth:window.speechSynthesis,Utterance:window.SpeechSynthesisUtterance,
   readout:id=>{const e=map.get(id);return narrationParts(e,getReadout(e));},
@@ -18,17 +22,19 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
   if(key==='previous')b.setAttribute('aria-label','이전 사건');if(key==='next')b.setAttribute('aria-label','다음 사건');
   buttons.set(key,b);actions.append(b);
  }
- function hideList(){listOpen=false;panel.hidden=true;document.getElementById('webPanel').classList.remove('series-list-open');buttons.get('list').setAttribute('aria-expanded','false');}
+ function rememberList(){if(listOpen&&selected)listPositions.set(selected.id,{offset,scrollTop:cards.scrollTop});}
+ function hideList(){rememberList();listOpen=false;panel.hidden=true;document.getElementById('webPanel').classList.remove('series-list-open');buttons.get('list').setAttribute('aria-expanded','false');}
  function updateActions(){
   const state=detailActions(selected?.events||[],current,!!selected);
   for(const [key,b] of buttons)b.disabled=!state.enabled||(['previous','next'].includes(key)&&state[key]===null);
+  for(const key of ['previous','next']){const e=map?.get(state[key]);buttons.get(key).title=e?`${e.date_label||e.date} · ${e.title}`:(key==='previous'?'첫 사건입니다.':'마지막 사건입니다.');}
   const speech=buttons.get('tts');speech.textContent=reader.playing?'정지':'자동 TTS';speech.setAttribute('aria-pressed',String(reader.playing));
   if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){speech.disabled=true;speech.title='이 브라우저는 음성 읽기를 지원하지 않습니다.';}
   buttons.get('list').setAttribute('aria-expanded',String(listOpen));
  }
  function summary(){const s=detailActions(selected?.events||[],current,!!selected);return s.enabled?`${selected.title} · ${s.index+1} / ${selected.events.length.toLocaleString()}건`:'관련 항목을 선택한 후 아래 동작을 누르세요.';}
  function choose(choice){
-  reader.stop();selected=choice;hideList();renderChoices();updateActions();setStatus(summary());
+  reader.stop();hideList();selected=choice;renderChoices();updateActions();setStatus(summary());
   [...choices.querySelectorAll('button')].find(b=>b.dataset.choiceId===choice.id)?.focus({preventScroll:true});
  }
  function renderChoices(){
@@ -41,19 +47,19 @@ export function createDetailSeriesUI({loadCatalogue,getEvents,getCustomSeries,on
  }
  function renderCards({focusCurrent=false}={}){
   if(!listOpen||!selected)return;
-  const ids=selected.events,n=ids.indexOf(current);if(focusCurrent&&n>=0&&(n<offset||n>=offset+PAGE))offset=Math.floor(n/PAGE)*PAGE;
+  const ids=selected.events,n=ids.indexOf(current);if(focusCurrent&&n>=0&&(n<=offset||n>=offset+PAGE))offset=Math.max(0,n-1);
   document.getElementById('seriesEventTitle').textContent=selected.title;
   document.getElementById('seriesEventCount').textContent=`사건 ${ids.length.toLocaleString()}건 · ${offset+1}–${Math.min(offset+PAGE,ids.length)}`;
   const oldScroll=cards.scrollTop;cards.replaceChildren();
   for(const id of ids.slice(offset,offset+PAGE)){
-   const e=map.get(id),b=button('',()=>go(id),'series-event-card');b.dataset.eventId=String(id);b.setAttribute('aria-current',id===current?'true':'false');
+   const e=map.get(id),b=button('',()=>go(id),'series-event-card');b.dataset.eventId=String(id);b.title=`${e.date_label||e.date||'날짜 미상'} · ${e.title}`;b.setAttribute('aria-current',id===current?'true':'false');
    b.append(make('small',e.date_label||e.date||'날짜 미상','series-card-date'),make('strong',e.title,'series-card-title'),make('span',e.locality||e.place||e.country||'지역 미상','series-card-place'),make('span',[e.category,e.importance?`★ ${e.importance}`:''].filter(Boolean).join(' · '),'series-card-meta'));cards.append(b);
   }
   if(ids.length>PAGE){const pager=make('nav',undefined,'series-card-pages');pager.setAttribute('aria-label','사건카드 목록 페이지');const prev=button('이전 묶음',()=>{offset=Math.max(0,offset-PAGE);renderCards();cards.scrollTop=0;}),next=button('다음 묶음',()=>{offset+=PAGE;renderCards();cards.scrollTop=0;});prev.disabled=offset===0;next.disabled=offset+PAGE>=ids.length;pager.append(prev,next);cards.append(pager);}
   cards.scrollTop=oldScroll;
-  if(focusCurrent)requestAnimationFrame(()=>{if(listOpen)cards.querySelector('[aria-current="true"]')?.scrollIntoView({block:'nearest'});});
+  if(focusCurrent)requestAnimationFrame(()=>{if(!listOpen)return;const target=cards.querySelector('[aria-current="true"]');if(!target)return;cards.style.paddingBottom=`${Math.max(12,cards.clientHeight-target.offsetHeight-24)}px`;const previous=target.previousElementSibling;const anchor=previous?.classList.contains('series-event-card')?previous:target;cards.scrollTop=cards.scrollTop+anchor.getBoundingClientRect().top-cards.getBoundingClientRect().top-12;rememberList();});
  }
- function showList(){if(!selected)return;listOpen=true;panel.hidden=false;document.getElementById('webPanel').classList.add('series-list-open');offset=Math.floor(Math.max(0,selected.events.indexOf(current))/PAGE)*PAGE;renderCards({focusCurrent:true});updateActions();}
+ function showList(){if(!selected)return;listOpen=true;panel.hidden=false;document.getElementById('webPanel').classList.add('series-list-open');const saved=listPositions.get(selected.id);offset=saved?.offset??Math.max(0,selected.events.indexOf(current)-1);renderCards({focusCurrent:!saved});if(saved)cards.scrollTop=saved.scrollTop;updateActions();}
  function go(id,fromTts=false){if(id==null||!selected?.events.includes(id))return;if(!fromTts)reader.stop();onDetail(id,{fromTts});}
  function execute(key){
   const s=detailActions(selected?.events||[],current,!!selected);if(!s.enabled)return;
