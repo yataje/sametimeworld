@@ -1,10 +1,11 @@
+import {MELO_DOWNLOAD} from './melo-download.js';
 import {createMeloReader,meloJSON,meloRequest} from './melo-client.js';
 import {createWarmup} from './warmup.js';
 const KEY='stw-melo-settings-v1',defaults={engine:'melo',device:'auto',voice:'KR',reference:'',speed:1,rate:1,volume:1,sdp_ratio:.2,noise_scale:.6,noise_scale_w:.8};
 let settings={...defaults};try{settings={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}'),engine:'melo',reference:''};}catch{}
 window.stwMeloSettings=()=>({...settings});
 const section=document.createElement('section');section.className='stw-melo';
-section.innerHTML='<h2>MeloTTS 0.24 설정</h2><p>이 PC에서 음성을 생성합니다. Melo 프로그램을 먼저 실행하세요.</p><label>실행 장치<select id="meloDevice"><option value="auto">자동 · GPU 우선</option><option value="cpu">CPU</option><option value="cuda">NVIDIA GPU</option></select></label><div id="meloSliders"></div><label>미리 듣기 문장<textarea id="meloText" spellcheck="false">안녕하세요. 세임타임월드 TTS 연습입니다.</textarea></label><button id="meloPreview" type="button">미리 듣기</button> <button id="meloStop" type="button">읽기 정지</button><p id="meloStatus" role="status"></p><button id="meloConnect" type="button">모델 연결·준비 다시 확인</button>';
+section.innerHTML='<h2>MeloTTS 0.25 설정</h2><p>이 PC에서 음성을 생성합니다. Melo 프로그램을 먼저 실행하세요.</p><a class="melo-download" href="'+MELO_DOWNLOAD.url+'" target="_blank" rel="noopener">MeloTTS 다운로드 ('+MELO_DOWNLOAD.size+')</a><p class="melo-download-note">Windows 64비트 · CPU용 · 한국어 모델 포함<br>압축을 모두 푼 뒤 실행.cmd를 실행하고 이 페이지를 새로고침하세요.<br>설치 후 용량: '+MELO_DOWNLOAD.installedSize+'. 그래픽카드 없이 사용할 수 있습니다.</p><label>실행 장치<select id="meloDevice"><option value="auto">자동 · GPU 우선</option><option value="cpu">CPU</option><option value="cuda">NVIDIA GPU</option></select></label><div id="meloSliders"></div><label>미리 듣기 문장<textarea id="meloText" spellcheck="false">안녕하세요. 세임타임월드 TTS 연습입니다.</textarea></label><button id="meloPreview" type="button">미리 듣기</button> <button id="meloStop" type="button">읽기 정지</button><p id="meloStatus" role="status"></p><button id="meloConnect" type="button">모델 연결·준비 다시 확인</button>';
 document.querySelector('.display-settings-modal').insertBefore(section,document.querySelector('.display-settings-note'));
 const $=id=>document.getElementById(id),save=()=>{try{localStorage.setItem(KEY,JSON.stringify(settings));}catch{}};
 const badge=document.createElement('span');badge.style.marginLeft='10px';badge.setAttribute('role','status');document.querySelector('.version-label').append(badge);

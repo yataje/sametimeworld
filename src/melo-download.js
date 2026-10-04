@@ -1,0 +1,1 @@
+export const MELO_DOWNLOAD=Object.freeze({"url": "https://github.com/yataje/sametimeworld/releases/download/melo-v0.25/MeloTTS_Windows_Korean_CPU_0.25.zip", "bytes": 1180238838, "installedBytes": 2104105295, "size": "1.18 GB", "installedSize": "2.10 GB"});
