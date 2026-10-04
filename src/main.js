@@ -9,7 +9,7 @@ let DATA=[];
 let seriesUI=null,seriesState={active:null,ids:new Set(),context:false};
 function seriesFilteredEvents(){return seriesState.active&&!seriesState.context?DATA.filter(x=>seriesState.ids.has(x.id)):DATA;}
 
-const PAGE_VERSION='v0.8.4';
+const PAGE_VERSION='v0.8.5';
 const DB_VERSION_FALLBACK='v23';
 function normalizeRegion(value){
   const v=String(value??'').trim();
@@ -818,7 +818,7 @@ function renderSearch(){
 function createSearchScheduler(callback,{delay=120,setTimer=setTimeout,clearTimer=clearTimeout}={}){
  let timer=null,composing=false;
  const cancel=()=>{if(timer!==null)clearTimer(timer);timer=null;};
- const schedule=()=>{cancel();if(composing)return;timer=setTimer(()=>{timer=null;callback();},delay);};
+ const schedule=()=>{cancel();timer=setTimer(()=>{timer=null;callback();},delay);};
  return {schedule,cancel,compositionStart(){composing=true;cancel();},compositionEnd(){composing=false;schedule();},get composing(){return composing;}};
 }
 const searchScheduler=createSearchScheduler(renderSearch);
@@ -848,6 +848,7 @@ function goToBestSearchResult(){
 searchInput.addEventListener('input',()=>{if(!searchInput.value.trim())hideSearchSuggestions();else searchScheduler.schedule();});
 searchInput.addEventListener('focus',()=>searchScheduler.schedule());
 searchInput.addEventListener('compositionstart',()=>searchScheduler.compositionStart());
+searchInput.addEventListener('compositionupdate',()=>searchScheduler.schedule());
 searchInput.addEventListener('compositionend',()=>searchScheduler.compositionEnd());
 searchInput.addEventListener('keydown',e=>{
  if(e.isComposing||e.keyCode===229||searchScheduler.composing)return;
