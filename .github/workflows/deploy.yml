@@ -24,11 +24,12 @@ jobs:
           import pathlib,json,hashlib,re
           root=pathlib.Path('site');m=json.loads((root/'release.json').read_text())
           assert m['build_method']=='bundled-obfuscated-v1'
-          assert m['data_delivery']=='viewport-directional-buffer'
+          assert m['data_delivery']=='static-packaged'
+          assert 'api_origin' not in m
           paths={f['path'] for f in m['files']}|{'release.json'}
           assert paths=={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
           assert len([n for n in paths if n.endswith('.js')])==1
-          assert not any(n.startswith(('t/','s/')) for n in paths)
+          assert any(n.startswith('t/') for n in paths) and any(n.startswith('s/') for n in paths)
           allowed=r'(?:index\.html|release\.json|\.nojekyll|MAP_DATA_NOTICE\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|[ts]/[a-f0-9]{24}\.txt)'
           for n in paths:
               assert re.fullmatch(allowed,n),n
