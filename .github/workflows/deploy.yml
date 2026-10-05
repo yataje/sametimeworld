@@ -28,9 +28,9 @@ jobs:
           assert 'api_origin' not in m
           paths={f['path'] for f in m['files']}|{'release.json'}
           assert paths=={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
-          assert len([n for n in paths if n.endswith('.js')])==2
+          assert len([n for n in paths if n.endswith('.js')])==3
           assert any(n.startswith('t/') for n in paths) and any(n.startswith('s/') for n in paths)
-          allowed=r'(?:index\.html|space/(?:index\.html|walk\.css)|release\.json|\.nojekyll|MAP_DATA_NOTICE\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|[ts]/[a-f0-9]{24}\.txt)'
+          allowed=r'(?:index\.html|space/(?:index\.html|walk\.css|engines\.html|engines\.css)|release\.json|\.nojekyll|MAP_DATA_NOTICE\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|[ts]/[a-f0-9]{24}\.txt)'
           for n in paths:
               assert re.fullmatch(allowed,n),n
               p=root/n;assert not p.is_symlink();b=p.read_bytes()
