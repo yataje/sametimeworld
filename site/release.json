@@ -2,7 +2,7 @@
   "series_version": 2,
   "series_count": 131,
   "series_sha256": "83a83523e065c8c19c547a38b99be44627890f619a6700c2e962058496bceace",
-  "page_version": "0.10.6",
+  "page_version": "0.10.7",
   "data_version": "v33",
   "data_hash": "a1813785e5e6cd30da47029d27f68e9be4a55161f1e0b6cf20cbf2752ddad1bb",
   "counts": [
@@ -12,9 +12,9 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-b17598ce0fe00af2.js",
-      "size": 2305817,
-      "sha256": "b17598ce0fe00af27e1b640c5a4a1e9af298581be80a3055f307d4ffd7650664"
+      "path": "assets/r-d2bef466dd8de705.js",
+      "size": 2315084,
+      "sha256": "d2bef466dd8de7053ba98a86f7d9768e43ccc39c3a85d1b35818d3fe9050390e"
     },
     {
       "path": "assets/r-d884934748ecfe5a.png",
@@ -22,14 +22,14 @@
       "sha256": "d884934748ecfe5ac16b336055679219f9c6124d86f79d2c4164e18c5e7f093c"
     },
     {
-      "path": "assets/r-5259806e874c0cf0.css",
-      "size": 39705,
-      "sha256": "5259806e874c0cf06bcffd9019cbdfe7b00c45634e1ce6f18d31f83d05335b53"
+      "path": "assets/r-e47e5f1d54e51439.css",
+      "size": 40116,
+      "sha256": "e47e5f1d54e514396709f02f1d51b41b55001973cd097c78970586c53f6a02d5"
     },
     {
       "path": "index.html",
       "size": 12273,
-      "sha256": "8d9e33739b8eed73a7795950ddc10e6dee625d48af735994ee8c462c1cbb5ee2"
+      "sha256": "b2f7be6a6c86c926157af9a37aee3825be8a58b89fbc0db38c9cd3d3e2842c19"
     },
     {
       "path": ".nojekyll",
