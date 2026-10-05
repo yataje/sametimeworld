@@ -2,7 +2,7 @@
   "series_version": 2,
   "series_count": 131,
   "series_sha256": "83a83523e065c8c19c547a38b99be44627890f619a6700c2e962058496bceace",
-  "page_version": "0.10.3",
+  "page_version": "0.10.2",
   "data_version": "v33",
   "data_hash": "a1813785e5e6cd30da47029d27f68e9be4a55161f1e0b6cf20cbf2752ddad1bb",
   "counts": [
@@ -12,9 +12,9 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-55f30b64a96651ce.js",
-      "size": 2251508,
-      "sha256": "55f30b64a96651ce14d55962ae58ffccb406872b2b134f1d7378982034c53f6a"
+      "path": "assets/r-1bafe161f95bbbfb.js",
+      "size": 2294897,
+      "sha256": "1bafe161f95bbbfb80a6a7312326d68c9f487f2abeefca4527e2187d521937e0"
     },
     {
       "path": "assets/r-d884934748ecfe5a.png",
@@ -29,7 +29,7 @@
     {
       "path": "index.html",
       "size": 12273,
-      "sha256": "7ca9d4fbbc0c17cf6c3455797c7406b35ebebb7c9e54434d43ab89ef33ce5e02"
+      "sha256": "f586c46d4841b09a7df8933c615e79bf2326778e7f069c558e4032e879ff072c"
     },
     {
       "path": ".nojekyll",
@@ -42,11 +42,6 @@
       "sha256": "ea524ed0f448d0d30526462b6b92f098be70087974b27e2d83cf444e94182297"
     }
   ],
-  "data_delivery": "viewport-adaptive-prefetch",
-  "prefetch_screens": {
-    "normal": 2,
-    "day": 5
-  },
-  "annual_min_importance": 4,
+  "data_delivery": "viewport-plus-half",
   "api_origin": "https://sametimeworld-api.yataje.workers.dev"
 }

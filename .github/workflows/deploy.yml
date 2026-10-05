@@ -24,7 +24,7 @@ jobs:
           import pathlib,json,hashlib,re
           root=pathlib.Path('site');m=json.loads((root/'release.json').read_text())
           assert m['build_method']=='bundled-obfuscated-v1'
-          assert m['data_delivery']=='viewport-adaptive-prefetch'
+          assert m['data_delivery']=='viewport-plus-half'
           paths={f['path'] for f in m['files']}|{'release.json'}
           assert paths=={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
           assert len([n for n in paths if n.endswith('.js')])==1
