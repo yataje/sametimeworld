@@ -2,7 +2,7 @@
   "series_version": 2,
   "series_count": 131,
   "series_sha256": "620c6c9f4413128a3950ad00f4c865fa78e52da0220df4ee41addfcc3b79736d",
-  "page_version": "0.10.20",
+  "page_version": "0.10.21",
   "data_version": "v34",
   "data_hash": "1fb907bd5d9dc5c1d0914ec32e973d1e25014238caf990c709f4ab6b1b435b36",
   "counts": [
@@ -12,34 +12,34 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-601493a383c4048a.js",
-      "size": 2331929,
-      "sha256": "601493a383c4048a4ce7fb5849459d0020db30f9e152a9d9d157be84ca0f371a"
+      "path": "assets/r-45c493a472116a44.js",
+      "size": 2330972,
+      "sha256": "45c493a472116a4444626e26198dce2cf9096a53894c668b108f2a4461f3e852"
     },
     {
-      "path": "assets/r-cbf2ed46f856dba2.js",
-      "size": 48112,
-      "sha256": "cbf2ed46f856dba2e0e1fabf9d1ade47562ea4df44920888934df4d4bb58a236"
+      "path": "assets/r-d69135994ec930c7.js",
+      "size": 59707,
+      "sha256": "d69135994ec930c7e92af8db0c3c88cd4c5ffe0c5d88dd6fa16443f3439120d4"
     },
     {
       "path": "space/index.html",
-      "size": 1172,
-      "sha256": "0b52c903d21bb7b98a54972b899798f0dffc30a36f96dfebc5ef6df5f840a136"
+      "size": 1905,
+      "sha256": "bfa4f1402364e10d5c767b8bc52f0273395ef57fb118dc975c68d195559af977"
     },
     {
       "path": "space/walk.css",
-      "size": 1451,
-      "sha256": "0e1f7a5fa6a7f2f0ddf9d8f04ea83a5cf41fc3dc7646326ce07677d729b9cb54"
+      "size": 1792,
+      "sha256": "18ba544897015b0b6b6ab392fd7142577f3d38baa782272532cfb393fe3a28bc"
     },
     {
-      "path": "assets/r-c66b07699ee85241.js",
-      "size": 20981,
-      "sha256": "c66b07699ee85241f0ed69dd99789cd6865c2aa2c7b38801138db69c24237364"
+      "path": "assets/r-97a0ad12569605c1.js",
+      "size": 20976,
+      "sha256": "97a0ad12569605c17c79a33820545bd163e2538cc226891cda5006f553fae6e9"
     },
     {
       "path": "space/engines.html",
       "size": 1820,
-      "sha256": "e30e4ef087a7fe40d7d31b7f5b750571723a38aa6885e56dcd8f030a016f912b"
+      "sha256": "934eb8eaba5943efe489c22f18fca7cca29ffef8031015a5fc3d9ff73b7764d7"
     },
     {
       "path": "space/engines.css",
@@ -58,8 +58,8 @@
     },
     {
       "path": "index.html",
-      "size": 13990,
-      "sha256": "68dafff96aa62b075dad5247292fdcf5b6055aed8d5d0b3ea9c834d58c797625"
+      "size": 14332,
+      "sha256": "9e0d0f548797f5c9462d5d98fe98d1f559ce2f01a508ee98d14b4d86da072cbe"
     },
     {
       "path": "s/620c6c9f4413128a3950ad00.txt",
