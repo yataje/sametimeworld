@@ -12,19 +12,19 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-2a3932cf49db80f5.js",
-      "size": 2326113,
-      "sha256": "2a3932cf49db80f53d968289054e5fba4ae0c681860a7e5b9ab34a61ec9999da"
+      "path": "assets/r-cb9d01b693b93fcd.js",
+      "size": 2325228,
+      "sha256": "cb9d01b693b93fcd0da1027cc44541e7de83b966fae5ccdf5e0ab170ec4611dc"
     },
     {
-      "path": "assets/r-5896df0ecbdfe78c.js",
-      "size": 30636,
-      "sha256": "5896df0ecbdfe78cf880b512ca042a71cfc950f0e2cc5aeeeed88bf33ecd4d1c"
+      "path": "assets/r-32dc4ac7589631c9.js",
+      "size": 31396,
+      "sha256": "32dc4ac7589631c9033db981b4c96d83474dce6e6e2f1b46de3782903b8cf5cd"
     },
     {
       "path": "space/index.html",
-      "size": 1499,
-      "sha256": "2d75afe370f16cbf631bba454cdc46503259993a60ec9a11e2b143ef125209ed"
+      "size": 1158,
+      "sha256": "8dd86eec82ff643377e3f2d6f6baf9aa4eda1d664fd1f2a1501273e159721050"
     },
     {
       "path": "space/walk.css",
@@ -32,14 +32,14 @@
       "sha256": "f2f9090f710290ccd89cbcc222326bcc2674a7ddb1b3d0906d94338ba72bf1d5"
     },
     {
-      "path": "assets/r-4de23245a43baefa.js",
-      "size": 34096,
-      "sha256": "4de23245a43baefa581f23a165000bdd20b2bb79a5dd7d0b5b9d4bfaee039d2a"
+      "path": "assets/r-cbeecd53dec897d9.js",
+      "size": 20928,
+      "sha256": "cbeecd53dec897d95a4a8536995658c87ac8899a8031e65b2d7062f8c1d262ff"
     },
     {
       "path": "space/engines.html",
-      "size": 2300,
-      "sha256": "2d43ae599abd52ba70d8d91ba47591fcff506c338d6b8890645959ea2a9d7e22"
+      "size": 1820,
+      "sha256": "325d08c1c840f01c5023e405522ca6bb37a308d3adad352e5cb8299188ab76fe"
     },
     {
       "path": "space/engines.css",
@@ -58,8 +58,8 @@
     },
     {
       "path": "index.html",
-      "size": 13029,
-      "sha256": "87827af328be1a16cb3f788f7a732d2269a60719b4d21c38f46a43a52553a260"
+      "size": 13824,
+      "sha256": "6dde2d1482e462ded81468fa05b46d076e2a33ece34559b49a40f4d220bec755"
     },
     {
       "path": "s/620c6c9f4413128a3950ad00.txt",
