@@ -1,1 +1,0 @@
-Temporary display comparison. Remove the entire _display-test directory on the next regular release. Not part of dist-public or release manifest. Main publisher replaces site from dist-public. No history data copied here.

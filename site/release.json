@@ -280,39 +280,29 @@
   "data_delivery": "static-packaged",
   "temporary_files": [
     {
-      "path": "_display-test/babylon.html",
-      "size": 1268,
-      "sha256": "c8f949cc95e31467ae05ebe4e08445b17a8adee797d03158aa625eace30d09f0"
+      "path": "vr-rebuild/index.html",
+      "size": 1073,
+      "sha256": "b10c3ecb405e51712050d7c6724f124c7d03944c3bff23a8b47a8e246b5f7391"
     },
     {
-      "path": "_display-test/babylon.js",
-      "size": 1008,
-      "sha256": "f88b5664159a97ce4214b414d00b6e87652ae1728f05cf66ecd6a900a9ce859c"
+      "path": "vr-rebuild/vr.css",
+      "size": 963,
+      "sha256": "1fd22b6207b1c071a140109ce8d64a28ca4b5a55a641f1c0366855cde242575c"
     },
     {
-      "path": "_display-test/REMOVE-NEXT-RELEASE.txt",
-      "size": 223,
-      "sha256": "0823dc12d73d10b5f9d9a32770f1f0ce43fb6a620e1dbebc0d137d4cfd03f08f"
+      "path": "vr-rebuild/vr.js",
+      "size": 4860,
+      "sha256": "04c2d5cdb354811c230fd9a65a84d069db02bb9cdb8c405d3a62669a16856eb8"
     },
     {
-      "path": "_display-test/shared.js",
-      "size": 1270,
-      "sha256": "b429ed635aaee7871e07968b3e744037ca11b6488cca705782e9711d2f38d376"
+      "path": "vr-rebuild/orientation-core.js",
+      "size": 1984,
+      "sha256": "5c8474bc25cb0301f9620bf0dee2e851ebf8038bd242a6345ea880e4a709c485"
     },
     {
-      "path": "_display-test/test.css",
-      "size": 724,
-      "sha256": "6e1b9eb312781d79f3aa8b7d4ed2c399275658a8e1aecee85d92e1b3edfabd41"
-    },
-    {
-      "path": "_display-test/three.html",
-      "size": 1216,
-      "sha256": "52dc3bd20b2457fb6c3c9ed4cc86b96e7403995d550aba9bc854982a261dc2d7"
-    },
-    {
-      "path": "_display-test/three.js",
-      "size": 938,
-      "sha256": "d420155c10db457c3dfcd5a99d86d9f4cd7250b5a6673df510f72d668cef7e8e"
+      "path": "vr-rebuild/project-window.mjs",
+      "size": 1726,
+      "sha256": "5f3e1b1246d39d8ae43b3314c13717e4a5e6d07f6a4b87a2f5ddd8d24f60df74"
     }
   ]
 }
