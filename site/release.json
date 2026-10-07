@@ -2,7 +2,7 @@
   "series_version": 2,
   "series_count": 131,
   "series_sha256": "620c6c9f4413128a3950ad00f4c865fa78e52da0220df4ee41addfcc3b79736d",
-  "page_version": "0.10.22",
+  "page_version": "0.10.23",
   "data_version": "v34",
   "data_hash": "1fb907bd5d9dc5c1d0914ec32e973d1e25014238caf990c709f4ab6b1b435b36",
   "counts": [
@@ -12,19 +12,19 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-9a695752e9e21146.js",
-      "size": 2328827,
-      "sha256": "9a695752e9e21146701ef26993b6a51044b61bac8b4ed5c3f6b957a3d0add984"
+      "path": "assets/r-6fc320f9b19000af.js",
+      "size": 2328281,
+      "sha256": "6fc320f9b19000af21ed8b2fa4ed88c44906f022e44eff1e7c9f3dcc20637047"
     },
     {
-      "path": "assets/r-7e51d86118811300.js",
-      "size": 59804,
-      "sha256": "7e51d86118811300a549deda25942af295d45c1b0175249e313a6016df1fdbe3"
+      "path": "assets/r-9151a19a855081a6.js",
+      "size": 59807,
+      "sha256": "9151a19a855081a6b26cbced1329baa1ff44d3eb7308b272a6dba4caf78cbea6"
     },
     {
       "path": "space/index.html",
       "size": 1905,
-      "sha256": "c62347adbf785d8ab52d2028dae4d6e60050e6aea0e0dd7c65a4a0bf11554b8f"
+      "sha256": "17af1b232df6068d5887ef7912b789ad2936ca421ef61ac475ef389fbb53fb34"
     },
     {
       "path": "space/walk.css",
@@ -32,14 +32,14 @@
       "sha256": "18ba544897015b0b6b6ab392fd7142577f3d38baa782272532cfb393fe3a28bc"
     },
     {
-      "path": "assets/r-a1e442871d82a747.js",
-      "size": 20979,
-      "sha256": "a1e442871d82a7472a95e706740d1a4f4766618fb19dc71c6d8e266ed40477bd"
+      "path": "assets/r-4ef579a984b63d76.js",
+      "size": 20983,
+      "sha256": "4ef579a984b63d7620d1059b64cb724c4127afa200fffca28632e450a640b082"
     },
     {
       "path": "space/engines.html",
       "size": 1820,
-      "sha256": "7e4f06c6baa5aae4143eb7a70986e8a399a6b3c16ecffb86243177f2a31df3ed"
+      "sha256": "8239b08ac6bea7a0a314fd47a404cbaab655682de9f633b0ab95f5b1dacfbdd4"
     },
     {
       "path": "space/engines.css",
@@ -58,8 +58,8 @@
     },
     {
       "path": "index.html",
-      "size": 14332,
-      "sha256": "b8a226647a32155c64a3123d4a4fa4670ecc73b234df8328dbe25dccb6675e32"
+      "size": 14386,
+      "sha256": "bcbbad05486326e4a1f7b416cc62b78f4b15e6559e53cdf6b45039e3f1c0a847"
     },
     {
       "path": "s/620c6c9f4413128a3950ad00.txt",
@@ -275,34 +275,37 @@
       "path": "MAP_DATA_NOTICE.txt",
       "size": 1109,
       "sha256": "ea524ed0f448d0d30526462b6b92f098be70087974b27e2d83cf444e94182297"
-    }
-  ],
-  "data_delivery": "static-packaged",
-  "temporary_files": [
+    },
+    {
+      "path": "assets/r-0cf7c6b555040980.js",
+      "size": 1011324,
+      "sha256": "0cf7c6b555040980fcc21c57ee7e258f63ab6091d5bd7ae64ac34123e9095efa"
+    },
+    {
+      "path": "assets/r-cf5c878b90b48b21.css",
+      "size": 1295,
+      "sha256": "cf5c878b90b48b21427e1cd8e30bb9d329056c3c6d032b1483156595bf047290"
+    },
+    {
+      "path": "vr/index.html",
+      "size": 1336,
+      "sha256": "41d736a883ccab565c42acf9cefee419bebdea013f549ef0308565a1f6988985"
+    },
+    {
+      "path": "vr/NOTICE.txt",
+      "size": 2234,
+      "sha256": "d50dbf113ae9014d8edf6b40a6c0971c41ca17f0f555a6edbacf88b85cda0135"
+    },
     {
       "path": "vr-rebuild/index.html",
-      "size": 3359,
-      "sha256": "6d6b58b9b5010ae63df784b5106380a5170077663aaa7a6d78b496423dd9827f"
+      "size": 197,
+      "sha256": "45f57b6901175e8af9ab42f845a03212fef44066ad210af29f4389f11b38b8d8"
     },
     {
-      "path": "vr-rebuild/vr.css",
-      "size": 963,
-      "sha256": "1fd22b6207b1c071a140109ce8d64a28ca4b5a55a641f1c0366855cde242575c"
-    },
-    {
-      "path": "vr-rebuild/vr.js",
-      "size": 5356,
-      "sha256": "eefce2e2791c228b63c90ead133dd02c3b84d7c97631f728690b6898410030da"
-    },
-    {
-      "path": "vr-rebuild/orientation-core.js",
-      "size": 1984,
-      "sha256": "5c8474bc25cb0301f9620bf0dee2e851ebf8038bd242a6345ea880e4a709c485"
-    },
-    {
-      "path": "vr-rebuild/project-window.mjs",
-      "size": 1726,
-      "sha256": "5f3e1b1246d39d8ae43b3314c13717e4a5e6d07f6a4b87a2f5ddd8d24f60df74"
+      "path": "assets/r-91112bbf62f080a9.js",
+      "size": 287,
+      "sha256": "91112bbf62f080a90214ca7ef8c8b9447882936a615f8e850236731a04f1f1cf"
     }
-  ]
+  ],
+  "data_delivery": "static-packaged"
 }
