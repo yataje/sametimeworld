@@ -277,5 +277,42 @@
       "sha256": "ea524ed0f448d0d30526462b6b92f098be70087974b27e2d83cf444e94182297"
     }
   ],
-  "data_delivery": "static-packaged"
+  "data_delivery": "static-packaged",
+  "temporary_files": [
+    {
+      "path": "_display-test/babylon.html",
+      "size": 1268,
+      "sha256": "c8f949cc95e31467ae05ebe4e08445b17a8adee797d03158aa625eace30d09f0"
+    },
+    {
+      "path": "_display-test/babylon.js",
+      "size": 1008,
+      "sha256": "f88b5664159a97ce4214b414d00b6e87652ae1728f05cf66ecd6a900a9ce859c"
+    },
+    {
+      "path": "_display-test/REMOVE-NEXT-RELEASE.txt",
+      "size": 223,
+      "sha256": "0823dc12d73d10b5f9d9a32770f1f0ce43fb6a620e1dbebc0d137d4cfd03f08f"
+    },
+    {
+      "path": "_display-test/shared.js",
+      "size": 1270,
+      "sha256": "b429ed635aaee7871e07968b3e744037ca11b6488cca705782e9711d2f38d376"
+    },
+    {
+      "path": "_display-test/test.css",
+      "size": 724,
+      "sha256": "6e1b9eb312781d79f3aa8b7d4ed2c399275658a8e1aecee85d92e1b3edfabd41"
+    },
+    {
+      "path": "_display-test/three.html",
+      "size": 1216,
+      "sha256": "52dc3bd20b2457fb6c3c9ed4cc86b96e7403995d550aba9bc854982a261dc2d7"
+    },
+    {
+      "path": "_display-test/three.js",
+      "size": 938,
+      "sha256": "d420155c10db457c3dfcd5a99d86d9f4cd7250b5a6673df510f72d668cef7e8e"
+    }
+  ]
 }
