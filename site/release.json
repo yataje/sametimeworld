@@ -281,8 +281,8 @@
   "temporary_files": [
     {
       "path": "vr-rebuild/index.html",
-      "size": 1073,
-      "sha256": "b10c3ecb405e51712050d7c6724f124c7d03944c3bff23a8b47a8e246b5f7391"
+      "size": 3359,
+      "sha256": "6d6b58b9b5010ae63df784b5106380a5170077663aaa7a6d78b496423dd9827f"
     },
     {
       "path": "vr-rebuild/vr.css",
@@ -291,8 +291,8 @@
     },
     {
       "path": "vr-rebuild/vr.js",
-      "size": 4860,
-      "sha256": "04c2d5cdb354811c230fd9a65a84d069db02bb9cdb8c405d3a62669a16856eb8"
+      "size": 5356,
+      "sha256": "eefce2e2791c228b63c90ead133dd02c3b84d7c97631f728690b6898410030da"
     },
     {
       "path": "vr-rebuild/orientation-core.js",
