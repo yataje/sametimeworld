@@ -1,1 +1,0 @@
-(()=>{const q=new URLSearchParams(location.search);if(window===parent&&q.get('spaceScreen')!=='1'&&q.get('view')!=='desktop'&&(q.get('view')==='mobile'||/iPhone|iPod|Android.+Mobile|Windows Phone/i.test(navigator.userAgent)))location.replace(new URL('vr/index.html',location.href));})();
