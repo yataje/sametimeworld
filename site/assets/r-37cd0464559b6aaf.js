@@ -1,6 +1,6 @@
 const q = new URLSearchParams(location.search);
 const phone = /iPhone|iPod|Android.+Mobile|Windows Phone/i.test(navigator.userAgent);
-const pc = q.get('spaceScreen') === '1' || q.get('view') === 'desktop';
+const pc = q.get('view') === 'desktop';
 const mobile = !pc && (q.get('view') === 'mobile' || phone);
 const target = new URL(mobile ? 'index-mobile.html' : 'index-pc.html', location.href);
 q.delete('view');
