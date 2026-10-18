@@ -144,12 +144,88 @@
         "entity_series_count": 485,
         "language": "en"
       }
+    },
+    "ja": {
+      "folder": "jpn",
+      "data_hash": "1e8e72d80378c000f5274160aff015f3b03bb2c5946fa0ca965a109a3b1ac284",
+      "counts": [
+        39535,
+        6750
+      ],
+      "archive": {
+        "f": "DB/jpn/t/1f9f0c519864cbd9f7eed172.txt",
+        "k": "bL1tMLRzsrJNo/sRLTcL2T34zVqOhnpLtqdHpmfC7ds=",
+        "h": "8e46f846190ede71b74a47d5ced69f1bca5a974dee22fdd8adb3c082f1ed48e3",
+        "d": "1e8e72d80378c000f5274160aff015f3b03bb2c5946fa0ca965a109a3b1ac284",
+        "r": 43,
+        "n": [
+          39535,
+          6750
+        ],
+        "parts": [
+          "DB/jpn/t/1f9f0c519864cbd9f7eed172.txt",
+          "DB/jpn/t/459501cbc1440cb07d9c5dd2.txt",
+          "DB/jpn/t/3a9608babb0ff775bf5694e9.txt",
+          "DB/jpn/t/81d71dfffa0783910ac2ac21.txt",
+          "DB/jpn/t/422c9849bfc3485dc8641669.txt",
+          "DB/jpn/t/338a01dbd6ff6b54c8a8f5f6.txt",
+          "DB/jpn/t/539ab822d0f2f93711cb6978.txt",
+          "DB/jpn/t/82f6b7df5148480ff65e43b7.txt",
+          "DB/jpn/t/543588ef455391777588ffaf.txt",
+          "DB/jpn/t/af54076179da1e8b1bc1fe6c.txt",
+          "DB/jpn/t/d9fb46477236377dece37062.txt",
+          "DB/jpn/t/a838b52ca8fdb174f2054e8f.txt",
+          "DB/jpn/t/df20ca1df58653d4a1bab43b.txt",
+          "DB/jpn/t/7e635ae9563d98bdbbc10e08.txt",
+          "DB/jpn/t/17c4c8859d37320dcdac8f41.txt",
+          "DB/jpn/t/f23a542b00a0d78008f5923b.txt",
+          "DB/jpn/t/25466b501817b9c3f8732fe1.txt",
+          "DB/jpn/t/1c256a76e36d8c9bedf18762.txt",
+          "DB/jpn/t/5440ca4b1fa33faa54ca2545.txt",
+          "DB/jpn/t/63b72a8af510b437fb14baf4.txt",
+          "DB/jpn/t/5671d2696683b45f9119e4df.txt",
+          "DB/jpn/t/8557e93eb485ede399fcf57f.txt",
+          "DB/jpn/t/1109f9f0feea0618520c2bc9.txt",
+          "DB/jpn/t/452570b17b85f25d0d282b5d.txt",
+          "DB/jpn/t/72d40bdff0a336346ba0f14c.txt",
+          "DB/jpn/t/88682390ad059c986b6625f4.txt",
+          "DB/jpn/t/62c73318671c7eb721dfcdf8.txt",
+          "DB/jpn/t/a048fcd0ab51b0fa76f2a899.txt",
+          "DB/jpn/t/00693a305855e56012088762.txt",
+          "DB/jpn/t/07affd59d785b196beae33b5.txt",
+          "DB/jpn/t/d0a6157e67d39657d5d2de07.txt",
+          "DB/jpn/t/4535f6b86e0192be83872b59.txt",
+          "DB/jpn/t/2c0e4213430934d2deb60505.txt",
+          "DB/jpn/t/c7526524b2d227760b80d0a8.txt",
+          "DB/jpn/t/a481f7fceb127c88a9952739.txt",
+          "DB/jpn/t/781c16f6b79d6e0ceb854e1b.txt",
+          "DB/jpn/t/c814e758fbb73289c9719df9.txt",
+          "DB/jpn/t/6e40309126f3b8d434a37c1b.txt",
+          "DB/jpn/t/75b08b130d55992582dcd4b3.txt",
+          "DB/jpn/t/a9a1031a4935fa89fee2eeac.txt",
+          "DB/jpn/t/aa32aee0801114d9b949334a.txt",
+          "DB/jpn/t/a21fa96302c5f0f30c3af9ab.txt",
+          "DB/jpn/t/b3b92340ea0ec26b80a5c157.txt",
+          "DB/jpn/t/b20f77753b8a5b61c5393ddf.txt"
+        ]
+      },
+      "series": {
+        "file": "DB/jpn/s/d52a0547d6a088ca06d223bd.txt",
+        "sha256": "d52a0547d6a088ca06d223bd859c8d92d1f842493c70c52560dee50e0ce8e21f",
+        "version": 7,
+        "series_count": 1049,
+        "concept_count": 32208,
+        "war_tag_count": 145,
+        "war_tag_links": 1073,
+        "entity_series_count": 485,
+        "language": "ja"
+      }
     }
   },
   "series_version": 7,
   "series_count": 1049,
   "series_sha256": "c49ca3e5378cc3820b9a5c6b5f337980313281a99f1d50949bac75f10da5e158",
-  "page_version": "0.10.67",
+  "page_version": "0.10.68",
   "data_version": "v43",
   "data_hash": "c455abcb2f9c820fd5a679860b06a84660324f69855dbd7c4a1ebd686e23f7d8",
   "counts": [
@@ -159,9 +235,9 @@
   "build_method": "bundled-obfuscated-v1",
   "files": [
     {
-      "path": "assets/r-e2089ff77abdf9ea.js",
-      "size": 2416177,
-      "sha256": "e2089ff77abdf9ea45084a7b5990962aec9068a308541082923c0de0cf60f3ae"
+      "path": "assets/r-e2699508178dbc43.js",
+      "size": 2463925,
+      "sha256": "e2699508178dbc43fff004e3b3e6ee0f3ad2a9d903c33db3086ca80cc76fab99"
     },
     {
       "path": "assets/r-d884934748ecfe5a.png",
@@ -169,19 +245,19 @@
       "sha256": "d884934748ecfe5ac16b336055679219f9c6124d86f79d2c4164e18c5e7f093c"
     },
     {
-      "path": "assets/r-01522d8812449849.css",
-      "size": 57949,
-      "sha256": "01522d88124498496d63340e9caa455379da71b49cfd7000b35b032ea8b24a0e"
+      "path": "assets/r-0dd0470d18b3cbf4.css",
+      "size": 58047,
+      "sha256": "0dd0470d18b3cbf42bdaaa09b3776a27f0496c72863373903454e7a981a00ac8"
     },
     {
       "path": "index-pc.html",
       "size": 14415,
-      "sha256": "06812558c942b4b4f5fc163454725f3eedcf7ac01a875035c6a003ea1226366b"
+      "sha256": "a64d9abeea888c0d5f83648b08771d97dacad82484003c5e3310ee1a57e287b2"
     },
     {
       "path": "index-mobile.html",
       "size": 14418,
-      "sha256": "9489d7cebfb83a4d65a3fe2a488fc179fed3e1a7eb4adac757b42499cc8e0737"
+      "sha256": "b4e3e8a1f36883658526bc2e2cf9d02e8eef0b5a754704558501d4e2a507ff78"
     },
     {
       "path": "DB/kor/s/c49ca3e5378cc3820b9a5c6b.txt",
@@ -707,6 +783,231 @@
       "path": "DB/eng/s/4b5506c18a9703d462506f89.txt",
       "size": 1372425,
       "sha256": "4b5506c18a9703d462506f8915574c91a975d9972bd753cd772e7db080f435ea"
+    },
+    {
+      "path": "DB/jpn/t/1f9f0c519864cbd9f7eed172.txt",
+      "size": 196608,
+      "sha256": "1f9f0c519864cbd9f7eed172ba38d2b569e23ffd18bca6c4f57fedcf5bbc6729"
+    },
+    {
+      "path": "DB/jpn/t/459501cbc1440cb07d9c5dd2.txt",
+      "size": 196608,
+      "sha256": "459501cbc1440cb07d9c5dd251c3d306b49dd596b85efa535628eb9f03ff1879"
+    },
+    {
+      "path": "DB/jpn/t/3a9608babb0ff775bf5694e9.txt",
+      "size": 196608,
+      "sha256": "3a9608babb0ff775bf5694e9d4f035731a6fbb35dfc22b25cf531c85a2bc4f03"
+    },
+    {
+      "path": "DB/jpn/t/81d71dfffa0783910ac2ac21.txt",
+      "size": 196608,
+      "sha256": "81d71dfffa0783910ac2ac219e69866d76a5f0015a9c9ec8809558832246be56"
+    },
+    {
+      "path": "DB/jpn/t/422c9849bfc3485dc8641669.txt",
+      "size": 196608,
+      "sha256": "422c9849bfc3485dc86416690b670bcd179d86fdd2c8b33e925d2bf917fd7ee6"
+    },
+    {
+      "path": "DB/jpn/t/338a01dbd6ff6b54c8a8f5f6.txt",
+      "size": 196608,
+      "sha256": "338a01dbd6ff6b54c8a8f5f69421f85aa82c9e45fb2d02298ad1304f7d596dd4"
+    },
+    {
+      "path": "DB/jpn/t/539ab822d0f2f93711cb6978.txt",
+      "size": 196608,
+      "sha256": "539ab822d0f2f93711cb697893523ba26bc0eaf8d2493b738199c2015a3a5fd3"
+    },
+    {
+      "path": "DB/jpn/t/82f6b7df5148480ff65e43b7.txt",
+      "size": 196608,
+      "sha256": "82f6b7df5148480ff65e43b70a1b649a8ff30e069a4a688db555c0753aea34aa"
+    },
+    {
+      "path": "DB/jpn/t/543588ef455391777588ffaf.txt",
+      "size": 196608,
+      "sha256": "543588ef455391777588ffaf1da696fc8ce8a2c436a0878223036f684613ecdd"
+    },
+    {
+      "path": "DB/jpn/t/af54076179da1e8b1bc1fe6c.txt",
+      "size": 196608,
+      "sha256": "af54076179da1e8b1bc1fe6c8e948d0b6c2c1038ff40649bff391e222b601a2d"
+    },
+    {
+      "path": "DB/jpn/t/d9fb46477236377dece37062.txt",
+      "size": 196608,
+      "sha256": "d9fb46477236377dece37062e9704376ea0551ee27987acb0ebbe62661cdad0f"
+    },
+    {
+      "path": "DB/jpn/t/a838b52ca8fdb174f2054e8f.txt",
+      "size": 196608,
+      "sha256": "a838b52ca8fdb174f2054e8faa4388b1f50e2166e0ad8c6649753ec0ed397c14"
+    },
+    {
+      "path": "DB/jpn/t/df20ca1df58653d4a1bab43b.txt",
+      "size": 196608,
+      "sha256": "df20ca1df58653d4a1bab43b6c97ac5adc694cb49bb94a8e98686a93a8ce0148"
+    },
+    {
+      "path": "DB/jpn/t/7e635ae9563d98bdbbc10e08.txt",
+      "size": 196608,
+      "sha256": "7e635ae9563d98bdbbc10e0871a1429669b9f283cdf08572c6cb419ab2a707dc"
+    },
+    {
+      "path": "DB/jpn/t/17c4c8859d37320dcdac8f41.txt",
+      "size": 196608,
+      "sha256": "17c4c8859d37320dcdac8f41e53edd259ec0a50e649771f12bbde846f938899b"
+    },
+    {
+      "path": "DB/jpn/t/f23a542b00a0d78008f5923b.txt",
+      "size": 196608,
+      "sha256": "f23a542b00a0d78008f5923bc2f15e48887d95f54502c743a3afecf71eaa4f3f"
+    },
+    {
+      "path": "DB/jpn/t/25466b501817b9c3f8732fe1.txt",
+      "size": 196608,
+      "sha256": "25466b501817b9c3f8732fe12f75d93fefc7a023245d5476a4fe144489bdc05b"
+    },
+    {
+      "path": "DB/jpn/t/1c256a76e36d8c9bedf18762.txt",
+      "size": 196608,
+      "sha256": "1c256a76e36d8c9bedf187629f46f922c6473325103373288f00ae02e775ca7e"
+    },
+    {
+      "path": "DB/jpn/t/5440ca4b1fa33faa54ca2545.txt",
+      "size": 196608,
+      "sha256": "5440ca4b1fa33faa54ca2545d81f8c1f52151d494e3f6095919b9a97648371b5"
+    },
+    {
+      "path": "DB/jpn/t/63b72a8af510b437fb14baf4.txt",
+      "size": 196608,
+      "sha256": "63b72a8af510b437fb14baf447aa82ae3aeb739f8c9e1cdc9f4afe1645d634fa"
+    },
+    {
+      "path": "DB/jpn/t/5671d2696683b45f9119e4df.txt",
+      "size": 196608,
+      "sha256": "5671d2696683b45f9119e4df44a40a21ad5a83120902ae6ccee6faddd2ba4c43"
+    },
+    {
+      "path": "DB/jpn/t/8557e93eb485ede399fcf57f.txt",
+      "size": 196608,
+      "sha256": "8557e93eb485ede399fcf57fc5fe7cacdec29a163112108e63fd96cc8bae5263"
+    },
+    {
+      "path": "DB/jpn/t/1109f9f0feea0618520c2bc9.txt",
+      "size": 196608,
+      "sha256": "1109f9f0feea0618520c2bc920c35146d36059cec3519e3a135a5fc45c9cf599"
+    },
+    {
+      "path": "DB/jpn/t/452570b17b85f25d0d282b5d.txt",
+      "size": 196608,
+      "sha256": "452570b17b85f25d0d282b5dc5a0e2fa600a14629875ae1b0ac85bdab808c4fd"
+    },
+    {
+      "path": "DB/jpn/t/72d40bdff0a336346ba0f14c.txt",
+      "size": 196608,
+      "sha256": "72d40bdff0a336346ba0f14c7de136cd3eff26de0ffb6fa0af3dcbf0c73f95c2"
+    },
+    {
+      "path": "DB/jpn/t/88682390ad059c986b6625f4.txt",
+      "size": 196608,
+      "sha256": "88682390ad059c986b6625f4402e691782b051320c1e591e583a96a19b0841b5"
+    },
+    {
+      "path": "DB/jpn/t/62c73318671c7eb721dfcdf8.txt",
+      "size": 196608,
+      "sha256": "62c73318671c7eb721dfcdf81dd88103c6f5fa607d4a1d329fbe622deca87893"
+    },
+    {
+      "path": "DB/jpn/t/a048fcd0ab51b0fa76f2a899.txt",
+      "size": 196608,
+      "sha256": "a048fcd0ab51b0fa76f2a89977a44257dec6ab7cfee5c2611f1b8a62f6121b9d"
+    },
+    {
+      "path": "DB/jpn/t/00693a305855e56012088762.txt",
+      "size": 196608,
+      "sha256": "00693a305855e5601208876218edec40d5c7836fa3af19f35267667388d641e4"
+    },
+    {
+      "path": "DB/jpn/t/07affd59d785b196beae33b5.txt",
+      "size": 196608,
+      "sha256": "07affd59d785b196beae33b589f41abe0351b62e66169dc230658be37e8e8b35"
+    },
+    {
+      "path": "DB/jpn/t/d0a6157e67d39657d5d2de07.txt",
+      "size": 196608,
+      "sha256": "d0a6157e67d39657d5d2de0713822e6c333e69809ceb9c81ce9ecc3a1a9415a1"
+    },
+    {
+      "path": "DB/jpn/t/4535f6b86e0192be83872b59.txt",
+      "size": 196608,
+      "sha256": "4535f6b86e0192be83872b59623d115129e08123d2248dc9ce459a2ee306eba2"
+    },
+    {
+      "path": "DB/jpn/t/2c0e4213430934d2deb60505.txt",
+      "size": 196608,
+      "sha256": "2c0e4213430934d2deb60505e1604d7a8452834d725153548156bb740b198fdd"
+    },
+    {
+      "path": "DB/jpn/t/c7526524b2d227760b80d0a8.txt",
+      "size": 196608,
+      "sha256": "c7526524b2d227760b80d0a88b536a40539187f244255bd702e1224ba0fd49b4"
+    },
+    {
+      "path": "DB/jpn/t/a481f7fceb127c88a9952739.txt",
+      "size": 196608,
+      "sha256": "a481f7fceb127c88a99527392dc703f43f4e58e0c32606e1d40e129ef81340b9"
+    },
+    {
+      "path": "DB/jpn/t/781c16f6b79d6e0ceb854e1b.txt",
+      "size": 196608,
+      "sha256": "781c16f6b79d6e0ceb854e1bd1fafb236800a003d77211a8b5d5e066189d7205"
+    },
+    {
+      "path": "DB/jpn/t/c814e758fbb73289c9719df9.txt",
+      "size": 196608,
+      "sha256": "c814e758fbb73289c9719df9154dda20c3631b85cbe2822e3485fcafc10de109"
+    },
+    {
+      "path": "DB/jpn/t/6e40309126f3b8d434a37c1b.txt",
+      "size": 196608,
+      "sha256": "6e40309126f3b8d434a37c1bbe36a70811874b0b76646271381b7639b17eec4d"
+    },
+    {
+      "path": "DB/jpn/t/75b08b130d55992582dcd4b3.txt",
+      "size": 196608,
+      "sha256": "75b08b130d55992582dcd4b39802c4f97664c507b649aba63bef816cd6e6590b"
+    },
+    {
+      "path": "DB/jpn/t/a9a1031a4935fa89fee2eeac.txt",
+      "size": 196608,
+      "sha256": "a9a1031a4935fa89fee2eeac469d5bb9f85dd306dfb621292723791e8aec8668"
+    },
+    {
+      "path": "DB/jpn/t/aa32aee0801114d9b949334a.txt",
+      "size": 196608,
+      "sha256": "aa32aee0801114d9b949334a81508c80f1a18f22250903a81f706cc6aa3f6cfd"
+    },
+    {
+      "path": "DB/jpn/t/a21fa96302c5f0f30c3af9ab.txt",
+      "size": 196608,
+      "sha256": "a21fa96302c5f0f30c3af9abc24dc9780a1ba01215afb6597e4f595362365ae9"
+    },
+    {
+      "path": "DB/jpn/t/b3b92340ea0ec26b80a5c157.txt",
+      "size": 196608,
+      "sha256": "b3b92340ea0ec26b80a5c157271a6f6e9541e0759dd6524a06b7bf8f650fdd98"
+    },
+    {
+      "path": "DB/jpn/t/b20f77753b8a5b61c5393ddf.txt",
+      "size": 36636,
+      "sha256": "b20f77753b8a5b61c5393ddfd3d6dbf792a6c6d16cfdf78b1b14c669cb91e185"
+    },
+    {
+      "path": "DB/jpn/s/d52a0547d6a088ca06d223bd.txt",
+      "size": 1392905,
+      "sha256": "d52a0547d6a088ca06d223bd859c8d92d1f842493c70c52560dee50e0ce8e21f"
     },
     {
       "path": "assets/r-37cd0464559b6aaf.js",
