@@ -30,7 +30,7 @@ jobs:
           assert paths=={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file()}
           assert len([n for n in paths if n.endswith('.js')]) in (2,3)
           assert any(re.match(r'(?:DB/(?:kor|eng|jpn|zho)/)?t/',n) for n in paths) and any(re.match(r'(?:DB/(?:kor|eng|jpn|zho)/)?s/',n) for n in paths)
-          allowed=r'(?:index(?:-pc|-mobile)?\.html|release\.json|\.nojekyll|MAP_DATA_NOTICE\.txt|music/[a-f0-9]{24}\.mp3|music/credits\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|(?:DB/(?:kor|eng|jpn|zho)/)?[ts]/[a-f0-9]{24}\.txt)'
+          allowed=r'(?:index(?:-pc|-mobile)?\.html|release\.json|sitemap\.xml|\.nojekyll|MAP_DATA_NOTICE\.txt|music/[a-f0-9]{24}\.mp3|music/credits\.txt|assets/r-[a-f0-9]{16}\.(?:js|css|png)|(?:DB/(?:kor|eng|jpn|zho)/)?[ts]/[a-f0-9]{24}\.txt)'
           for n in paths:
               assert re.fullmatch(allowed,n),n
               p=root/n;assert not p.is_symlink();b=p.read_bytes()
